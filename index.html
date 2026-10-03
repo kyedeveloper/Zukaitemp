@@ -224,7 +224,7 @@ details[open]>summary{margin-bottom:18px}
 </section>
 
 <a class="tools" href="/tools.html">
-  <div><b class="f">🛠 ZukaiTools</b><span>Hapus background, upscale gambar, kompres foto, dan generator password. Gratis!</span></div>
+  <div><b class="f">🛠 ZukaiTools</b><span>Hapus background, upscale AI, QR code, tes kecepatan internet, dan lainnya. Gratis!</span></div>
   <span class="btn p sm">Buka tools →</span>
 </a>
 
@@ -302,15 +302,19 @@ const words=['pinky','sakura','boba','candy','peach','cloud','melon','bunny','ki
 const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
 let acc=null,msgs=[],seen=new Set(),first=true,auto=true,snd=true,cd=10,openId=null,curMsg=null,gone=new Set(),hist=store.get('pm_hist',[]);
 
-let useProxy=true;
+let useProxy=location.protocol!=='file:';
 const HOST={tm:'https://api.mail.tm',gw:'https://api.mail.gw'};
+function fetchT(url,opt,ms){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);return fetch(url,{...opt,signal:c.signal}).finally(()=>clearTimeout(t))}
 async function req(path,opt,prov='tm'){
   if(useProxy){
-    try{const r=await fetch('/api/mail?h='+prov+'&p='+encodeURIComponent(path),{...opt,cache:'no-store'});if(r.headers.get('x-zt-proxy'))return r}catch{}
-    useProxy=false;
+    let r;
+    try{r=await fetchT('/api/mail?h='+prov+'&p='+encodeURIComponent(path),{...opt,cache:'no-store'},12000)}
+    catch(e){throw new Error(e.name==='AbortError'?'server terlalu lama merespons':'koneksi gagal ('+e.message+')')}
+    if(r.headers.get('x-zt-proxy')||r.status!==404)return r;
+    useProxy=false; // proxy tidak ada (bukan di Vercel)
   }
   if(!HOST[prov])throw new Error('server ini butuh proxy Vercel (api/mail.js)');
-  return fetch(HOST[prov]+path,opt);
+  return fetchT(HOST[prov]+path,opt,12000);
 }
 async function api(path,opt={},tok,prov){
   prov=prov||acc?.prov||'tm';
@@ -334,14 +338,18 @@ const PROVS={tm:'Server A · mail.tm',gw:'Server B · mail.gw',tp:'Server C · t
 const pn=p=>((PROVS[p||'tm']||'').split('· ')[1])||'';
 const tmo=(p,ms)=>Promise.race([p,new Promise((_,j)=>setTimeout(()=>j(new Error('waktu habis')),ms))]);
 async function loadDomains(){
-  const ks=Object.keys(PROVS);
-  const res=await Promise.allSettled(ks.map(async p=>{const j=await tmo(api('/domains',{},null,p),9000);return (j['hydra:member']||j).filter(x=>x.isActive!==false).map(x=>x.domain)}));
-  let html='',n=0;
-  res.forEach((x,i)=>{const p=ks[i];if(x.status==='fulfilled'&&x.value.length){n+=x.value.length;html+=`<optgroup label="${PROVS[p]}">`+x.value.map(d=>`<option value="${p}:${esc(d)}">${esc(d)}</option>`).join('')+'</optgroup>'}});
-  if(!n){const why=res.map(x=>x.reason?.message).filter(Boolean)[0]||'daftar domain kosong';$('#addr').textContent='Menghubungkan ke server...';toast('Gagal memuat domain: '+why+' (coba lagi otomatis)');return false}
-  const old=$('#dom').value;$('#dom').innerHTML=html;if(old)$('#dom').value=old;
-  window.__okProvs=res.map((x,i)=>x.status==='fulfilled'&&x.value.length?PROVS[ks[i]].split('· ')[1]:null).filter(Boolean);
-  return true;
+  const ks=Object.keys(PROVS),got={},errs=[];
+  const paint=()=>{let html='';ks.forEach(p=>{if(got[p])html+=`<optgroup label="${PROVS[p]}">`+got[p].map(d=>`<option value="${p}:${esc(d)}">${esc(d)}</option>`).join('')+'</optgroup>'});const old=$('#dom').value;$('#dom').innerHTML=html;if(old)$('#dom').value=old};
+  return new Promise(res=>{
+    let pending=ks.length,done=false;
+    ks.forEach(p=>tmo(api('/domains',{},null,p),7000).then(j=>{
+      const l=(j['hydra:member']||j).filter(x=>x.isActive!==false).map(x=>x.domain);
+      if(!l.length)throw new Error('daftar domain kosong');
+      got[p]=l;paint();if(!done){done=true;res(true)}
+    }).catch(e=>errs.push(pn(p)+': '+e.message)).finally(()=>{
+      if(--pending===0&&!done){$('#addr').textContent='Menghubungkan ke server...';toast('Gagal memuat domain: '+errs[0]+' (coba lagi otomatis)');res(false)}
+    }));
+  });
 }
 async function make(user,pick){
   const given=!!user;
@@ -351,12 +359,14 @@ async function make(user,pick){
   if(!opts.length)return toast('Domain belum tersedia, tunggu sebentar');
   const by={};opts.forEach(v=>(by[v.split(':')[0]]??=[]).push(v));
   const rp=k=>by[k][Math.random()*by[k].length|0];
-  const provs=Object.keys(by).sort(()=>Math.random()-.5);
+  const good=store.get('pm_good',''),provs=Object.keys(by).sort(()=>Math.random()-.5).sort((a,b)=>(b===good)-(a===good));
   const first=pick||(given?$('#dom').value:rp(provs[0]));
+  const wait=$('#addr').textContent;
   const order=[first,...provs.filter(k=>k!==first.split(':')[0]).map(rp)];
   setBusy(true);let err;
   for(const v of order){
     const i=v.indexOf(':'),prov=v.slice(0,i),domain=v.slice(i+1),address=user+'@'+domain,password=rnd(14);
+    $('#hs').textContent='Menyiapkan alamat · mencoba '+pn(prov)+'...';
     try{
       const a=await api('/accounts',{method:'POST',body:JSON.stringify({address,password})},null,prov);
       const real=a.address||address;
@@ -366,7 +376,7 @@ async function make(user,pick){
       activate(entry);toast('Alamat baru siap! 💖');hearts(8);setBusy(false);return;
     }catch(e){err=e;if(/already|used|exist/i.test(e.message))break}
   }
-  $('#addr').textContent=acc?acc.address:'Gagal membuat alamat';
+  $('#addr').textContent=acc?acc.address:'Gagal membuat alamat';$('#hs').textContent=acc?'Alamat kamu · '+pn(acc.prov):'Tekan "Acak baru" untuk coba lagi';
   toast(/already|used|exist/i.test(err?.message||'')?'Nama itu sudah dipakai, coba yang lain':'Gagal: '+(err?.message||'server tidak merespons'));
   setBusy(false);
 }
@@ -403,4 +413,130 @@ async function poll(){
     msgs=j['hydra:member'].filter(m=>!gone.has(m.id));
     const fresh=msgs.filter(m=>!seen.has(m.id));
     msgs.forEach(m=>seen.add(m.id));
-    if(!first&&fresh.length){beep();hearts(12);toast('💌 '+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+    if(!first&&fresh.length){beep();hearts(12);toast('💌 '+fresh.length+' pesan baru dari '+(fresh[0].from.name||fresh[0].from.address));document.title='💌 ('+fresh.length+') ZukaiTemp';setTimeout(()=>document.title='ZukaiTemp · Email Sementara',4000)}
+    first=false;render();
+    store.set('pm_good',acc.prov||'tm');
+    $('#stat').textContent='✅ Terakhir cek '+new Date().toLocaleTimeString('id-ID')+' · '+pn(acc.prov)+' · '+msgs.length+' pesan';
+  }catch(e){$('#stat').textContent='⚠️ Gagal cek inbox: '+e.message;if(/401|Invalid/i.test(e.message)){const i=hist.findIndex(h=>h.address===acc.address);i>=0&&switchTo(i)}}
+  $('#bRef').style.opacity='';
+}
+function render(){
+  const q=$('#q').value.trim().toLowerCase();
+  const f=msgs.filter(m=>!q||(m.subject+m.intro+m.from.address+(m.from.name||'')).toLowerCase().includes(q));
+  $('#sTot').textContent=msgs.length;$('#sUn').textContent=msgs.filter(m=>!m.seen).length;
+  $('#list').innerHTML=f.length?f.map((m,i)=>`<div class="m ${m.seen?'':'un'}" data-id="${m.id}" style="animation-delay:${i*50}ms" tabindex="0">
+    <div class="av">${esc((m.from.name||m.from.address)[0]).toUpperCase()}</div>
+    <div class="mi"><b>${esc(m.from.name||m.from.address)}</b><span>${esc(m.subject||'(tanpa subjek)')}</span><span>${esc(m.intro)}</span></div>
+    <div class="mt">${ago(m.createdAt)}<br>${m.seen?'':'<i class="dot"></i>'}</div></div>`).join('')
+    :`<div class="empty"><i>📭</i>${q?'Tidak ada pesan yang cocok':'Belum ada pesan. Kirim email ke alamat di atas, nanti muncul di sini!'}</div>`;
+}
+async function openMsg(id){
+  try{
+    const m=await api('/messages/'+id,{},acc.token);openId=id;
+    $('#mSub').textContent=m.subject||'(tanpa subjek)';
+    $('#mMeta').textContent='Dari: '+(m.from.name?m.from.name+' <'+m.from.address+'>':m.from.address)+' · '+new Date(m.createdAt).toLocaleString('id-ID');
+    const body=(m.html&&m.html.length)?m.html.join(''):'<pre style="white-space:pre-wrap;font-family:Nunito,sans-serif;padding:16px">'+esc(m.text)+'</pre>';
+    $('#mBody').innerHTML='<iframe sandbox="allow-popups allow-popups-to-escape-sandbox" title="Isi email"></iframe>';
+    $('#mBody').firstChild.srcdoc='<base target="_blank"><style>body{font-family:sans-serif;padding:14px;word-break:break-word}img{max-width:100%}</style>'+body;
+    $('#mFoot').querySelectorAll('.att').forEach(e=>e.remove());
+    (m.attachments||[]).forEach(a=>{const b=document.createElement('button');b.className='btn o att';b.textContent='📎 '+a.filename;b.onclick=()=>dl(a);$('#mFoot').prepend(b)});
+    curMsg=m;
+    const plain=m.text||(m.html||[]).join(' ').replace(/<[^>]+>/g,' ');
+    const otp=(plain.match(/(?<![\w@.\/-])\d{4,8}(?![\w@.\/-])/)||[])[0];
+    if(otp){const b=document.createElement('button');b.className='btn p att';b.textContent='🔑 Salin kode '+otp;b.onclick=()=>{navigator.clipboard.writeText(otp).catch(()=>{});toast('Kode '+otp+' tersalin');hearts(5)};$('#mFoot').prepend(b)}
+    $('#modal').classList.add('on');
+    const x=msgs.find(z=>z.id===id);if(x){x.seen=true;render()}
+  }catch(e){toast(e.message)}
+}
+async function dl(a){
+  try{const r=await req(a.downloadUrl,{headers:{Authorization:'Bearer '+acc.token}},acc.prov);const u=URL.createObjectURL(await r.blob());const l=document.createElement('a');l.href=u;l.download=a.filename;l.click();URL.revokeObjectURL(u)}catch{toast('Gagal mengunduh lampiran')}
+}
+async function delMsg(){
+  if(!openId)return;
+  try{await api('/messages/'+openId,{method:'DELETE'},acc.token);gone.add(openId);msgs=msgs.filter(m=>m.id!==openId);$('#modal').classList.remove('on');render();toast('Pesan dihapus')}catch(e){toast(e.message)}
+}
+function renderHist(){
+  $('#hist').innerHTML=hist.length?hist.map((h,i)=>`<div class="h ${acc&&h.address===acc.address?'cur':''}" data-i="${i}"><span>${esc(h.address)}</span><button data-x="${i}" title="Hapus dari riwayat" aria-label="Hapus dari riwayat">✕</button></div>`).join(''):'<div class="empty" style="padding:12px">Belum ada riwayat</div>';
+}
+
+/* ---------- Timer ---------- */
+function resetCd(){cd=10;tick()}
+function tick(){$('#sCd').textContent=auto?cd+'s':'off';$('#pb').style.width=auto?cd*10+'%':'0%'}
+setInterval(()=>{
+  if(acc){const m=(Date.now()-acc.created)/6e4|0;$('#sAge').textContent=m<60?m+'m':(m/60|0)+'j '+m%60+'m'}
+  if(!auto||!acc)return;
+  if(--cd<=0){poll();cd=10}tick();
+},1000);
+
+/* ---------- Event ---------- */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('.btn');
+  if(b){const r=document.createElement('span'),s=b.getBoundingClientRect(),d=Math.max(s.width,s.height);r.className='rip';r.style.cssText=`width:${d}px;height:${d}px;left:${e.clientX-s.left-d/2}px;top:${e.clientY-s.top-d/2}px`;b.appendChild(r);setTimeout(()=>r.remove(),600)}
+});
+$('#bCopy').onclick=async()=>{if(!acc)return;try{await navigator.clipboard.writeText(acc.address)}catch{const t=document.createElement('textarea');t.value=acc.address;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove()}toast('Tersalin: '+acc.address);hearts(5)};
+$('#bNew').onclick=()=>make();
+$('#bRef').onclick=()=>{poll();resetCd()};
+$('#bDel').onclick=delAcc;
+$('#bMake').onclick=()=>make($('#uName').value.trim(),$('#dom').value);
+$('#uName').onkeydown=e=>{if(e.key==='Enter')make($('#uName').value.trim(),$('#dom').value)};
+$('#q').oninput=render;
+$('#list').onclick=e=>{const m=e.target.closest('.m');m&&openMsg(m.dataset.id)};
+$('#list').onkeydown=e=>{if(e.key==='Enter'){const m=e.target.closest('.m');m&&openMsg(m.dataset.id)}};
+$('#hist').onclick=e=>{
+  const x=e.target.closest('[data-x]');
+  if(x){hist.splice(+x.dataset.x,1);store.set('pm_hist',hist);renderHist();return}
+  const h=e.target.closest('.h');h&&switchTo(+h.dataset.i);
+};
+$('#mClose').onclick=()=>$('#modal').classList.remove('on');
+$('#modal').onclick=e=>{if(e.target.id==='modal')$('#modal').classList.remove('on')};
+document.onkeydown=e=>{if(e.key==='Escape'){$('#modal').classList.remove('on');$('#devModal').classList.remove('on')}};
+$('#mDel').onclick=delMsg;
+$('#tAuto').onclick=e=>{auto=!auto;e.currentTarget.classList.toggle('on',auto);resetCd();toast(auto?'Auto-refresh nyala':'Auto-refresh mati')};
+$('#tSnd').onclick=e=>{snd=!snd;e.currentTarget.classList.toggle('on',snd);if(snd)beep();toast(snd?'Suara nyala':'Suara mati')};
+
+$('#mSave').onclick=()=>{if(!curMsg)return;const body=(curMsg.html&&curMsg.html.length)?curMsg.html.join(''):'<pre>'+esc(curMsg.text)+'</pre>';const doc='<meta charset="utf-8"><h2>'+esc(curMsg.subject)+'</h2><p>Dari: '+esc(curMsg.from.address)+'</p><hr>'+body;const u=URL.createObjectURL(new Blob([doc],{type:'text/html'}));const l=document.createElement('a');l.href=u;l.download='pesan-'+curMsg.id.slice(0,6)+'.html';l.click();URL.revokeObjectURL(u);toast('Pesan tersimpan')};
+const setDark=d=>{document.documentElement.toggleAttribute('data-dark',d);$('#tDark').classList.toggle('on',d);store.set('zt_dark',d)};
+$('#tDark').onclick=()=>setDark(!document.documentElement.hasAttribute('data-dark'));
+setDark(store.get('zt_dark',false));
+
+if(innerWidth>900)document.querySelectorAll('.acc').forEach(d=>d.open=true);
+
+/* ---------- Developer ---------- */
+function openDev(){
+  $('#dAv').textContent=(DEV.name||'Z')[0].toUpperCase();
+  $('#dName').textContent=DEV.name;$('#dRole').textContent=DEV.role;
+  const links=(DEV.links||[]).filter(l=>/^(https?:|mailto:)/.test(l.url)).map(l=>`<a class="btn o sm" href="${esc(l.url)}" target="_blank" rel="noopener" style="text-decoration:none">${esc(l.label)}</a>`).join('');
+  $('#dBody').innerHTML=`
+    <div><h4>Tentang</h4><p>${esc(DEV.bio)}</p></div>
+    ${links?`<div><h4>Hubungi developer</h4><div class="tags">${links}</div></div>`:''}
+    <div><h4>Fitur</h4><ul><li>Banyak server dan domain, otomatis pindah kalau ada yang mati</li><li>Alamat acak atau kustom, riwayat alamat tersimpan</li><li>Salin kode OTP sekali klik</li><li>Notifikasi pesan baru, mode gelap, simpan pesan</li></ul></div>
+    <div><h4>Server tersedia</h4><div class="tags">${Object.values(PROVS).map(v=>`<span class="tag">${esc(v.split('· ')[1])}</span>`).join('')}</div></div>
+    <div class="note"><p>Email di sini bersifat sementara dan bisa dibaca orang lain di beberapa server. Jangan dipakai untuk akun penting, bank, atau data pribadi.</p></div>`;
+  $('#devModal').classList.add('on');
+}
+$('#bDev').onclick=openDev;$('#bDev2').onclick=openDev;
+$('#dClose').onclick=()=>$('#devModal').classList.remove('on');
+$('#devModal').onclick=e=>{if(e.target.id==='devModal')$('#devModal').classList.remove('on')};
+
+/* ---------- Pasang sebagai aplikasi (PWA) ---------- */
+let deferred=null;
+const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;if(!standalone)$('#bInstall').hidden=false});
+addEventListener('appinstalled',()=>{$('#bInstall').hidden=true;toast('Aplikasi terpasang 💖')});
+if(/iphone|ipad|ipod/i.test(navigator.userAgent)&&!standalone)$('#bInstall').hidden=false;
+$('#bInstall').onclick=async()=>{
+  if(deferred){deferred.prompt();await deferred.userChoice;deferred=null;$('#bInstall').hidden=true}
+  else toast('Di iPhone: ketuk Bagikan, lalu "Tambah ke Layar Utama"');
+};
+if('serviceWorker' in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+
+/* ---------- Mulai ---------- */
+(async()=>{
+  let ok=await loadDomains();renderHist();render();
+  while(!ok){await new Promise(r=>setTimeout(r,4000));ok=await loadDomains()}
+  const cur=store.get('pm_cur'),i=hist.findIndex(h=>h.address===cur);
+  if(i>=0)switchTo(i);else make();
+})();
+</script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 // Service worker ZukaiTemp: halaman selalu coba versi terbaru dulu, cadangan dari cache.
-const V = 'zukaitemp-v2';
+const V = 'zukaitemp-v3';
 const SHELL = ['/', '/index.html', '/tools.html', '/manifest.json', '/icon-192.png', '/icon-512.png', '/icon-maskable.png', '/apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
