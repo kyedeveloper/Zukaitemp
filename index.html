@@ -103,7 +103,7 @@ input:focus,select:focus{border-color:var(--p1);outline:0}
 </header>
 
 <section class="hero">
-  <small>Alamat email sementara kamu</small>
+  <small id="hs">Alamat email sementara kamu</small>
   <div class="addr"><output id="addr">Menyiapkan...</output></div>
   <div class="row">
     <button class="btn w" id="bCopy">📋 Salin</button>
@@ -164,21 +164,24 @@ const API='https://api.mail.tm',$=s=>document.querySelector(s);
 const ch='abcdefghijklmnopqrstuvwxyz0123456789',rnd=n=>Array.from({length:n},()=>ch[Math.random()*ch.length|0]).join('');
 const words=['pinky','sakura','boba','candy','peach','cloud','melon','bunny','kiwi','mochi','berry','glow'];
 const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
-let acc=null,msgs=[],seen=new Set(),first=true,auto=true,snd=true,cd=10,openId=null,curMsg=null,hist=store.get('pm_hist',[]);
+let acc=null,msgs=[],seen=new Set(),first=true,auto=true,snd=true,cd=10,openId=null,curMsg=null,gone=new Set(),hist=store.get('pm_hist',[]);
 
 let useProxy=true;
-async function req(path,opt){
+const HOST={tm:'https://api.mail.tm',gw:'https://api.mail.gw'};
+async function req(path,opt,prov='tm'){
   if(useProxy){
-    try{const r=await fetch('/api/mail?p='+encodeURIComponent(path),opt);if(r.headers.get('x-zt-proxy'))return r}catch{}
+    try{const r=await fetch('/api/mail?h='+prov+'&p='+encodeURIComponent(path),opt);if(r.headers.get('x-zt-proxy'))return r}catch{}
     useProxy=false;
   }
-  return fetch(API+path,opt);
+  if(!HOST[prov])throw new Error('server ini butuh proxy Vercel (api/mail.js)');
+  return fetch(HOST[prov]+path,opt);
 }
-async function api(path,opt={},tok){
+async function api(path,opt={},tok,prov){
+  prov=prov||acc?.prov||'tm';
   const h={};
   if(opt.body)h['Content-Type']='application/json';
   if(tok)h.Authorization='Bearer '+tok;
-  const r=await req(path,{...opt,headers:h});
+  const r=await req(path,{...opt,headers:h},prov);
   if(r.status===204)return null;
   const t=await r.text();let j=null;try{j=JSON.parse(t)}catch{}
   if(!r.ok)throw new Error(j?.['hydra:description']||j?.message||('Error '+r.status+(t?': '+t.replace(/<[^>]+>/g,' ').trim().slice(0,100):'')));
@@ -191,38 +194,56 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 function ago(d){const s=(Date.now()-new Date(d))/1000;if(s<60)return'baru saja';if(s<3600)return(s/60|0)+' mnt lalu';if(s<86400)return(s/3600|0)+' jam lalu';return new Date(d).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}
 
 /* ---------- Akun ---------- */
+const PROVS={tm:'Server A · mail.tm',gw:'Server B · mail.gw',tp:'Server C · tempmail.plus',gm:'Server D · Guerrilla Mail',tl:'Server E · tempmail.lol',sm:'Server F · 1secmail'};
+const tmo=(p,ms)=>Promise.race([p,new Promise((_,j)=>setTimeout(()=>j(new Error('waktu habis')),ms))]);
 async function loadDomains(){
-  try{
-    const j=await api('/domains');const d=(j['hydra:member']||j).filter(x=>x.isActive);
-    if(!d.length)throw new Error('daftar domain kosong');
-    $('#dom').innerHTML=d.map(x=>`<option>${esc(x.domain)}</option>`).join('');
-  }catch(e){$('#addr').textContent='Menghubungkan ke server...';toast('Gagal memuat domain: '+e.message+' (coba lagi otomatis)');return false}
+  const ks=Object.keys(PROVS);
+  const res=await Promise.allSettled(ks.map(async p=>{const j=await tmo(api('/domains',{},null,p),9000);return (j['hydra:member']||j).filter(x=>x.isActive!==false).map(x=>x.domain)}));
+  let html='',n=0;
+  res.forEach((x,i)=>{const p=ks[i];if(x.status==='fulfilled'&&x.value.length){n+=x.value.length;html+=`<optgroup label="${PROVS[p]}">`+x.value.map(d=>`<option value="${p}:${esc(d)}">${esc(d)}</option>`).join('')+'</optgroup>'}});
+  if(!n){const why=res.map(x=>x.reason?.message).filter(Boolean)[0]||'daftar domain kosong';$('#addr').textContent='Menghubungkan ke server...';toast('Gagal memuat domain: '+why+' (coba lagi otomatis)');return false}
+  const old=$('#dom').value;$('#dom').innerHTML=html;if(old)$('#dom').value=old;
+  window.__okProvs=res.map((x,i)=>x.status==='fulfilled'&&x.value.length?PROVS[ks[i]].split('· ')[1]:null).filter(Boolean);
   return true;
 }
-async function make(user,domain){
+async function make(user,pick){
+  const given=!!user;
   user=(user||words[Math.random()*words.length|0]+rnd(5)).toLowerCase().replace(/[^a-z0-9._-]/g,'');
   if(!user)return toast('Nama pengguna tidak valid');
-  domain=domain||$('#dom').value;
-  if(!domain)return toast('Domain belum tersedia, coba refresh halaman');
-  const address=user+'@'+domain,password=rnd(14);
-  setBusy(true);
-  try{
-    const a=await api('/accounts',{method:'POST',body:JSON.stringify({address,password})});
-    const t=await api('/token',{method:'POST',body:JSON.stringify({address,password})});
-    const entry={address,password,id:a.id,token:t.token,created:Date.now()};
-    hist=[entry,...hist.filter(h=>h.address!==address)].slice(0,8);store.set('pm_hist',hist);
-    activate(entry);toast('Alamat baru siap! 💖');hearts(8);
-  }catch(e){toast(/already|used|exist/i.test(e.message)?'Nama itu sudah dipakai, coba yang lain':e.message)}
+  const opts=[...$('#dom').options].map(o=>o.value);
+  if(!opts.length)return toast('Domain belum tersedia, tunggu sebentar');
+  const by={};opts.forEach(v=>(by[v.split(':')[0]]??=[]).push(v));
+  const rp=k=>by[k][Math.random()*by[k].length|0];
+  const provs=Object.keys(by).sort(()=>Math.random()-.5);
+  const first=pick||(given?$('#dom').value:rp(provs[0]));
+  const order=[first,...provs.filter(k=>k!==first.split(':')[0]).map(rp)];
+  setBusy(true);let err;
+  for(const v of order){
+    const i=v.indexOf(':'),prov=v.slice(0,i),domain=v.slice(i+1),address=user+'@'+domain,password=rnd(14);
+    try{
+      const a=await api('/accounts',{method:'POST',body:JSON.stringify({address,password})},null,prov);
+      const real=a.address||address;
+      const tok=a.token||(await api('/token',{method:'POST',body:JSON.stringify({address,password})},null,prov)).token;
+      const entry={address:real,password,id:a.id,token:tok,prov,created:Date.now()};
+      hist=[entry,...hist.filter(h=>h.address!==real)].slice(0,8);store.set('pm_hist',hist);
+      activate(entry);toast('Alamat baru siap! 💖');hearts(8);setBusy(false);return;
+    }catch(e){err=e;if(/already|used|exist/i.test(e.message))break}
+  }
+  $('#addr').textContent=acc?acc.address:'Gagal membuat alamat';
+  toast(/already|used|exist/i.test(err?.message||'')?'Nama itu sudah dipakai, coba yang lain':'Gagal: '+(err?.message||'server tidak merespons'));
   setBusy(false);
 }
 async function switchTo(i){
   const h=hist[i];if(!h)return;setBusy(true);
-  try{const t=await api('/token',{method:'POST',body:JSON.stringify({address:h.address,password:h.password})});h.token=t.token;store.set('pm_hist',hist);activate(h)}
-  catch{toast('Akun ini sudah tidak aktif');hist.splice(i,1);store.set('pm_hist',hist);renderHist()}
-  setBusy(false);
+  try{
+    try{await api('/messages?page=1',{},h.token,h.prov||'tm')}
+    catch{const t=await api('/token',{method:'POST',body:JSON.stringify({address:h.address,password:h.password})},null,h.prov||'tm');h.token=t.token;store.set('pm_hist',hist)}
+    activate(h);
+  }catch{toast('Akun ini sudah tidak aktif');hist.splice(i,1);store.set('pm_hist',hist);renderHist();$('#addr').textContent=acc?acc.address:'Membuat alamat baru...'}
+  setBusy(false);if(!acc)make();
 }
 function activate(a){
-  acc=a;msgs=[];seen=new Set();first=true;
+  acc=a;msgs=[];seen=new Set();gone=new Set();first=true;$('#hs').textContent='Alamat email sementara kamu · '+(PROVS[a.prov||'tm']||'');
   const o=$('#addr');o.textContent=a.address;o.classList.remove('pop');void o.offsetWidth;o.classList.add('pop');
   store.set('pm_cur',a.address);renderHist();render();poll();resetCd();
 }
@@ -242,7 +263,7 @@ async function poll(){
   $('#bRef').firstChild.textContent='⏳ ';
   try{
     const j=await api('/messages?page=1',{},acc.token);
-    msgs=j['hydra:member'];
+    msgs=j['hydra:member'].filter(m=>!gone.has(m.id));
     const fresh=msgs.filter(m=>!seen.has(m.id));
     msgs.forEach(m=>seen.add(m.id));
     if(!first&&fresh.length){beep();hearts(12);toast('💌 '+fresh.length+' pesan baru dari '+(fresh[0].from.name||fresh[0].from.address));document.title='💌 ('+fresh.length+') ZukaiTemp';setTimeout(()=>document.title='ZukaiTemp · Email Sementara',4000)}
@@ -279,11 +300,11 @@ async function openMsg(id){
   }catch(e){toast(e.message)}
 }
 async function dl(a){
-  try{const r=await req(a.downloadUrl,{headers:{Authorization:'Bearer '+acc.token}});const u=URL.createObjectURL(await r.blob());const l=document.createElement('a');l.href=u;l.download=a.filename;l.click();URL.revokeObjectURL(u)}catch{toast('Gagal mengunduh lampiran')}
+  try{const r=await req(a.downloadUrl,{headers:{Authorization:'Bearer '+acc.token}},acc.prov);const u=URL.createObjectURL(await r.blob());const l=document.createElement('a');l.href=u;l.download=a.filename;l.click();URL.revokeObjectURL(u)}catch{toast('Gagal mengunduh lampiran')}
 }
 async function delMsg(){
   if(!openId)return;
-  try{await api('/messages/'+openId,{method:'DELETE'},acc.token);msgs=msgs.filter(m=>m.id!==openId);$('#modal').classList.remove('on');render();toast('Pesan dihapus')}catch(e){toast(e.message)}
+  try{await api('/messages/'+openId,{method:'DELETE'},acc.token);gone.add(openId);msgs=msgs.filter(m=>m.id!==openId);$('#modal').classList.remove('on');render();toast('Pesan dihapus')}catch(e){toast(e.message)}
 }
 function renderHist(){
   $('#hist').innerHTML=hist.length?hist.map((h,i)=>`<div class="h ${acc&&h.address===acc.address?'cur':''}" data-i="${i}"><span>${esc(h.address)}</span><button data-x="${i}" title="Hapus dari riwayat" aria-label="Hapus dari riwayat">✕</button></div>`).join(''):'<div class="empty" style="padding:12px">Belum ada riwayat</div>';
