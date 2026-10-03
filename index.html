@@ -2,9 +2,17 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="ZukaiTemp - email sementara gratis dengan banyak server dan domain.">
+<meta name="theme-color" content="#ff4d94">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ZukaiTemp">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>ZukaiTemp · Email Sementara</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💌</text></svg>">
+<link rel="icon" type="image/png" href="/icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--p1:#ff4d94;--p2:#ff8fbd;--p3:#ffd9e8;--p4:#fff5f9;--ink:#40182d;--mut:#936079;--w:#fff;--sh:0 14px 34px -18px rgba(255,77,148,.55)}
@@ -18,7 +26,7 @@ button{font-family:inherit}
 .b2{width:320px;height:320px;background:var(--p3);bottom:-80px;right:-80px;animation-delay:-5s}
 .b3{width:220px;height:220px;background:#ffb3d1;top:45%;left:60%;animation-delay:-9s}
 @keyframes drift{to{transform:translate(60px,40px) scale(1.15)}}
-.wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:28px 20px 64px}
+.wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:max(28px,env(safe-area-inset-top)) 20px max(64px,env(safe-area-inset-bottom))}
 
 /* navbar */
 .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:28px;animation:drop .7s cubic-bezier(.2,1.4,.4,1)}
@@ -142,7 +150,7 @@ input:focus,select:focus{border-color:var(--p1);outline:0}
   .stats{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:640px){
-  .wrap{padding:20px 16px 48px}
+  .wrap{padding:max(20px,env(safe-area-inset-top)) 16px max(48px,env(safe-area-inset-bottom))}
   .nav{margin-bottom:22px}
   .navr{width:100%}.navr .chip{flex:1;padding:0 10px}.navr .btn{flex:1 1 100%}
   .hero{padding:26px 20px;border-radius:26px}
@@ -188,6 +196,7 @@ details[open]>summary{margin-bottom:18px}
     <button class="chip on" id="tAuto">⏱ Auto</button>
     <button class="chip on" id="tSnd">🔔 Suara</button>
     <button class="chip" id="tDark">🌙 Gelap</button>
+    <button class="chip on" id="bInstall" hidden>📲 Pasang</button>
   </div>
 </header>
 
@@ -487,6 +496,18 @@ function openDev(){
 $('#bDev').onclick=openDev;$('#bDev2').onclick=openDev;
 $('#dClose').onclick=()=>$('#devModal').classList.remove('on');
 $('#devModal').onclick=e=>{if(e.target.id==='devModal')$('#devModal').classList.remove('on')};
+
+/* ---------- Pasang sebagai aplikasi (PWA) ---------- */
+let deferred=null;
+const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;if(!standalone)$('#bInstall').hidden=false});
+addEventListener('appinstalled',()=>{$('#bInstall').hidden=true;toast('Aplikasi terpasang 💖')});
+if(/iphone|ipad|ipod/i.test(navigator.userAgent)&&!standalone)$('#bInstall').hidden=false;
+$('#bInstall').onclick=async()=>{
+  if(deferred){deferred.prompt();await deferred.userChoice;deferred=null;$('#bInstall').hidden=true}
+  else toast('Di iPhone: ketuk Bagikan, lalu "Tambah ke Layar Utama"');
+};
+if('serviceWorker' in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
 
 /* ---------- Mulai ---------- */
 (async()=>{
