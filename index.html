@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZukaiTemp · Email Sementara</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💌</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--p1:#ff4d94;--p2:#ff8fbd;--p3:#ffd1e3;--p4:#fff0f6;--ink:#4a1d36;--mut:#a06683;--w:#fff;--r:22px}
+*{box-sizing:border-box;margin:0}
+body{font-family:Nunito,system-ui,sans-serif;color:var(--ink);background:var(--p4);min-height:100vh;overflow-x:hidden}
+h1,h2,h3,.f{font-family:Fredoka,Nunito,sans-serif}
+.blob{position:fixed;border-radius:50%;filter:blur(60px);opacity:.55;z-index:0;animation:drift 14s ease-in-out infinite alternate}
+.b1{width:340px;height:340px;background:var(--p2);top:-80px;left:-80px}
+.b2{width:300px;height:300px;background:var(--p3);bottom:-60px;right:-60px;animation-delay:-5s}
+.b3{width:200px;height:200px;background:#ffb3d1;top:40%;left:55%;animation-delay:-9s}
+@keyframes drift{to{transform:translate(60px,40px) scale(1.15)}}
+.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:22px 16px 60px}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;animation:drop .7s cubic-bezier(.2,1.4,.4,1)}
+@keyframes drop{from{opacity:0;transform:translateY(-24px)}}
+.logo{display:flex;align-items:center;gap:10px;font-size:1.7rem;font-weight:600;color:var(--p1)}
+.logo i{font-style:normal;display:inline-block;animation:wig 2.4s ease-in-out infinite}
+@keyframes wig{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(10deg) scale(1.12)}}
+.tog{display:flex;gap:8px}
+.chip{border:2px solid var(--p3);background:var(--w);color:var(--mut);padding:7px 13px;border-radius:99px;font:600 .85rem Nunito;cursor:pointer;transition:.2s}
+.chip.on{background:var(--p1);border-color:var(--p1);color:#fff}
+.hero{background:linear-gradient(135deg,var(--p1),#ff7ab0);border-radius:30px;padding:28px 24px;color:#fff;box-shadow:0 18px 40px -14px rgba(255,77,148,.6);position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.14);right:-60px;top:-70px}
+.hero small{opacity:.9;font-weight:700}
+.addr{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:8px 0 16px}
+.addr output{font:600 clamp(1.2rem,4.6vw,2rem) Fredoka;word-break:break-all;background:rgba(255,255,255,.2);padding:8px 16px;border-radius:16px;min-height:52px;display:flex;align-items:center}
+.addr output.pop{animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{from{transform:scale(.7);opacity:0}}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.btn{position:relative;overflow:hidden;border:0;border-radius:14px;padding:11px 18px;font:600 .95rem Fredoka;cursor:pointer;transition:transform .15s,box-shadow .2s;display:inline-flex;gap:7px;align-items:center}
+.btn:hover{transform:translateY(-2px)}.btn:active{transform:scale(.95)}
+.btn.w{background:#fff;color:var(--p1);box-shadow:0 6px 14px -6px rgba(0,0,0,.25)}
+.btn.g{background:rgba(255,255,255,.22);color:#fff}
+.btn.p{background:var(--p1);color:#fff;box-shadow:0 8px 18px -8px var(--p1)}
+.btn.o{background:var(--p4);color:var(--p1);border:2px solid var(--p3)}
+.btn:focus-visible,.chip:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #fff;outline-offset:2px;box-shadow:0 0 0 5px var(--p1)}
+.rip{position:absolute;border-radius:50%;background:rgba(255,77,148,.35);transform:scale(0);animation:rip .6s linear;pointer-events:none}
+@keyframes rip{to{transform:scale(4);opacity:0}}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+.st{background:var(--w);border-radius:18px;padding:14px;text-align:center;box-shadow:0 8px 20px -12px rgba(255,77,148,.5)}
+.st b{display:block;font:600 1.5rem Fredoka;color:var(--p1)}.st span{font-size:.78rem;color:var(--mut);font-weight:700}
+.bar{height:5px;background:var(--p3);border-radius:9px;margin-top:6px;overflow:hidden}.bar i{display:block;height:100%;background:var(--p1);width:100%;transition:width 1s linear}
+.grid{display:grid;grid-template-columns:320px 1fr;gap:18px;align-items:start}
+.card{background:var(--w);border-radius:var(--r);padding:18px;box-shadow:0 12px 30px -16px rgba(255,77,148,.55)}
+.card h3{font-size:1.1rem;margin-bottom:12px;color:var(--p1)}
+label{display:block;font-size:.8rem;font-weight:700;color:var(--mut);margin:10px 0 4px}
+input,select{width:100%;padding:11px 13px;border-radius:12px;border:2px solid var(--p3);font:600 .95rem Nunito;color:var(--ink);background:var(--p4)}
+input:focus,select:focus{border-color:var(--p1);outline:0}
+.hist{display:flex;flex-direction:column;gap:7px;margin-top:6px;max-height:210px;overflow:auto}
+.h{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:9px 11px;border-radius:12px;background:var(--p4);font-size:.82rem;font-weight:700;cursor:pointer;transition:.2s;word-break:break-all}
+.h:hover{background:var(--p3);transform:translateX(4px)}.h.cur{background:var(--p1);color:#fff}
+.h button{border:0;background:none;cursor:pointer;font-size:1rem;color:inherit}
+.ihead{display:flex;gap:10px;align-items:center;margin-bottom:12px}.ihead h3{margin:0;flex:1}
+.ihead input{max-width:200px}
+.list{display:flex;flex-direction:column;gap:9px;min-height:200px}
+.m{display:flex;gap:12px;align-items:center;padding:12px;border-radius:16px;background:var(--p4);cursor:pointer;transition:.2s;animation:slide .45s both;position:relative}
+@keyframes slide{from{opacity:0;transform:translateX(-26px)}}
+.m:hover{background:var(--p3);transform:translateX(5px)}
+.m.un{background:var(--w);border:2px solid var(--p2)}
+.av{flex:none;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--p2),var(--p1));color:#fff;display:grid;place-items:center;font:600 1.15rem Fredoka}
+.mi{flex:1;min-width:0}.mi b{display:block;font-size:.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mi span{display:block;font-size:.82rem;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mt{font-size:.74rem;color:var(--mut);font-weight:700;text-align:right}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--p1);display:inline-block;animation:pulse 1.4s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 7px rgba(255,77,148,0);transform:scale(1.2)}0%{box-shadow:0 0 0 0 rgba(255,77,148,.6)}}
+.empty{text-align:center;color:var(--mut);padding:36px 10px;font-weight:700}
+.empty i{display:block;font-style:normal;font-size:3rem;animation:float 3s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-12px)}}
+.modal{position:fixed;inset:0;background:rgba(74,29,54,.45);backdrop-filter:blur(4px);z-index:20;display:none;align-items:center;justify-content:center;padding:14px}
+.modal.on{display:flex}
+.box{background:var(--w);border-radius:26px;width:min(760px,100%);max-height:92vh;display:flex;flex-direction:column;animation:pop .35s cubic-bezier(.2,1.4,.4,1);overflow:hidden}
+.mh{padding:18px 20px;background:var(--p4);border-bottom:2px solid var(--p3)}
+.mh h2{font-size:1.25rem;margin-bottom:4px}.mh p{font-size:.85rem;color:var(--mut);font-weight:600;word-break:break-all}
+.mb{flex:1;min-height:260px;overflow:auto}
+.mb iframe{width:100%;height:100%;min-height:340px;border:0;background:#fff}
+.mf{padding:12px 16px;display:flex;gap:8px;flex-wrap:wrap;border-top:2px solid var(--p3)}
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,120px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:99px;font-weight:700;z-index:40;transition:.4s cubic-bezier(.2,1.4,.4,1);max-width:90vw}
+.toast.on{transform:translate(-50%,0)}
+.hrt{position:fixed;bottom:-30px;z-index:30;pointer-events:none;animation:up 2.4s ease-out forwards}
+@keyframes up{to{transform:translateY(-105vh) rotate(40deg);opacity:0}}
+.spin{animation:sp .8s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+:root[data-dark]{--p4:#1f0d18;--w:#33172a;--ink:#ffe6f1;--mut:#d79ab9;--p3:#5a2a45}
+@media(max-width:860px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.ihead{flex-wrap:wrap}.ihead input{max-width:none;width:100%}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+<div class="wrap">
+<header>
+  <div class="logo f"><i>💌</i> ZukaiTemp</div>
+  <div class="tog">
+    <button class="chip on" id="tAuto">⏱ Auto-refresh</button>
+    <button class="chip on" id="tSnd">🔔 Suara</button>
+    <button class="chip" id="tDark">🌙 Gelap</button>
+  </div>
+</header>
+
+<section class="hero">
+  <small>Alamat email sementara kamu</small>
+  <div class="addr"><output id="addr">Menyiapkan...</output></div>
+  <div class="row">
+    <button class="btn w" id="bCopy">📋 Salin</button>
+    <button class="btn g" id="bNew">✨ Acak baru</button>
+    <button class="btn g" id="bRef">🔄 Refresh</button>
+    <button class="btn g" id="bDel">🗑 Hapus akun</button>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="st"><b id="sTot">0</b><span>Total pesan</span></div>
+  <div class="st"><b id="sUn">0</b><span>Belum dibaca</span></div>
+  <div class="st"><b id="sCd">10s</b><span>Refresh berikutnya</span><div class="bar"><i id="pb"></i></div></div>
+  <div class="st"><b id="sAge">0m</b><span>Aktif sejak</span></div>
+</div>
+
+<div class="grid">
+  <aside>
+    <div class="card">
+      <h3>🎀 Alamat kustom</h3>
+      <label for="uName">Nama pengguna</label>
+      <input id="uName" placeholder="contoh: kucingpink" maxlength="30" autocomplete="off">
+      <label for="dom">Domain</label>
+      <select id="dom"></select>
+      <div class="row" style="margin-top:14px"><button class="btn p" id="bMake" style="width:100%;justify-content:center">Buat alamat</button></div>
+    </div>
+    <div class="card" style="margin-top:18px">
+      <h3>🕘 Riwayat alamat</h3>
+      <div class="hist" id="hist"></div>
+    </div>
+  </aside>
+
+  <main class="card">
+    <div class="ihead">
+      <h3>📬 Kotak masuk</h3>
+      <input id="q" type="search" placeholder="Cari pengirim / subjek..." aria-label="Cari pesan">
+    </div>
+    <div class="list" id="list"></div>
+  </main>
+</div>
+</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+  <div class="box">
+    <div class="mh"><h2 id="mSub"></h2><p id="mMeta"></p></div>
+    <div class="mb" id="mBody"></div>
+    <div class="mf" id="mFoot">
+      <button class="btn p" id="mDel">🗑 Hapus pesan</button>
+      <button class="btn o" id="mSave">⬇ Simpan</button>
+      <button class="btn o" id="mClose">Tutup</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const API='https://api.mail.tm',$=s=>document.querySelector(s);
+const ch='abcdefghijklmnopqrstuvwxyz0123456789',rnd=n=>Array.from({length:n},()=>ch[Math.random()*ch.length|0]).join('');
+const words=['pinky','sakura','boba','candy','peach','cloud','melon','bunny','kiwi','mochi','berry','glow'];
+const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
+let acc=null,msgs=[],seen=new Set(),first=true,auto=true,snd=true,cd=10,openId=null,curMsg=null,hist=store.get('pm_hist',[]);
+
+async function api(path,opt={},tok){
+  const h={'Content-Type':'application/json'};
+  if(tok)h.Authorization='Bearer '+tok;
+  const r=await fetch(API+path,{...opt,headers:h});
+  if(r.status===204)return null;
+  const j=await r.json().catch(()=>null);
+  if(!r.ok)throw new Error(j?.['hydra:description']||j?.message||'Error '+r.status);
+  return j;
+}
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('on'),2600)}
+function hearts(n=10){for(let i=0;i<n;i++){const s=document.createElement('span');s.className='hrt';s.textContent=['💗','💖','🌸','💌'][i%4];s.style.left=Math.random()*100+'vw';s.style.fontSize=16+Math.random()*22+'px';s.style.animationDelay=Math.random()*.6+'s';document.body.appendChild(s);setTimeout(()=>s.remove(),3200)}}
+function beep(){if(!snd)return;try{const c=new(window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.setValueAtTime(880,c.currentTime);o.frequency.setValueAtTime(1175,c.currentTime+.12);g.gain.setValueAtTime(.15,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.4);o.start();o.stop(c.currentTime+.4)}catch{}}
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function ago(d){const s=(Date.now()-new Date(d))/1000;if(s<60)return'baru saja';if(s<3600)return(s/60|0)+' mnt lalu';if(s<86400)return(s/3600|0)+' jam lalu';return new Date(d).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}
+
+/* ---------- Akun ---------- */
+async function loadDomains(){
+  try{const j=await api('/domains');const d=j['hydra:member'].filter(x=>x.isActive);$('#dom').innerHTML=d.map(x=>`<option>${esc(x.domain)}</option>`).join('')}
+  catch(e){toast('Gagal memuat domain. Cek koneksi internet.')}
+}
+async function make(user,domain){
+  user=(user||words[Math.random()*words.length|0]+rnd(5)).toLowerCase().replace(/[^a-z0-9._-]/g,'');
+  if(!user)return toast('Nama pengguna tidak valid');
+  domain=domain||$('#dom').value;
+  if(!domain)return toast('Domain belum tersedia, coba refresh halaman');
+  const address=user+'@'+domain,password=rnd(14);
+  setBusy(true);
+  try{
+    const a=await api('/accounts',{method:'POST',body:JSON.stringify({address,password})});
+    const t=await api('/token',{method:'POST',body:JSON.stringify({address,password})});
+    const entry={address,password,id:a.id,token:t.token,created:Date.now()};
+    hist=[entry,...hist.filter(h=>h.address!==address)].slice(0,8);store.set('pm_hist',hist);
+    activate(entry);toast('Alamat baru siap! 💖');hearts(8);
+  }catch(e){toast(/already|used|exist/i.test(e.message)?'Nama itu sudah dipakai, coba yang lain':e.message)}
+  setBusy(false);
+}
+async function switchTo(i){
+  const h=hist[i];if(!h)return;setBusy(true);
+  try{const t=await api('/token',{method:'POST',body:JSON.stringify({address:h.address,password:h.password})});h.token=t.token;store.set('pm_hist',hist);activate(h)}
+  catch{toast('Akun ini sudah tidak aktif');hist.splice(i,1);store.set('pm_hist',hist);renderHist()}
+  setBusy(false);
+}
+function activate(a){
+  acc=a;msgs=[];seen=new Set();first=true;
+  const o=$('#addr');o.textContent=a.address;o.classList.remove('pop');void o.offsetWidth;o.classList.add('pop');
+  store.set('pm_cur',a.address);renderHist();render();poll();resetCd();
+}
+async function delAcc(){
+  if(!acc)return;
+  if(!confirm('Hapus akun '+acc.address+' beserta semua pesannya?'))return;
+  try{await api('/accounts/'+acc.id,{method:'DELETE'},acc.token)}catch{}
+  hist=hist.filter(h=>h.address!==acc.address);store.set('pm_hist',hist);
+  toast('Akun dihapus');
+  hist.length?switchTo(0):make();
+}
+function setBusy(b){$('#bNew').disabled=$('#bMake').disabled=b;if(b)$('#addr').textContent='Menyiapkan...'}
+
+/* ---------- Inbox ---------- */
+async function poll(){
+  if(!acc)return;
+  $('#bRef').firstChild.textContent='⏳ ';
+  try{
+    const j=await api('/messages?page=1',{},acc.token);
+    msgs=j['hydra:member'];
+    const fresh=msgs.filter(m=>!seen.has(m.id));
+    msgs.forEach(m=>seen.add(m.id));
+    if(!first&&fresh.length){beep();hearts(12);toast('💌 '+fresh.length+' pesan baru dari '+(fresh[0].from.name||fresh[0].from.address));document.title='💌 ('+fresh.length+') ZukaiTemp';setTimeout(()=>document.title='ZukaiTemp · Email Sementara',4000)}
+    first=false;render();
+  }catch(e){if(/401|Invalid/i.test(e.message)){const i=hist.findIndex(h=>h.address===acc.address);i>=0&&switchTo(i)}}
+  $('#bRef').firstChild.textContent='🔄 ';
+}
+function render(){
+  const q=$('#q').value.trim().toLowerCase();
+  const f=msgs.filter(m=>!q||(m.subject+m.intro+m.from.address+(m.from.name||'')).toLowerCase().includes(q));
+  $('#sTot').textContent=msgs.length;$('#sUn').textContent=msgs.filter(m=>!m.seen).length;
+  $('#list').innerHTML=f.length?f.map((m,i)=>`<div class="m ${m.seen?'':'un'}" data-id="${m.id}" style="animation-delay:${i*50}ms" tabindex="0">
+    <div class="av">${esc((m.from.name||m.from.address)[0]).toUpperCase()}</div>
+    <div class="mi"><b>${esc(m.from.name||m.from.address)}</b><span>${esc(m.subject||'(tanpa subjek)')}</span><span>${esc(m.intro)}</span></div>
+    <div class="mt">${ago(m.createdAt)}<br>${m.seen?'':'<i class="dot"></i>'}</div></div>`).join('')
+    :`<div class="empty"><i>📭</i>${q?'Tidak ada pesan yang cocok':'Belum ada pesan. Kirim email ke alamat di atas, nanti muncul di sini!'}</div>`;
+}
+async function openMsg(id){
+  try{
+    const m=await api('/messages/'+id,{},acc.token);openId=id;
+    $('#mSub').textContent=m.subject||'(tanpa subjek)';
+    $('#mMeta').textContent='Dari: '+(m.from.name?m.from.name+' <'+m.from.address+'>':m.from.address)+' · '+new Date(m.createdAt).toLocaleString('id-ID');
+    const body=(m.html&&m.html.length)?m.html.join(''):'<pre style="white-space:pre-wrap;font-family:Nunito,sans-serif;padding:16px">'+esc(m.text)+'</pre>';
+    $('#mBody').innerHTML='<iframe sandbox="allow-popups allow-popups-to-escape-sandbox" title="Isi email"></iframe>';
+    $('#mBody').firstChild.srcdoc='<base target="_blank"><style>body{font-family:sans-serif;padding:14px;word-break:break-word}img{max-width:100%}</style>'+body;
+    $('#mFoot').querySelectorAll('.att').forEach(e=>e.remove());
+    (m.attachments||[]).forEach(a=>{const b=document.createElement('button');b.className='btn o att';b.textContent='📎 '+a.filename;b.onclick=()=>dl(a);$('#mFoot').prepend(b)});
+    curMsg=m;
+    const plain=m.text||(m.html||[]).join(' ').replace(/<[^>]+>/g,' ');
+    const otp=(plain.match(/(?<![\w@.\/-])\d{4,8}(?![\w@.\/-])/)||[])[0];
+    if(otp){const b=document.createElement('button');b.className='btn p att';b.textContent='🔑 Salin kode '+otp;b.onclick=()=>{navigator.clipboard.writeText(otp).catch(()=>{});toast('Kode '+otp+' tersalin');hearts(5)};$('#mFoot').prepend(b)}
+    $('#modal').classList.add('on');
+    const x=msgs.find(z=>z.id===id);if(x){x.seen=true;render()}
+  }catch(e){toast(e.message)}
+}
+async function dl(a){
+  try{const r=await fetch(API+a.downloadUrl,{headers:{Authorization:'Bearer '+acc.token}});const u=URL.createObjectURL(await r.blob());const l=document.createElement('a');l.href=u;l.download=a.filename;l.click();URL.revokeObjectURL(u)}catch{toast('Gagal mengunduh lampiran')}
+}
+async function delMsg(){
+  if(!openId)return;
+  try{await api('/messages/'+openId,{method:'DELETE'},acc.token);msgs=msgs.filter(m=>m.id!==openId);$('#modal').classList.remove('on');render();toast('Pesan dihapus')}catch(e){toast(e.message)}
+}
+function renderHist(){
+  $('#hist').innerHTML=hist.length?hist.map((h,i)=>`<div class="h ${acc&&h.address===acc.address?'cur':''}" data-i="${i}"><span>${esc(h.address)}</span><button data-x="${i}" title="Hapus dari riwayat" aria-label="Hapus dari riwayat">✕</button></div>`).join(''):'<div class="empty" style="padding:12px">Belum ada riwayat</div>';
+}
+
+/* ---------- Timer ---------- */
+function resetCd(){cd=10;tick()}
+function tick(){$('#sCd').textContent=auto?cd+'s':'off';$('#pb').style.width=auto?cd*10+'%':'0%'}
+setInterval(()=>{
+  if(acc){const m=(Date.now()-acc.created)/6e4|0;$('#sAge').textContent=m<60?m+'m':(m/60|0)+'j '+m%60+'m'}
+  if(!auto||!acc)return;
+  if(--cd<=0){poll();cd=10}tick();
+},1000);
+
+/* ---------- Event ---------- */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('.btn');
+  if(b){const r=document.createElement('span'),s=b.getBoundingClientRect(),d=Math.max(s.width,s.height);r.className='rip';r.style.cssText=`width:${d}px;height:${d}px;left:${e.clientX-s.left-d/2}px;top:${e.clientY-s.top-d/2}px`;b.appendChild(r);setTimeout(()=>r.remove(),600)}
+});
+$('#bCopy').onclick=async()=>{if(!acc)return;try{await navigator.clipboard.writeText(acc.address)}catch{const t=document.createElement('textarea');t.value=acc.address;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove()}toast('Tersalin: '+acc.address);hearts(5)};
+$('#bNew').onclick=()=>make();
+$('#bRef').onclick=()=>{poll();resetCd()};
+$('#bDel').onclick=delAcc;
+$('#bMake').onclick=()=>make($('#uName').value.trim());
+$('#uName').onkeydown=e=>{if(e.key==='Enter')make($('#uName').value.trim())};
+$('#q').oninput=render;
+$('#list').onclick=e=>{const m=e.target.closest('.m');m&&openMsg(m.dataset.id)};
+$('#list').onkeydown=e=>{if(e.key==='Enter'){const m=e.target.closest('.m');m&&openMsg(m.dataset.id)}};
+$('#hist').onclick=e=>{
+  const x=e.target.closest('[data-x]');
+  if(x){hist.splice(+x.dataset.x,1);store.set('pm_hist',hist);renderHist();return}
+  const h=e.target.closest('.h');h&&switchTo(+h.dataset.i);
+};
+$('#mClose').onclick=()=>$('#modal').classList.remove('on');
+$('#modal').onclick=e=>{if(e.target.id==='modal')$('#modal').classList.remove('on')};
+document.onkeydown=e=>{if(e.key==='Escape')$('#modal').classList.remove('on')};
+$('#mDel').onclick=delMsg;
+$('#tAuto').onclick=e=>{auto=!auto;e.currentTarget.classList.toggle('on',auto);resetCd();toast(auto?'Auto-refresh nyala':'Auto-refresh mati')};
+$('#tSnd').onclick=e=>{snd=!snd;e.currentTarget.classList.toggle('on',snd);if(snd)beep();toast(snd?'Suara nyala':'Suara mati')};
+
+$('#mSave').onclick=()=>{if(!curMsg)return;const body=(curMsg.html&&curMsg.html.length)?curMsg.html.join(''):'<pre>'+esc(curMsg.text)+'</pre>';const doc='<meta charset="utf-8"><h2>'+esc(curMsg.subject)+'</h2><p>Dari: '+esc(curMsg.from.address)+'</p><hr>'+body;const u=URL.createObjectURL(new Blob([doc],{type:'text/html'}));const l=document.createElement('a');l.href=u;l.download='pesan-'+curMsg.id.slice(0,6)+'.html';l.click();URL.revokeObjectURL(u);toast('Pesan tersimpan')};
+const setDark=d=>{document.documentElement.toggleAttribute('data-dark',d);$('#tDark').classList.toggle('on',d);store.set('zt_dark',d)};
+$('#tDark').onclick=()=>setDark(!document.documentElement.hasAttribute('data-dark'));
+setDark(store.get('zt_dark',false));
+
+/* ---------- Mulai ---------- */
+(async()=>{
+  await loadDomains();renderHist();render();
+  const cur=store.get('pm_cur'),i=hist.findIndex(h=>h.address===cur);
+  if(i>=0)switchTo(i);else make();
+})();
+</script>
+</body>
+</html>
