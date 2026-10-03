@@ -141,6 +141,7 @@ input:focus,select:focus{border-color:var(--p1);outline:0}
       <h3>📬 Kotak masuk</h3>
       <input id="q" type="search" placeholder="Cari pengirim / subjek..." aria-label="Cari pesan">
     </div>
+    <div id="stat" style="font-size:.8rem;color:var(--mut);font-weight:700;margin:-4px 0 10px">Menunggu pengecekan pertama...</div>
     <div class="list" id="list"></div>
   </main>
 </div>
@@ -170,7 +171,7 @@ let useProxy=true;
 const HOST={tm:'https://api.mail.tm',gw:'https://api.mail.gw'};
 async function req(path,opt,prov='tm'){
   if(useProxy){
-    try{const r=await fetch('/api/mail?h='+prov+'&p='+encodeURIComponent(path),opt);if(r.headers.get('x-zt-proxy'))return r}catch{}
+    try{const r=await fetch('/api/mail?h='+prov+'&p='+encodeURIComponent(path),{...opt,cache:'no-store'});if(r.headers.get('x-zt-proxy'))return r}catch{}
     useProxy=false;
   }
   if(!HOST[prov])throw new Error('server ini butuh proxy Vercel (api/mail.js)');
@@ -260,7 +261,7 @@ function setBusy(b){$('#bNew').disabled=$('#bMake').disabled=b;if(b)$('#addr').t
 /* ---------- Inbox ---------- */
 async function poll(){
   if(!acc)return;
-  $('#bRef').firstChild.textContent='⏳ ';
+  $('#bRef').style.opacity='.6';
   try{
     const j=await api('/messages?page=1',{},acc.token);
     msgs=j['hydra:member'].filter(m=>!gone.has(m.id));
@@ -268,8 +269,9 @@ async function poll(){
     msgs.forEach(m=>seen.add(m.id));
     if(!first&&fresh.length){beep();hearts(12);toast('💌 '+fresh.length+' pesan baru dari '+(fresh[0].from.name||fresh[0].from.address));document.title='💌 ('+fresh.length+') ZukaiTemp';setTimeout(()=>document.title='ZukaiTemp · Email Sementara',4000)}
     first=false;render();
-  }catch(e){if(/401|Invalid/i.test(e.message)){const i=hist.findIndex(h=>h.address===acc.address);i>=0&&switchTo(i)}}
-  $('#bRef').firstChild.textContent='🔄 ';
+    $('#stat').textContent='✅ Terakhir cek '+new Date().toLocaleTimeString('id-ID')+' · '+(PROVS[acc.prov||'tm']||'')+' · '+msgs.length+' pesan';
+  }catch(e){$('#stat').textContent='⚠️ Gagal cek inbox: '+e.message;if(/401|Invalid/i.test(e.message)){const i=hist.findIndex(h=>h.address===acc.address);i>=0&&switchTo(i)}}
+  $('#bRef').style.opacity='';
 }
 function render(){
   const q=$('#q').value.trim().toLowerCase();
