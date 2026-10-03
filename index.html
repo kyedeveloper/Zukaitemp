@@ -7,120 +7,195 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💌</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--p1:#ff4d94;--p2:#ff8fbd;--p3:#ffd1e3;--p4:#fff0f6;--ink:#4a1d36;--mut:#a06683;--w:#fff;--r:22px}
+:root{--p1:#ff4d94;--p2:#ff8fbd;--p3:#ffd9e8;--p4:#fff5f9;--ink:#40182d;--mut:#936079;--w:#fff;--sh:0 14px 34px -18px rgba(255,77,148,.55)}
+:root[data-dark]{--p4:#1f0d18;--w:#33172a;--ink:#ffe6f1;--mut:#d79ab9;--p3:#5a2a45}
 *{box-sizing:border-box;margin:0}
-body{font-family:Nunito,system-ui,sans-serif;color:var(--ink);background:var(--p4);min-height:100vh;overflow-x:hidden}
-h1,h2,h3,.f{font-family:Fredoka,Nunito,sans-serif}
-.blob{position:fixed;border-radius:50%;filter:blur(60px);opacity:.55;z-index:0;animation:drift 14s ease-in-out infinite alternate}
-.b1{width:340px;height:340px;background:var(--p2);top:-80px;left:-80px}
-.b2{width:300px;height:300px;background:var(--p3);bottom:-60px;right:-60px;animation-delay:-5s}
-.b3{width:200px;height:200px;background:#ffb3d1;top:40%;left:55%;animation-delay:-9s}
+body{font:400 16px/1.55 Nunito,system-ui,sans-serif;color:var(--ink);background:var(--p4);min-height:100vh;overflow-x:hidden}
+h1,h2,h3,h4,.f{font-family:Fredoka,Nunito,sans-serif}
+button{font-family:inherit}
+.blob{position:fixed;border-radius:50%;filter:blur(70px);opacity:.5;z-index:0;animation:drift 16s ease-in-out infinite alternate;pointer-events:none}
+.b1{width:360px;height:360px;background:var(--p2);top:-100px;left:-100px}
+.b2{width:320px;height:320px;background:var(--p3);bottom:-80px;right:-80px;animation-delay:-5s}
+.b3{width:220px;height:220px;background:#ffb3d1;top:45%;left:60%;animation-delay:-9s}
 @keyframes drift{to{transform:translate(60px,40px) scale(1.15)}}
-.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:22px 16px 60px}
-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;animation:drop .7s cubic-bezier(.2,1.4,.4,1)}
+.wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:28px 20px 64px}
+
+/* navbar */
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:28px;animation:drop .7s cubic-bezier(.2,1.4,.4,1)}
 @keyframes drop{from{opacity:0;transform:translateY(-24px)}}
-.logo{display:flex;align-items:center;gap:10px;font-size:1.7rem;font-weight:600;color:var(--p1)}
-.logo i{font-style:normal;display:inline-block;animation:wig 2.4s ease-in-out infinite}
-@keyframes wig{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(10deg) scale(1.12)}}
-.tog{display:flex;gap:8px}
-.chip{border:2px solid var(--p3);background:var(--w);color:var(--mut);padding:7px 13px;border-radius:99px;font:600 .85rem Nunito;cursor:pointer;transition:.2s}
+.logo{display:flex;align-items:center;gap:12px;font-size:1.65rem;font-weight:600;color:var(--p1)}
+.lg{display:grid;place-items:center;width:46px;height:46px;border-radius:15px;background:linear-gradient(135deg,var(--p1),var(--p2));font-size:1.4rem;box-shadow:0 10px 20px -10px var(--p1);animation:wig 2.6s ease-in-out infinite}
+@keyframes wig{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg) scale(1.08)}}
+.navr{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.chip{min-height:40px;padding:0 16px;border:2px solid var(--p3);background:var(--w);color:var(--mut);border-radius:99px;font:700 .86rem Nunito;cursor:pointer;transition:.2s}
+.chip:hover{border-color:var(--p2)}
 .chip.on{background:var(--p1);border-color:var(--p1);color:#fff}
-.hero{background:linear-gradient(135deg,var(--p1),#ff7ab0);border-radius:30px;padding:28px 24px;color:#fff;box-shadow:0 18px 40px -14px rgba(255,77,148,.6);position:relative;overflow:hidden}
-.hero::after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.14);right:-60px;top:-70px}
-.hero small{opacity:.9;font-weight:700}
-.addr{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:8px 0 16px}
-.addr output{font:600 clamp(1.2rem,4.6vw,2rem) Fredoka;word-break:break-all;background:rgba(255,255,255,.2);padding:8px 16px;border-radius:16px;min-height:52px;display:flex;align-items:center}
-.addr output.pop{animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
-@keyframes pop{from{transform:scale(.7);opacity:0}}
-.row{display:flex;gap:10px;flex-wrap:wrap}
-.btn{position:relative;overflow:hidden;border:0;border-radius:14px;padding:11px 18px;font:600 .95rem Fredoka;cursor:pointer;transition:transform .15s,box-shadow .2s;display:inline-flex;gap:7px;align-items:center}
-.btn:hover{transform:translateY(-2px)}.btn:active{transform:scale(.95)}
-.btn.w{background:#fff;color:var(--p1);box-shadow:0 6px 14px -6px rgba(0,0,0,.25)}
-.btn.g{background:rgba(255,255,255,.22);color:#fff}
-.btn.p{background:var(--p1);color:#fff;box-shadow:0 8px 18px -8px var(--p1)}
+
+/* buttons */
+.btn{position:relative;overflow:hidden;border:0;border-radius:15px;min-height:46px;padding:0 22px;font:600 .98rem Fredoka;cursor:pointer;transition:transform .15s,box-shadow .2s;display:inline-flex;gap:8px;align-items:center;justify-content:center}
+.btn.sm{min-height:40px;padding:0 18px;font-size:.9rem;border-radius:99px}
+.btn:hover{transform:translateY(-2px)}.btn:active{transform:scale(.96)}
+.btn:disabled{opacity:.6;cursor:wait;transform:none}
+.btn.w{background:#fff;color:var(--p1);box-shadow:0 8px 16px -8px rgba(0,0,0,.3)}
+.btn.g{background:rgba(255,255,255,.22);color:#fff;border:2px solid rgba(255,255,255,.3)}
+.btn.p{background:var(--p1);color:#fff;box-shadow:0 10px 20px -10px var(--p1)}
 .btn.o{background:var(--p4);color:var(--p1);border:2px solid var(--p3)}
-.btn:focus-visible,.chip:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #fff;outline-offset:2px;box-shadow:0 0 0 5px var(--p1)}
+.btn:focus-visible,.chip:focus-visible,input:focus-visible,select:focus-visible,.m:focus-visible,.lnk:focus-visible{outline:3px solid var(--p1);outline-offset:2px}
+.hero .btn:focus-visible{outline-color:#fff}
 .rip{position:absolute;border-radius:50%;background:rgba(255,77,148,.35);transform:scale(0);animation:rip .6s linear;pointer-events:none}
 @keyframes rip{to{transform:scale(4);opacity:0}}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
-.st{background:var(--w);border-radius:18px;padding:14px;text-align:center;box-shadow:0 8px 20px -12px rgba(255,77,148,.5)}
-.st b{display:block;font:600 1.5rem Fredoka;color:var(--p1)}.st span{font-size:.78rem;color:var(--mut);font-weight:700}
-.bar{height:5px;background:var(--p3);border-radius:9px;margin-top:6px;overflow:hidden}.bar i{display:block;height:100%;background:var(--p1);width:100%;transition:width 1s linear}
-.grid{display:grid;grid-template-columns:320px 1fr;gap:18px;align-items:start}
-.card{background:var(--w);border-radius:var(--r);padding:18px;box-shadow:0 12px 30px -16px rgba(255,77,148,.55)}
-.card h3{font-size:1.1rem;margin-bottom:12px;color:var(--p1)}
-label{display:block;font-size:.8rem;font-weight:700;color:var(--mut);margin:10px 0 4px}
-input,select{width:100%;padding:11px 13px;border-radius:12px;border:2px solid var(--p3);font:600 .95rem Nunito;color:var(--ink);background:var(--p4)}
+
+/* hero */
+.hero{background:linear-gradient(135deg,var(--p1),#ff78ae);border-radius:32px;padding:36px 32px;color:#fff;box-shadow:0 24px 46px -20px rgba(255,77,148,.7);position:relative;overflow:hidden;margin-bottom:24px}
+.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.13)}
+.hero::before{width:260px;height:260px;right:-70px;top:-90px}
+.hero::after{width:150px;height:150px;left:-40px;bottom:-60px}
+.hero small{position:relative;display:block;font-weight:700;opacity:.95;margin-bottom:12px}
+.hero output{position:relative;z-index:1;display:block;font:600 clamp(1.25rem,4.4vw,2.1rem)/1.3 Fredoka;word-break:break-all;background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.35);padding:18px 22px;border-radius:20px;margin-bottom:24px}
+.hero output.pop{animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{from{transform:scale(.8);opacity:0}}
+.actions{position:relative;z-index:1;display:flex;gap:12px;flex-wrap:wrap}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.st{display:flex;align-items:center;gap:14px;background:var(--w);border-radius:20px;padding:18px 20px;box-shadow:var(--sh)}
+.ic{flex:none;display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:var(--p4);font-size:1.3rem}
+.st>div{flex:1;min-width:0}
+.st b{display:block;font:600 1.55rem/1.1 Fredoka;color:var(--p1)}
+.st>div>span{display:block;font-size:.8rem;color:var(--mut);font-weight:700;margin-top:3px}
+.bar{height:6px;background:var(--p3);border-radius:9px;margin-top:8px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--p1);width:100%;transition:width 1s linear}
+
+/* layout */
+.grid{display:grid;grid-template-columns:1fr 340px;grid-template-areas:"main side";gap:24px;align-items:start}
+.grid>main{grid-area:main}
+aside{grid-area:side;display:flex;flex-direction:column;gap:24px;position:sticky;top:20px}
+.card{background:var(--w);border-radius:26px;padding:28px;box-shadow:var(--sh)}
+.card h3{font-size:1.18rem;margin-bottom:18px;color:var(--p1)}
+label{display:block;font-size:.84rem;font-weight:700;color:var(--mut);margin:16px 0 7px}
+label:first-of-type{margin-top:0}
+input,select{width:100%;min-height:48px;padding:0 16px;border-radius:14px;border:2px solid var(--p3);font:600 .95rem Nunito;color:var(--ink);background:var(--p4);transition:border-color .2s}
 input:focus,select:focus{border-color:var(--p1);outline:0}
-.hist{display:flex;flex-direction:column;gap:7px;margin-top:6px;max-height:210px;overflow:auto}
-.h{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:9px 11px;border-radius:12px;background:var(--p4);font-size:.82rem;font-weight:700;cursor:pointer;transition:.2s;word-break:break-all}
-.h:hover{background:var(--p3);transform:translateX(4px)}.h.cur{background:var(--p1);color:#fff}
-.h button{border:0;background:none;cursor:pointer;font-size:1rem;color:inherit}
-.ihead{display:flex;gap:10px;align-items:center;margin-bottom:12px}.ihead h3{margin:0;flex:1}
-.ihead input{max-width:200px}
-.list{display:flex;flex-direction:column;gap:9px;min-height:200px}
-.m{display:flex;gap:12px;align-items:center;padding:12px;border-radius:16px;background:var(--p4);cursor:pointer;transition:.2s;animation:slide .45s both;position:relative}
+.hint{font-size:.8rem;color:var(--mut);margin-top:8px}
+#bMake{width:100%;margin-top:20px}
+.hist{display:flex;flex-direction:column;gap:10px;max-height:260px;overflow:auto}
+.h{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 14px;border-radius:14px;background:var(--p4);font-size:.84rem;font-weight:700;cursor:pointer;transition:.2s;word-break:break-all}
+.h:hover{background:var(--p3);transform:translateX(4px)}
+.h.cur{background:var(--p1);color:#fff}
+.h button{border:0;background:none;cursor:pointer;font-size:1rem;color:inherit;padding:2px 6px}
+
+/* inbox */
+.ihead{display:flex;gap:16px;align-items:center;margin-bottom:12px}
+.ihead h3{margin:0;flex:1}
+.ihead input{max-width:240px}
+#stat{font-size:.82rem;color:var(--mut);font-weight:700;margin-bottom:18px;padding-bottom:16px;border-bottom:2px dashed var(--p3)}
+.list{display:flex;flex-direction:column;gap:12px;min-height:240px}
+.m{display:flex;gap:14px;align-items:center;padding:16px 18px;border-radius:18px;background:var(--p4);cursor:pointer;transition:.2s;animation:slide .45s both}
 @keyframes slide{from{opacity:0;transform:translateX(-26px)}}
 .m:hover{background:var(--p3);transform:translateX(5px)}
 .m.un{background:var(--w);border:2px solid var(--p2)}
-.av{flex:none;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--p2),var(--p1));color:#fff;display:grid;place-items:center;font:600 1.15rem Fredoka}
-.mi{flex:1;min-width:0}.mi b{display:block;font-size:.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mi span{display:block;font-size:.82rem;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mt{font-size:.74rem;color:var(--mut);font-weight:700;text-align:right}
+.av{flex:none;width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--p2),var(--p1));color:#fff;display:grid;place-items:center;font:600 1.2rem Fredoka}
+.mi{flex:1;min-width:0}
+.mi b{display:block;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mi span{display:block;font-size:.84rem;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mt{flex:none;font-size:.76rem;color:var(--mut);font-weight:700;text-align:right;line-height:1.8}
 .dot{width:10px;height:10px;border-radius:50%;background:var(--p1);display:inline-block;animation:pulse 1.4s infinite}
-@keyframes pulse{50%{box-shadow:0 0 0 7px rgba(255,77,148,0);transform:scale(1.2)}0%{box-shadow:0 0 0 0 rgba(255,77,148,.6)}}
-.empty{text-align:center;color:var(--mut);padding:36px 10px;font-weight:700}
-.empty i{display:block;font-style:normal;font-size:3rem;animation:float 3s ease-in-out infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,77,148,.6)}50%{transform:scale(1.2)}100%{box-shadow:0 0 0 8px rgba(255,77,148,0)}}
+.empty{text-align:center;color:var(--mut);padding:44px 16px;font-weight:700;line-height:1.7}
+.empty i{display:block;font-style:normal;font-size:3.2rem;margin-bottom:8px;animation:float 3s ease-in-out infinite}
 @keyframes float{50%{transform:translateY(-12px)}}
-.modal{position:fixed;inset:0;background:rgba(74,29,54,.45);backdrop-filter:blur(4px);z-index:20;display:none;align-items:center;justify-content:center;padding:14px}
+
+/* footer */
+.foot{margin-top:44px;text-align:center;color:var(--mut);font-size:.86rem;font-weight:700;line-height:1.9}
+.lnk{border:0;background:none;color:var(--p1);font:700 .86rem Nunito;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(64,24,45,.5);backdrop-filter:blur(5px);z-index:20;display:none;align-items:center;justify-content:center;padding:16px}
 .modal.on{display:flex}
-.box{background:var(--w);border-radius:26px;width:min(760px,100%);max-height:92vh;display:flex;flex-direction:column;animation:pop .35s cubic-bezier(.2,1.4,.4,1);overflow:hidden}
-.mh{padding:18px 20px;background:var(--p4);border-bottom:2px solid var(--p3)}
-.mh h2{font-size:1.25rem;margin-bottom:4px}.mh p{font-size:.85rem;color:var(--mut);font-weight:600;word-break:break-all}
+.box{background:var(--w);border-radius:28px;width:min(760px,100%);max-height:92vh;display:flex;flex-direction:column;animation:pop .35s cubic-bezier(.2,1.4,.4,1);overflow:hidden}
+.mh{padding:22px 26px;background:var(--p4);border-bottom:2px solid var(--p3)}
+.mh h2{font-size:1.3rem;margin-bottom:6px;line-height:1.3}
+.mh p{font-size:.86rem;color:var(--mut);font-weight:600;word-break:break-all}
 .mb{flex:1;min-height:260px;overflow:auto}
-.mb iframe{width:100%;height:100%;min-height:340px;border:0;background:#fff}
-.mf{padding:12px 16px;display:flex;gap:8px;flex-wrap:wrap;border-top:2px solid var(--p3)}
-.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,120px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:99px;font-weight:700;z-index:40;transition:.4s cubic-bezier(.2,1.4,.4,1);max-width:90vw}
+.mb iframe{width:100%;height:100%;min-height:360px;border:0;background:#fff}
+.mf{padding:16px 22px;display:flex;gap:10px;flex-wrap:wrap;border-top:2px solid var(--p3)}
+.dh{display:flex;gap:16px;align-items:center}
+.dav{flex:none;width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,var(--p2),var(--p1));color:#fff;display:grid;place-items:center;font:600 1.7rem Fredoka}
+.mb.dbody{min-height:0;padding:24px 26px;display:flex;flex-direction:column;gap:24px}
+.dbody h4{font-size:1.02rem;color:var(--p1);margin-bottom:10px}
+.dbody p,.dbody li{color:var(--mut);font-weight:600;font-size:.92rem}
+.dbody ul{padding-left:20px;line-height:1.9}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tag{background:var(--p4);border:2px solid var(--p3);padding:5px 13px;border-radius:99px;font-size:.82rem;font-weight:700}
+.note{background:var(--p4);border-radius:16px;padding:14px 16px}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,140px);background:var(--ink);color:var(--w);padding:13px 22px;border-radius:99px;font-weight:700;z-index:40;transition:.4s cubic-bezier(.2,1.4,.4,1);max-width:90vw;text-align:center}
 .toast.on{transform:translate(-50%,0)}
 .hrt{position:fixed;bottom:-30px;z-index:30;pointer-events:none;animation:up 2.4s ease-out forwards}
 @keyframes up{to{transform:translateY(-105vh) rotate(40deg);opacity:0}}
-.spin{animation:sp .8s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
-:root[data-dark]{--p4:#1f0d18;--w:#33172a;--ink:#ffe6f1;--mut:#d79ab9;--p3:#5a2a45}
-@media(max-width:860px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.ihead{flex-wrap:wrap}.ihead input{max-width:none;width:100%}}
+
+@media(max-width:900px){
+  .grid{grid-template-columns:1fr;grid-template-areas:"main" "side"}
+  aside{position:static}
+  .stats{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:640px){
+  .wrap{padding:20px 16px 48px}
+  .nav{margin-bottom:22px}
+  .navr{width:100%}.navr .chip{flex:1;padding:0 10px}.navr .btn{flex:1 1 100%}
+  .hero{padding:26px 20px;border-radius:26px}
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions .btn{padding:0 12px}
+  .stats{gap:12px}.st{padding:14px;gap:10px}.ic{width:38px;height:38px;font-size:1.1rem}.st b{font-size:1.3rem}
+  .card{padding:22px 18px}
+  .ihead{flex-wrap:wrap}.ihead input{max-width:none;width:100%}
+  .m{padding:14px}.av{width:42px;height:42px}
+  .mh,.mb.dbody{padding-left:20px;padding-right:20px}
+}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
 <div class="wrap">
-<header>
-  <div class="logo f"><i>💌</i> ZukaiTemp</div>
-  <div class="tog">
+
+<header class="nav">
+  <div class="logo f"><span class="lg">💌</span><span>ZukaiTemp</span></div>
+  <div class="navr">
     <button class="chip on" id="tAuto">⏱ Auto-refresh</button>
     <button class="chip on" id="tSnd">🔔 Suara</button>
     <button class="chip" id="tDark">🌙 Gelap</button>
+    <button class="btn p sm" id="bDev">👩‍💻 Developer</button>
   </div>
 </header>
 
 <section class="hero">
   <small id="hs">Alamat email sementara kamu</small>
-  <div class="addr"><output id="addr">Menyiapkan...</output></div>
-  <div class="row">
-    <button class="btn w" id="bCopy">📋 Salin</button>
+  <output id="addr">Menyiapkan...</output>
+  <div class="actions">
+    <button class="btn w" id="bCopy">📋 Salin alamat</button>
     <button class="btn g" id="bNew">✨ Acak baru</button>
     <button class="btn g" id="bRef">🔄 Refresh</button>
     <button class="btn g" id="bDel">🗑 Hapus akun</button>
   </div>
 </section>
 
-<div class="stats">
-  <div class="st"><b id="sTot">0</b><span>Total pesan</span></div>
-  <div class="st"><b id="sUn">0</b><span>Belum dibaca</span></div>
-  <div class="st"><b id="sCd">10s</b><span>Refresh berikutnya</span><div class="bar"><i id="pb"></i></div></div>
-  <div class="st"><b id="sAge">0m</b><span>Aktif sejak</span></div>
-</div>
+<section class="stats">
+  <div class="st"><span class="ic">📨</span><div><b id="sTot">0</b><span>Total pesan</span></div></div>
+  <div class="st"><span class="ic">💗</span><div><b id="sUn">0</b><span>Belum dibaca</span></div></div>
+  <div class="st"><span class="ic">⏱</span><div><b id="sCd">10s</b><span>Refresh berikutnya</span><div class="bar"><i id="pb"></i></div></div></div>
+  <div class="st"><span class="ic">🕒</span><div><b id="sAge">0m</b><span>Aktif sejak</span></div></div>
+</section>
 
 <div class="grid">
+  <main class="card">
+    <div class="ihead">
+      <h3>📬 Kotak masuk</h3>
+      <input id="q" type="search" placeholder="Cari pengirim atau subjek..." aria-label="Cari pesan">
+    </div>
+    <div id="stat">Menunggu pengecekan pertama...</div>
+    <div class="list" id="list"></div>
+  </main>
+
   <aside>
     <div class="card">
       <h3>🎀 Alamat kustom</h3>
@@ -128,23 +203,20 @@ input:focus,select:focus{border-color:var(--p1);outline:0}
       <input id="uName" placeholder="contoh: kucingpink" maxlength="30" autocomplete="off">
       <label for="dom">Domain</label>
       <select id="dom"></select>
-      <div class="row" style="margin-top:14px"><button class="btn p" id="bMake" style="width:100%;justify-content:center">Buat alamat</button></div>
+      <p class="hint">Kosongkan nama kalau mau diacak.</p>
+      <button class="btn p" id="bMake">Buat alamat</button>
     </div>
-    <div class="card" style="margin-top:18px">
+    <div class="card">
       <h3>🕘 Riwayat alamat</h3>
       <div class="hist" id="hist"></div>
     </div>
   </aside>
-
-  <main class="card">
-    <div class="ihead">
-      <h3>📬 Kotak masuk</h3>
-      <input id="q" type="search" placeholder="Cari pengirim / subjek..." aria-label="Cari pesan">
-    </div>
-    <div id="stat" style="font-size:.8rem;color:var(--mut);font-weight:700;margin:-4px 0 10px">Menunggu pengecekan pertama...</div>
-    <div class="list" id="list"></div>
-  </main>
 </div>
+
+<footer class="foot">
+  Dibuat dengan 💗 untuk kamu yang malas spam di email utama<br>
+  <button class="lnk" id="bDev2">Tentang developer</button>
+</footer>
 </div>
 
 <div class="modal" id="modal" role="dialog" aria-modal="true">
@@ -158,9 +230,28 @@ input:focus,select:focus{border-color:var(--p1);outline:0}
     </div>
   </div>
 </div>
+
+<div class="modal" id="devModal" role="dialog" aria-modal="true">
+  <div class="box">
+    <div class="mh dh"><div class="dav" id="dAv"></div><div><h2 id="dName"></h2><p id="dRole"></p></div></div>
+    <div class="mb dbody" id="dBody"></div>
+    <div class="mf"><button class="btn o" id="dClose">Tutup</button></div>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
+/* ====== Isi bagian ini dengan data kamu (muncul di tombol Developer) ====== */
+const DEV={
+  name:'Nama Kamu',
+  role:'Pembuat ZukaiTemp',
+  bio:'ZukaiTemp dibuat supaya kamu bisa menerima email verifikasi tanpa membuka alamat email utama.',
+  links:[ // isi url (diawali https://) agar tombolnya muncul
+    {label:'Instagram',url:''},
+    {label:'GitHub',url:''},
+    {label:'WhatsApp',url:''}
+  ]
+};
 const API='https://api.mail.tm',$=s=>document.querySelector(s);
 const ch='abcdefghijklmnopqrstuvwxyz0123456789',rnd=n=>Array.from({length:n},()=>ch[Math.random()*ch.length|0]).join('');
 const words=['pinky','sakura','boba','candy','peach','cloud','melon','bunny','kiwi','mochi','berry','glow'];
@@ -330,8 +421,8 @@ $('#bCopy').onclick=async()=>{if(!acc)return;try{await navigator.clipboard.write
 $('#bNew').onclick=()=>make();
 $('#bRef').onclick=()=>{poll();resetCd()};
 $('#bDel').onclick=delAcc;
-$('#bMake').onclick=()=>make($('#uName').value.trim());
-$('#uName').onkeydown=e=>{if(e.key==='Enter')make($('#uName').value.trim())};
+$('#bMake').onclick=()=>make($('#uName').value.trim(),$('#dom').value);
+$('#uName').onkeydown=e=>{if(e.key==='Enter')make($('#uName').value.trim(),$('#dom').value)};
 $('#q').oninput=render;
 $('#list').onclick=e=>{const m=e.target.closest('.m');m&&openMsg(m.dataset.id)};
 $('#list').onkeydown=e=>{if(e.key==='Enter'){const m=e.target.closest('.m');m&&openMsg(m.dataset.id)}};
@@ -342,7 +433,7 @@ $('#hist').onclick=e=>{
 };
 $('#mClose').onclick=()=>$('#modal').classList.remove('on');
 $('#modal').onclick=e=>{if(e.target.id==='modal')$('#modal').classList.remove('on')};
-document.onkeydown=e=>{if(e.key==='Escape')$('#modal').classList.remove('on')};
+document.onkeydown=e=>{if(e.key==='Escape'){$('#modal').classList.remove('on');$('#devModal').classList.remove('on')}};
 $('#mDel').onclick=delMsg;
 $('#tAuto').onclick=e=>{auto=!auto;e.currentTarget.classList.toggle('on',auto);resetCd();toast(auto?'Auto-refresh nyala':'Auto-refresh mati')};
 $('#tSnd').onclick=e=>{snd=!snd;e.currentTarget.classList.toggle('on',snd);if(snd)beep();toast(snd?'Suara nyala':'Suara mati')};
@@ -351,6 +442,23 @@ $('#mSave').onclick=()=>{if(!curMsg)return;const body=(curMsg.html&&curMsg.html.
 const setDark=d=>{document.documentElement.toggleAttribute('data-dark',d);$('#tDark').classList.toggle('on',d);store.set('zt_dark',d)};
 $('#tDark').onclick=()=>setDark(!document.documentElement.hasAttribute('data-dark'));
 setDark(store.get('zt_dark',false));
+
+/* ---------- Developer ---------- */
+function openDev(){
+  $('#dAv').textContent=(DEV.name||'Z')[0].toUpperCase();
+  $('#dName').textContent=DEV.name;$('#dRole').textContent=DEV.role;
+  const links=(DEV.links||[]).filter(l=>/^(https?:|mailto:)/.test(l.url)).map(l=>`<a class="btn o sm" href="${esc(l.url)}" target="_blank" rel="noopener" style="text-decoration:none">${esc(l.label)}</a>`).join('');
+  $('#dBody').innerHTML=`
+    <div><h4>Tentang</h4><p>${esc(DEV.bio)}</p></div>
+    ${links?`<div><h4>Hubungi developer</h4><div class="tags">${links}</div></div>`:''}
+    <div><h4>Fitur</h4><ul><li>Banyak server dan domain, otomatis pindah kalau ada yang mati</li><li>Alamat acak atau kustom, riwayat alamat tersimpan</li><li>Salin kode OTP sekali klik</li><li>Notifikasi pesan baru, mode gelap, simpan pesan</li></ul></div>
+    <div><h4>Server tersedia</h4><div class="tags">${Object.values(PROVS).map(v=>`<span class="tag">${esc(v.split('· ')[1])}</span>`).join('')}</div></div>
+    <div class="note"><p>Email di sini bersifat sementara dan bisa dibaca orang lain di beberapa server. Jangan dipakai untuk akun penting, bank, atau data pribadi.</p></div>`;
+  $('#devModal').classList.add('on');
+}
+$('#bDev').onclick=openDev;$('#bDev2').onclick=openDev;
+$('#dClose').onclick=()=>$('#devModal').classList.remove('on');
+$('#devModal').onclick=e=>{if(e.target.id==='devModal')$('#devModal').classList.remove('on')};
 
 /* ---------- Mulai ---------- */
 (async()=>{
