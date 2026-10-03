@@ -166,11 +166,11 @@ const words=['pinky','sakura','boba','candy','peach','cloud','melon','bunny','ki
 const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
 let acc=null,msgs=[],seen=new Set(),first=true,auto=true,snd=true,cd=10,openId=null,curMsg=null,hist=store.get('pm_hist',[]);
 
-let BASE='/api/mail';
+let useProxy=true;
 async function req(path,opt){
-  if(BASE!==API){
-    try{const r=await fetch(BASE+path,opt);if(r.headers.get('x-zt-proxy'))return r}catch{}
-    BASE=API;
+  if(useProxy){
+    try{const r=await fetch('/api/mail?p='+encodeURIComponent(path),opt);if(r.headers.get('x-zt-proxy'))return r}catch{}
+    useProxy=false;
   }
   return fetch(API+path,opt);
 }
