@@ -1,6 +1,6 @@
 // Service worker ZukaiTemp: halaman selalu coba versi terbaru dulu, cadangan dari cache.
-const V = 'zukaitemp-v1';
-const SHELL = ['/', '/index.html', '/manifest.json', '/icon-192.png', '/icon-512.png', '/icon-maskable.png', '/apple-touch-icon.png'];
+const V = 'zukaitemp-v2';
+const SHELL = ['/', '/index.html', '/tools.html', '/manifest.json', '/icon-192.png', '/icon-512.png', '/icon-maskable.png', '/apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(V).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));

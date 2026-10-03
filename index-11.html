@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="ZukaiTemp - email sementara gratis dengan banyak server dan domain.">
+<meta name="theme-color" content="#ff4d94">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ZukaiTemp">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>ZukaiTemp · Email Sementara</title>
+<link rel="icon" type="image/png" href="/icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--p1:#ff4d94;--p2:#ff8fbd;--p3:#ffd9e8;--p4:#fff5f9;--ink:#40182d;--mut:#936079;--w:#fff;--sh:0 14px 34px -18px rgba(255,77,148,.55)}
+:root[data-dark]{--p4:#1f0d18;--w:#33172a;--ink:#ffe6f1;--mut:#d79ab9;--p3:#5a2a45}
+*{box-sizing:border-box;margin:0}
+body{font:400 16px/1.55 Nunito,system-ui,sans-serif;color:var(--ink);background:var(--p4);min-height:100vh;overflow-x:hidden}
+h1,h2,h3,h4,.f{font-family:Fredoka,Nunito,sans-serif}
+button{font-family:inherit}
+.blob{position:fixed;border-radius:50%;filter:blur(70px);opacity:.5;z-index:0;animation:drift 16s ease-in-out infinite alternate;pointer-events:none}
+.b1{width:360px;height:360px;background:var(--p2);top:-100px;left:-100px}
+.b2{width:320px;height:320px;background:var(--p3);bottom:-80px;right:-80px;animation-delay:-5s}
+.b3{width:220px;height:220px;background:#ffb3d1;top:45%;left:60%;animation-delay:-9s}
+@keyframes drift{to{transform:translate(60px,40px) scale(1.15)}}
+.wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:max(28px,env(safe-area-inset-top)) 20px max(64px,env(safe-area-inset-bottom))}
+
+/* navbar */
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:28px;animation:drop .7s cubic-bezier(.2,1.4,.4,1)}
+@keyframes drop{from{opacity:0;transform:translateY(-24px)}}
+.logo{display:flex;align-items:center;gap:12px;font-size:1.65rem;font-weight:600;color:var(--p1)}
+.lg{display:grid;place-items:center;width:46px;height:46px;border-radius:15px;background:linear-gradient(135deg,var(--p1),var(--p2));font-size:1.4rem;box-shadow:0 10px 20px -10px var(--p1);animation:wig 2.6s ease-in-out infinite}
+@keyframes wig{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg) scale(1.08)}}
+.navr{display:flex;gap:10px;flex-wrap:wrap;align-items:center;order:2}
+#bDev{order:3}
+.logo{margin-right:auto}
+.chip{min-height:40px;padding:0 16px;border:2px solid var(--p3);background:var(--w);color:var(--mut);border-radius:99px;font:700 .86rem Nunito;cursor:pointer;transition:.2s}
+.chip:hover{border-color:var(--p2)}
+.chip.on{background:var(--p1);border-color:var(--p1);color:#fff}
+
+/* buttons */
+.btn{position:relative;overflow:hidden;border:0;border-radius:15px;min-height:46px;padding:0 22px;font:600 .98rem Fredoka;cursor:pointer;transition:transform .15s,box-shadow .2s;display:inline-flex;gap:8px;align-items:center;justify-content:center}
+.btn.sm{min-height:40px;padding:0 18px;font-size:.9rem;border-radius:99px}
+.btn:hover{transform:translateY(-2px)}.btn:active{transform:scale(.96)}
+.btn:disabled{opacity:.6;cursor:wait;transform:none}
+.btn.w{background:#fff;color:var(--p1);box-shadow:0 8px 16px -8px rgba(0,0,0,.3)}
+.btn.g{background:rgba(255,255,255,.22);color:#fff;border:2px solid rgba(255,255,255,.3)}
+.btn.p{background:var(--p1);color:#fff;box-shadow:0 10px 20px -10px var(--p1)}
+.btn.o{background:var(--p4);color:var(--p1);border:2px solid var(--p3)}
+.btn:focus-visible,.chip:focus-visible,input:focus-visible,select:focus-visible,.m:focus-visible,.lnk:focus-visible{outline:3px solid var(--p1);outline-offset:2px}
+.hero .btn:focus-visible{outline-color:#fff}
+.rip{position:absolute;border-radius:50%;background:rgba(255,77,148,.35);transform:scale(0);animation:rip .6s linear;pointer-events:none}
+@keyframes rip{to{transform:scale(4);opacity:0}}
+
+/* hero */
+.hero{background:linear-gradient(135deg,var(--p1),#ff78ae);border-radius:32px;padding:36px 32px;color:#fff;box-shadow:0 24px 46px -20px rgba(255,77,148,.7);position:relative;overflow:hidden;margin-bottom:24px}
+.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.13)}
+.hero::before{width:260px;height:260px;right:-70px;top:-90px}
+.hero::after{width:150px;height:150px;left:-40px;bottom:-60px}
+.hero small{position:relative;display:block;font-weight:700;opacity:.95;margin-bottom:12px}
+.hero output{position:relative;z-index:1;display:block;font:600 clamp(1.25rem,4.4vw,2.1rem)/1.3 Fredoka;word-break:break-all;background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.35);padding:18px 22px;border-radius:20px;margin-bottom:24px}
+.hero output.pop{animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{from{transform:scale(.8);opacity:0}}
+.actions{position:relative;z-index:1;display:flex;gap:12px;flex-wrap:wrap}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.st{display:flex;align-items:center;gap:14px;background:var(--w);border-radius:20px;padding:18px 20px;box-shadow:var(--sh)}
+.ic{flex:none;display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:var(--p4);font-size:1.3rem}
+.st>div{flex:1;min-width:0}
+.st b{display:block;font:600 1.55rem/1.1 Fredoka;color:var(--p1)}
+.st>div>span{display:block;font-size:.8rem;color:var(--mut);font-weight:700;margin-top:3px}
+.bar{height:6px;background:var(--p3);border-radius:9px;margin-top:8px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--p1);width:100%;transition:width 1s linear}
+
+/* layout */
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;grid-template-areas:"main side";gap:24px;align-items:start}
+.grid>main{grid-area:main;min-width:0}
+aside{grid-area:side;display:flex;flex-direction:column;gap:24px;position:sticky;top:20px}
+.card{min-width:0;background:var(--w);border-radius:26px;padding:28px;box-shadow:var(--sh)}
+.card h3{font-size:1.18rem;margin-bottom:18px;color:var(--p1)}
+label{display:block;font-size:.84rem;font-weight:700;color:var(--mut);margin:16px 0 7px}
+label:first-of-type{margin-top:0}
+input,select{width:100%;min-height:48px;padding:0 16px;border-radius:14px;border:2px solid var(--p3);font:600 .95rem Nunito;color:var(--ink);background:var(--p4);transition:border-color .2s}
+input:focus,select:focus{border-color:var(--p1);outline:0}
+.hint{font-size:.8rem;color:var(--mut);margin-top:8px}
+#bMake{width:100%;margin-top:20px}
+.hist{display:flex;flex-direction:column;gap:10px;max-height:260px;overflow:auto}
+.h{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 14px;border-radius:14px;background:var(--p4);font-size:.84rem;font-weight:700;cursor:pointer;transition:.2s;word-break:break-all}
+.h:hover{background:var(--p3);transform:translateX(4px)}
+.h.cur{background:var(--p1);color:#fff}
+.h button{border:0;background:none;cursor:pointer;font-size:1rem;color:inherit;padding:2px 6px}
+
+/* inbox */
+.ihead{display:flex;gap:16px;align-items:center;margin-bottom:12px}
+.ihead h3{margin:0;flex:1}
+.ihead input{max-width:240px}
+#stat{font-size:.82rem;color:var(--mut);font-weight:700;margin-bottom:18px;padding-bottom:16px;border-bottom:2px dashed var(--p3)}
+.list{display:flex;flex-direction:column;gap:12px;min-height:240px}
+.m{display:flex;gap:14px;align-items:center;padding:16px 18px;border-radius:18px;background:var(--p4);cursor:pointer;transition:.2s;animation:slide .45s both}
+@keyframes slide{from{opacity:0;transform:translateX(-26px)}}
+.m:hover{background:var(--p3);transform:translateX(5px)}
+.m.un{background:var(--w);border:2px solid var(--p2)}
+.av{flex:none;width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--p2),var(--p1));color:#fff;display:grid;place-items:center;font:600 1.2rem Fredoka}
+.mi{flex:1;min-width:0}
+.mi b{display:block;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mi span{display:block;font-size:.84rem;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mt{flex:none;font-size:.76rem;color:var(--mut);font-weight:700;text-align:right;line-height:1.8}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--p1);display:inline-block;animation:pulse 1.4s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,77,148,.6)}50%{transform:scale(1.2)}100%{box-shadow:0 0 0 8px rgba(255,77,148,0)}}
+.empty{text-align:center;color:var(--mut);padding:44px 16px;font-weight:700;line-height:1.7}
+.empty i{display:block;font-style:normal;font-size:3.2rem;margin-bottom:8px;animation:float 3s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-12px)}}
+
+/* footer */
+.foot{margin-top:44px;text-align:center;color:var(--mut);font-size:.86rem;font-weight:700;line-height:1.9}
+.lnk{border:0;background:none;color:var(--p1);font:700 .86rem Nunito;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(64,24,45,.5);backdrop-filter:blur(5px);z-index:20;display:none;align-items:center;justify-content:center;padding:16px}
+.modal.on{display:flex}
+.box{background:var(--w);border-radius:28px;width:min(760px,100%);max-height:92vh;display:flex;flex-direction:column;animation:pop .35s cubic-bezier(.2,1.4,.4,1);overflow:hidden}
+.mh{padding:22px 26px;background:var(--p4);border-bottom:2px solid var(--p3)}
+.mh h2{font-size:1.3rem;margin-bottom:6px;line-height:1.3}
+.mh p{font-size:.86rem;color:var(--mut);font-weight:600;word-break:break-all}
+.mb{flex:1;min-height:260px;overflow:auto}
+.mb iframe{width:100%;height:100%;min-height:360px;border:0;background:#fff}
+.mf{padding:16px 22px;display:flex;gap:10px;flex-wrap:wrap;border-top:2px solid var(--p3)}
+.dh{display:flex;gap:16px;align-items:center}
+.dav{flex:none;width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,var(--p2),var(--p1));color:#fff;display:grid;place-items:center;font:600 1.7rem Fredoka}
+.mb.dbody{min-height:0;padding:24px 26px;display:flex;flex-direction:column;gap:24px}
+.dbody h4{font-size:1.02rem;color:var(--p1);margin-bottom:10px}
+.dbody p,.dbody li{color:var(--mut);font-weight:600;font-size:.92rem}
+.dbody ul{padding-left:20px;line-height:1.9}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tag{background:var(--p4);border:2px solid var(--p3);padding:5px 13px;border-radius:99px;font-size:.82rem;font-weight:700}
+.note{background:var(--p4);border-radius:16px;padding:14px 16px}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,140px);background:var(--ink);color:var(--w);padding:13px 22px;border-radius:99px;font-weight:700;z-index:40;transition:.4s cubic-bezier(.2,1.4,.4,1);max-width:90vw;text-align:center}
+.toast.on{transform:translate(-50%,0)}
+.hrt{position:fixed;bottom:-30px;z-index:30;pointer-events:none;animation:up 2.4s ease-out forwards}
+@keyframes up{to{transform:translateY(-105vh) rotate(40deg);opacity:0}}
+
+@media(max-width:900px){
+  .grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"main" "side"}
+  aside{position:static}
+  .stats{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:640px){
+  .wrap{padding:max(20px,env(safe-area-inset-top)) 16px max(48px,env(safe-area-inset-bottom))}
+  .nav{margin-bottom:22px}
+  .navr{width:100%}.navr .chip{flex:1;padding:0 10px}.navr .btn{flex:1 1 100%}
+  .hero{padding:26px 20px;border-radius:26px}
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions .btn{padding:0 12px}
+  .stats{gap:12px}.st{padding:14px;gap:10px}.ic{width:38px;height:38px;font-size:1.1rem}.st b{font-size:1.3rem}
+  .card{padding:22px 18px}
+  .ihead{flex-wrap:wrap}.ihead input{max-width:none;width:100%}
+  .m{padding:14px}.av{width:42px;height:42px}
+  .mh,.mb.dbody{padding-left:20px;padding-right:20px}
+}
+a.tools{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:24px;padding:20px 24px;border-radius:24px;background:var(--w);border:2px dashed var(--p2);text-decoration:none;color:var(--ink);box-shadow:var(--sh);transition:.2s}
+a.tools:hover{transform:translateY(-3px);border-color:var(--p1)}
+a.tools b{display:block;font-size:1.15rem;color:var(--p1);margin-bottom:2px}
+a.tools span:not(.btn){font-size:.88rem;color:var(--mut);font-weight:600}
+summary{list-style:none;cursor:pointer;font:600 1.18rem Fredoka;color:var(--p1);display:flex;justify-content:space-between;align-items:center;gap:10px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"＋";font-size:1.1rem}
+details[open]>summary::after{content:"－"}
+details[open]>summary{margin-bottom:18px}
+@media(max-width:640px){
+  .nav{gap:12px;margin-bottom:18px}
+  .navr{order:3;width:100%;flex-wrap:nowrap}.navr .chip{flex:1;padding:0 6px;font-size:.8rem;white-space:nowrap}
+  #bDev{order:2;flex:none;padding:0 16px}
+  .logo{font-size:1.4rem}.lg{width:40px;height:40px;font-size:1.2rem}
+  .hero{padding:20px 16px;margin-bottom:18px}.hero small{font-size:.82rem;margin-bottom:8px}
+  .hero output{padding:13px 14px;margin-bottom:16px;border-radius:16px}
+  .actions{gap:8px}.actions .btn{min-height:42px;font-size:.88rem}
+  .stats{grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
+  .st{flex-direction:column;text-align:center;padding:12px 4px;gap:0;border-radius:16px}
+  .ic{display:none}.st b{font-size:1.15rem}.st>div>span{font-size:.68rem}.bar{margin:6px 6px 0}
+  .card{padding:18px 16px;border-radius:22px}
+  .list{min-height:120px;gap:10px}.empty{padding:28px 12px}
+  .grid{gap:16px}aside{gap:16px}
+  .foot{margin-top:28px}
+  a.tools{flex-direction:column;align-items:stretch;text-align:left;padding:18px 16px;gap:12px;margin-bottom:18px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+<div class="wrap">
+
+<header class="nav">
+  <div class="logo f"><span class="lg">💌</span><span>ZukaiTemp</span></div>
+  <button class="btn p sm" id="bDev">💻 Developer</button>
+  <div class="navr">
+    <button class="chip on" id="tAuto">⏱ Auto</button>
+    <button class="chip on" id="tSnd">🔔 Suara</button>
+    <button class="chip" id="tDark">🌙 Gelap</button>
+    <button class="chip on" id="bInstall" hidden>📲 Pasang</button>
+  </div>
+</header>
+
+<section class="hero">
+  <small id="hs">Alamat email sementara kamu</small>
+  <output id="addr">Menyiapkan...</output>
+  <div class="actions">
+    <button class="btn w" id="bCopy">📋 Salin alamat</button>
+    <button class="btn g" id="bNew">✨ Acak baru</button>
+    <button class="btn g" id="bRef">🔄 Refresh</button>
+    <button class="btn g" id="bDel">🗑 Hapus akun</button>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="st"><span class="ic">📨</span><div><b id="sTot">0</b><span>Pesan</span></div></div>
+  <div class="st"><span class="ic">💗</span><div><b id="sUn">0</b><span>Belum dibaca</span></div></div>
+  <div class="st"><span class="ic">⏱</span><div><b id="sCd">10s</b><span>Refresh lagi</span><div class="bar"><i id="pb"></i></div></div></div>
+  <div class="st"><span class="ic">🕒</span><div><b id="sAge">0m</b><span>Aktif</span></div></div>
+</section>
+
+<a class="tools" href="/tools.html">
+  <div><b class="f">🛠 ZukaiTools</b><span>Hapus background, upscale gambar, kompres foto, dan generator password. Gratis!</span></div>
+  <span class="btn p sm">Buka tools →</span>
+</a>
+
+<div class="grid">
+  <main class="card">
+    <div class="ihead">
+      <h3>📬 Kotak masuk</h3>
+      <input id="q" type="search" placeholder="Cari pengirim atau subjek..." aria-label="Cari pesan">
+    </div>
+    <div id="stat">Menunggu pengecekan pertama...</div>
+    <div class="list" id="list"></div>
+  </main>
+
+  <aside>
+    <details class="card acc">
+      <summary>🎀 Alamat kustom</summary>
+      <div>
+        <label for="uName">Nama pengguna</label>
+        <input id="uName" placeholder="contoh: kucingpink" maxlength="30" autocomplete="off">
+        <label for="dom">Domain</label>
+        <select id="dom"></select>
+        <p class="hint">Kosongkan nama kalau mau diacak.</p>
+        <button class="btn p" id="bMake">Buat alamat</button>
+      </div>
+    </details>
+    <details class="card acc">
+      <summary>🕘 Riwayat alamat</summary>
+      <div class="hist" id="hist"></div>
+    </details>
+  </aside>
+</div>
+
+<footer class="foot">
+  Dibuat dengan 💗 untuk kamu yang malas spam di email utama<br>
+  <button class="lnk" id="bDev2">Tentang developer</button>
+</footer>
+</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+  <div class="box">
+    <div class="mh"><h2 id="mSub"></h2><p id="mMeta"></p></div>
+    <div class="mb" id="mBody"></div>
+    <div class="mf" id="mFoot">
+      <button class="btn p" id="mDel">🗑 Hapus pesan</button>
+      <button class="btn o" id="mSave">⬇ Simpan</button>
+      <button class="btn o" id="mClose">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="devModal" role="dialog" aria-modal="true">
+  <div class="box">
+    <div class="mh dh"><div class="dav" id="dAv"></div><div><h2 id="dName"></h2><p id="dRole"></p></div></div>
+    <div class="mb dbody" id="dBody"></div>
+    <div class="mf"><button class="btn o" id="dClose">Tutup</button></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ====== Isi bagian ini dengan data kamu (muncul di tombol Developer) ====== */
+const DEV={
+  name:'ZukaiDeveloper',
+  role:'Pembuat ZukaiTemp',
+  bio:'ZukaiTemp dibuat supaya kamu bisa menerima email verifikasi tanpa membuka alamat email utama.',
+  links:[
+    {label:'TikTok',url:'https://tiktok.com/@feyzzie1'},
+    {label:'GitHub',url:'https://github.com/kyedeveloper'},
+    {label:'WhatsApp',url:'https://wa.me/ZukaiStore'}
+  ]
+};
+const API='https://api.mail.tm',$=s=>document.querySelector(s);
+const ch='abcdefghijklmnopqrstuvwxyz0123456789',rnd=n=>Array.from({length:n},()=>ch[Math.random()*ch.length|0]).join('');
+const words=['pinky','sakura','boba','candy','peach','cloud','melon','bunny','kiwi','mochi','berry','glow'];
+const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
+let acc=null,msgs=[],seen=new Set(),first=true,auto=true,snd=true,cd=10,openId=null,curMsg=null,gone=new Set(),hist=store.get('pm_hist',[]);
+
+let useProxy=true;
+const HOST={tm:'https://api.mail.tm',gw:'https://api.mail.gw'};
+async function req(path,opt,prov='tm'){
+  if(useProxy){
+    try{const r=await fetch('/api/mail?h='+prov+'&p='+encodeURIComponent(path),{...opt,cache:'no-store'});if(r.headers.get('x-zt-proxy'))return r}catch{}
+    useProxy=false;
+  }
+  if(!HOST[prov])throw new Error('server ini butuh proxy Vercel (api/mail.js)');
+  return fetch(HOST[prov]+path,opt);
+}
+async function api(path,opt={},tok,prov){
+  prov=prov||acc?.prov||'tm';
+  const h={};
+  if(opt.body)h['Content-Type']='application/json';
+  if(tok)h.Authorization='Bearer '+tok;
+  const r=await req(path,{...opt,headers:h},prov);
+  if(r.status===204)return null;
+  const t=await r.text();let j=null;try{j=JSON.parse(t)}catch{}
+  if(!r.ok)throw new Error(j?.['hydra:description']||j?.message||('Error '+r.status+(t?': '+t.replace(/<[^>]+>/g,' ').trim().slice(0,100):'')));
+  return j;
+}
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('on'),2600)}
+function hearts(n=10){for(let i=0;i<n;i++){const s=document.createElement('span');s.className='hrt';s.textContent=['💗','💖','🌸','💌'][i%4];s.style.left=Math.random()*100+'vw';s.style.fontSize=16+Math.random()*22+'px';s.style.animationDelay=Math.random()*.6+'s';document.body.appendChild(s);setTimeout(()=>s.remove(),3200)}}
+function beep(){if(!snd)return;try{const c=new(window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.setValueAtTime(880,c.currentTime);o.frequency.setValueAtTime(1175,c.currentTime+.12);g.gain.setValueAtTime(.15,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.4);o.start();o.stop(c.currentTime+.4)}catch{}}
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function ago(d){const s=(Date.now()-new Date(d))/1000;if(s<60)return'baru saja';if(s<3600)return(s/60|0)+' mnt lalu';if(s<86400)return(s/3600|0)+' jam lalu';return new Date(d).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}
+
+/* ---------- Akun ---------- */
+const PROVS={tm:'Server A · mail.tm',gw:'Server B · mail.gw',tp:'Server C · tempmail.plus',gm:'Server D · Guerrilla Mail',tl:'Server E · tempmail.lol',sm:'Server F · 1secmail'};
+const pn=p=>((PROVS[p||'tm']||'').split('· ')[1])||'';
+const tmo=(p,ms)=>Promise.race([p,new Promise((_,j)=>setTimeout(()=>j(new Error('waktu habis')),ms))]);
+async function loadDomains(){
+  const ks=Object.keys(PROVS);
+  const res=await Promise.allSettled(ks.map(async p=>{const j=await tmo(api('/domains',{},null,p),9000);return (j['hydra:member']||j).filter(x=>x.isActive!==false).map(x=>x.domain)}));
+  let html='',n=0;
+  res.forEach((x,i)=>{const p=ks[i];if(x.status==='fulfilled'&&x.value.length){n+=x.value.length;html+=`<optgroup label="${PROVS[p]}">`+x.value.map(d=>`<option value="${p}:${esc(d)}">${esc(d)}</option>`).join('')+'</optgroup>'}});
+  if(!n){const why=res.map(x=>x.reason?.message).filter(Boolean)[0]||'daftar domain kosong';$('#addr').textContent='Menghubungkan ke server...';toast('Gagal memuat domain: '+why+' (coba lagi otomatis)');return false}
+  const old=$('#dom').value;$('#dom').innerHTML=html;if(old)$('#dom').value=old;
+  window.__okProvs=res.map((x,i)=>x.status==='fulfilled'&&x.value.length?PROVS[ks[i]].split('· ')[1]:null).filter(Boolean);
+  return true;
+}
+async function make(user,pick){
+  const given=!!user;
+  user=(user||words[Math.random()*words.length|0]+rnd(5)).toLowerCase().replace(/[^a-z0-9._-]/g,'');
+  if(!user)return toast('Nama pengguna tidak valid');
+  const opts=[...$('#dom').options].map(o=>o.value);
+  if(!opts.length)return toast('Domain belum tersedia, tunggu sebentar');
+  const by={};opts.forEach(v=>(by[v.split(':')[0]]??=[]).push(v));
+  const rp=k=>by[k][Math.random()*by[k].length|0];
+  const provs=Object.keys(by).sort(()=>Math.random()-.5);
+  const first=pick||(given?$('#dom').value:rp(provs[0]));
+  const order=[first,...provs.filter(k=>k!==first.split(':')[0]).map(rp)];
+  setBusy(true);let err;
+  for(const v of order){
+    const i=v.indexOf(':'),prov=v.slice(0,i),domain=v.slice(i+1),address=user+'@'+domain,password=rnd(14);
+    try{
+      const a=await api('/accounts',{method:'POST',body:JSON.stringify({address,password})},null,prov);
+      const real=a.address||address;
+      const tok=a.token||(await api('/token',{method:'POST',body:JSON.stringify({address,password})},null,prov)).token;
+      const entry={address:real,password,id:a.id,token:tok,prov,created:Date.now()};
+      hist=[entry,...hist.filter(h=>h.address!==real)].slice(0,8);store.set('pm_hist',hist);
+      activate(entry);toast('Alamat baru siap! 💖');hearts(8);setBusy(false);return;
+    }catch(e){err=e;if(/already|used|exist/i.test(e.message))break}
+  }
+  $('#addr').textContent=acc?acc.address:'Gagal membuat alamat';
+  toast(/already|used|exist/i.test(err?.message||'')?'Nama itu sudah dipakai, coba yang lain':'Gagal: '+(err?.message||'server tidak merespons'));
+  setBusy(false);
+}
+async function switchTo(i){
+  const h=hist[i];if(!h)return;setBusy(true);
+  try{
+    try{await api('/messages?page=1',{},h.token,h.prov||'tm')}
+    catch{const t=await api('/token',{method:'POST',body:JSON.stringify({address:h.address,password:h.password})},null,h.prov||'tm');h.token=t.token;store.set('pm_hist',hist)}
+    activate(h);
+  }catch{toast('Akun ini sudah tidak aktif');hist.splice(i,1);store.set('pm_hist',hist);renderHist();$('#addr').textContent=acc?acc.address:'Membuat alamat baru...'}
+  setBusy(false);if(!acc)make();
+}
+function activate(a){
+  acc=a;msgs=[];seen=new Set();gone=new Set();first=true;$('#hs').textContent='Alamat kamu · '+pn(a.prov);
+  const o=$('#addr');o.textContent=a.address;o.classList.remove('pop');void o.offsetWidth;o.classList.add('pop');
+  store.set('pm_cur',a.address);renderHist();render();poll();resetCd();
+}
+async function delAcc(){
+  if(!acc)return;
+  if(!confirm('Hapus akun '+acc.address+' beserta semua pesannya?'))return;
+  try{await api('/accounts/'+acc.id,{method:'DELETE'},acc.token)}catch{}
+  hist=hist.filter(h=>h.address!==acc.address);store.set('pm_hist',hist);
+  toast('Akun dihapus');
+  hist.length?switchTo(0):make();
+}
+function setBusy(b){$('#bNew').disabled=$('#bMake').disabled=b;if(b)$('#addr').textContent='Menyiapkan...'}
+
+/* ---------- Inbox ---------- */
+async function poll(){
+  if(!acc)return;
+  $('#bRef').style.opacity='.6';
+  try{
+    const j=await api('/messages?page=1',{},acc.token);
+    msgs=j['hydra:member'].filter(m=>!gone.has(m.id));
+    const fresh=msgs.filter(m=>!seen.has(m.id));
+    msgs.forEach(m=>seen.add(m.id));
+    if(!first&&fresh.length){beep();hearts(12);toast('💌 '+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
