@@ -26,7 +26,9 @@ button{font-family:inherit}
 .logo{display:flex;align-items:center;gap:12px;font-size:1.65rem;font-weight:600;color:var(--p1)}
 .lg{display:grid;place-items:center;width:46px;height:46px;border-radius:15px;background:linear-gradient(135deg,var(--p1),var(--p2));font-size:1.4rem;box-shadow:0 10px 20px -10px var(--p1);animation:wig 2.6s ease-in-out infinite}
 @keyframes wig{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg) scale(1.08)}}
-.navr{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.navr{display:flex;gap:10px;flex-wrap:wrap;align-items:center;order:2}
+#bDev{order:3}
+.logo{margin-right:auto}
 .chip{min-height:40px;padding:0 16px;border:2px solid var(--p3);background:var(--w);color:var(--mut);border-radius:99px;font:700 .86rem Nunito;cursor:pointer;transition:.2s}
 .chip:hover{border-color:var(--p2)}
 .chip.on{background:var(--p1);border-color:var(--p1);color:#fff}
@@ -67,10 +69,10 @@ button{font-family:inherit}
 .bar i{display:block;height:100%;background:var(--p1);width:100%;transition:width 1s linear}
 
 /* layout */
-.grid{display:grid;grid-template-columns:1fr 340px;grid-template-areas:"main side";gap:24px;align-items:start}
-.grid>main{grid-area:main}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;grid-template-areas:"main side";gap:24px;align-items:start}
+.grid>main{grid-area:main;min-width:0}
 aside{grid-area:side;display:flex;flex-direction:column;gap:24px;position:sticky;top:20px}
-.card{background:var(--w);border-radius:26px;padding:28px;box-shadow:var(--sh)}
+.card{min-width:0;background:var(--w);border-radius:26px;padding:28px;box-shadow:var(--sh)}
 .card h3{font-size:1.18rem;margin-bottom:18px;color:var(--p1)}
 label{display:block;font-size:.84rem;font-weight:700;color:var(--mut);margin:16px 0 7px}
 label:first-of-type{margin-top:0}
@@ -135,7 +137,7 @@ input:focus,select:focus{border-color:var(--p1);outline:0}
 @keyframes up{to{transform:translateY(-105vh) rotate(40deg);opacity:0}}
 
 @media(max-width:900px){
-  .grid{grid-template-columns:1fr;grid-template-areas:"main" "side"}
+  .grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"main" "side"}
   aside{position:static}
   .stats{grid-template-columns:repeat(2,1fr)}
 }
@@ -151,6 +153,27 @@ input:focus,select:focus{border-color:var(--p1);outline:0}
   .m{padding:14px}.av{width:42px;height:42px}
   .mh,.mb.dbody{padding-left:20px;padding-right:20px}
 }
+summary{list-style:none;cursor:pointer;font:600 1.18rem Fredoka;color:var(--p1);display:flex;justify-content:space-between;align-items:center;gap:10px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"＋";font-size:1.1rem}
+details[open]>summary::after{content:"－"}
+details[open]>summary{margin-bottom:18px}
+@media(max-width:640px){
+  .nav{gap:12px;margin-bottom:18px}
+  .navr{order:3;width:100%;flex-wrap:nowrap}.navr .chip{flex:1;padding:0 6px;font-size:.8rem;white-space:nowrap}
+  #bDev{order:2;flex:none;padding:0 16px}
+  .logo{font-size:1.4rem}.lg{width:40px;height:40px;font-size:1.2rem}
+  .hero{padding:20px 16px;margin-bottom:18px}.hero small{font-size:.82rem;margin-bottom:8px}
+  .hero output{padding:13px 14px;margin-bottom:16px;border-radius:16px}
+  .actions{gap:8px}.actions .btn{min-height:42px;font-size:.88rem}
+  .stats{grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
+  .st{flex-direction:column;text-align:center;padding:12px 4px;gap:0;border-radius:16px}
+  .ic{display:none}.st b{font-size:1.15rem}.st>div>span{font-size:.68rem}.bar{margin:6px 6px 0}
+  .card{padding:18px 16px;border-radius:22px}
+  .list{min-height:120px;gap:10px}.empty{padding:28px 12px}
+  .grid{gap:16px}aside{gap:16px}
+  .foot{margin-top:28px}
+}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -160,11 +183,11 @@ input:focus,select:focus{border-color:var(--p1);outline:0}
 
 <header class="nav">
   <div class="logo f"><span class="lg">💌</span><span>ZukaiTemp</span></div>
+  <button class="btn p sm" id="bDev">💻 Developer</button>
   <div class="navr">
-    <button class="chip on" id="tAuto">⏱ Auto-refresh</button>
+    <button class="chip on" id="tAuto">⏱ Auto</button>
     <button class="chip on" id="tSnd">🔔 Suara</button>
     <button class="chip" id="tDark">🌙 Gelap</button>
-    <button class="btn p sm" id="bDev">👩‍💻 Developer</button>
   </div>
 </header>
 
@@ -180,10 +203,10 @@ input:focus,select:focus{border-color:var(--p1);outline:0}
 </section>
 
 <section class="stats">
-  <div class="st"><span class="ic">📨</span><div><b id="sTot">0</b><span>Total pesan</span></div></div>
+  <div class="st"><span class="ic">📨</span><div><b id="sTot">0</b><span>Pesan</span></div></div>
   <div class="st"><span class="ic">💗</span><div><b id="sUn">0</b><span>Belum dibaca</span></div></div>
-  <div class="st"><span class="ic">⏱</span><div><b id="sCd">10s</b><span>Refresh berikutnya</span><div class="bar"><i id="pb"></i></div></div></div>
-  <div class="st"><span class="ic">🕒</span><div><b id="sAge">0m</b><span>Aktif sejak</span></div></div>
+  <div class="st"><span class="ic">⏱</span><div><b id="sCd">10s</b><span>Refresh lagi</span><div class="bar"><i id="pb"></i></div></div></div>
+  <div class="st"><span class="ic">🕒</span><div><b id="sAge">0m</b><span>Aktif</span></div></div>
 </section>
 
 <div class="grid">
@@ -197,19 +220,21 @@ input:focus,select:focus{border-color:var(--p1);outline:0}
   </main>
 
   <aside>
-    <div class="card">
-      <h3>🎀 Alamat kustom</h3>
-      <label for="uName">Nama pengguna</label>
-      <input id="uName" placeholder="contoh: kucingpink" maxlength="30" autocomplete="off">
-      <label for="dom">Domain</label>
-      <select id="dom"></select>
-      <p class="hint">Kosongkan nama kalau mau diacak.</p>
-      <button class="btn p" id="bMake">Buat alamat</button>
-    </div>
-    <div class="card">
-      <h3>🕘 Riwayat alamat</h3>
+    <details class="card acc">
+      <summary>🎀 Alamat kustom</summary>
+      <div>
+        <label for="uName">Nama pengguna</label>
+        <input id="uName" placeholder="contoh: kucingpink" maxlength="30" autocomplete="off">
+        <label for="dom">Domain</label>
+        <select id="dom"></select>
+        <p class="hint">Kosongkan nama kalau mau diacak.</p>
+        <button class="btn p" id="bMake">Buat alamat</button>
+      </div>
+    </details>
+    <details class="card acc">
+      <summary>🕘 Riwayat alamat</summary>
       <div class="hist" id="hist"></div>
-    </div>
+    </details>
   </aside>
 </div>
 
@@ -243,11 +268,11 @@ input:focus,select:focus{border-color:var(--p1);outline:0}
 <script>
 /* ====== Isi bagian ini dengan data kamu (muncul di tombol Developer) ====== */
 const DEV={
-  name:'Zukai',
+  name:'ZukaiDeveloper',
   role:'Pembuat ZukaiTemp',
   bio:'ZukaiTemp dibuat supaya kamu bisa menerima email verifikasi tanpa membuka alamat email utama.',
-  links:[ // isi url (diawali https://) agar tombolnya muncul
-    {label:'Tiktok',url:'https://tiktok.com/@feyzzie1'},
+  links:[
+    {label:'TikTok',url:'https://tiktok.com/@feyzzie1'},
     {label:'GitHub',url:'https://github.com/kyedeveloper'},
     {label:'WhatsApp',url:'https://wa.me/ZukaiStore'}
   ]
@@ -287,6 +312,7 @@ function ago(d){const s=(Date.now()-new Date(d))/1000;if(s<60)return'baru saja';
 
 /* ---------- Akun ---------- */
 const PROVS={tm:'Server A · mail.tm',gw:'Server B · mail.gw',tp:'Server C · tempmail.plus',gm:'Server D · Guerrilla Mail',tl:'Server E · tempmail.lol',sm:'Server F · 1secmail'};
+const pn=p=>((PROVS[p||'tm']||'').split('· ')[1])||'';
 const tmo=(p,ms)=>Promise.race([p,new Promise((_,j)=>setTimeout(()=>j(new Error('waktu habis')),ms))]);
 async function loadDomains(){
   const ks=Object.keys(PROVS);
@@ -335,7 +361,7 @@ async function switchTo(i){
   setBusy(false);if(!acc)make();
 }
 function activate(a){
-  acc=a;msgs=[];seen=new Set();gone=new Set();first=true;$('#hs').textContent='Alamat email sementara kamu · '+(PROVS[a.prov||'tm']||'');
+  acc=a;msgs=[];seen=new Set();gone=new Set();first=true;$('#hs').textContent='Alamat kamu · '+pn(a.prov);
   const o=$('#addr');o.textContent=a.address;o.classList.remove('pop');void o.offsetWidth;o.classList.add('pop');
   store.set('pm_cur',a.address);renderHist();render();poll();resetCd();
 }
@@ -360,7 +386,7 @@ async function poll(){
     msgs.forEach(m=>seen.add(m.id));
     if(!first&&fresh.length){beep();hearts(12);toast('💌 '+fresh.length+' pesan baru dari '+(fresh[0].from.name||fresh[0].from.address));document.title='💌 ('+fresh.length+') ZukaiTemp';setTimeout(()=>document.title='ZukaiTemp · Email Sementara',4000)}
     first=false;render();
-    $('#stat').textContent='✅ Terakhir cek '+new Date().toLocaleTimeString('id-ID')+' · '+(PROVS[acc.prov||'tm']||'')+' · '+msgs.length+' pesan';
+    $('#stat').textContent='✅ Terakhir cek '+new Date().toLocaleTimeString('id-ID')+' · '+pn(acc.prov)+' · '+msgs.length+' pesan';
   }catch(e){$('#stat').textContent='⚠️ Gagal cek inbox: '+e.message;if(/401|Invalid/i.test(e.message)){const i=hist.findIndex(h=>h.address===acc.address);i>=0&&switchTo(i)}}
   $('#bRef').style.opacity='';
 }
@@ -442,6 +468,8 @@ $('#mSave').onclick=()=>{if(!curMsg)return;const body=(curMsg.html&&curMsg.html.
 const setDark=d=>{document.documentElement.toggleAttribute('data-dark',d);$('#tDark').classList.toggle('on',d);store.set('zt_dark',d)};
 $('#tDark').onclick=()=>setDark(!document.documentElement.hasAttribute('data-dark'));
 setDark(store.get('zt_dark',false));
+
+if(innerWidth>900)document.querySelectorAll('.acc').forEach(d=>d.open=true);
 
 /* ---------- Developer ---------- */
 function openDev(){
