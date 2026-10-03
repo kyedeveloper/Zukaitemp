@@ -166,10 +166,19 @@ const words=['pinky','sakura','boba','candy','peach','cloud','melon','bunny','ki
 const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
 let acc=null,msgs=[],seen=new Set(),first=true,auto=true,snd=true,cd=10,openId=null,curMsg=null,hist=store.get('pm_hist',[]);
 
+let BASE='/api/mail';
+async function req(path,opt){
+  if(BASE!==API){
+    try{const r=await fetch(BASE+path,opt);if(r.headers.get('x-zt-proxy'))return r}catch{}
+    BASE=API;
+  }
+  return fetch(API+path,opt);
+}
 async function api(path,opt={},tok){
-  const h={'Content-Type':'application/json'};
+  const h={};
+  if(opt.body)h['Content-Type']='application/json';
   if(tok)h.Authorization='Bearer '+tok;
-  const r=await fetch(API+path,{...opt,headers:h});
+  const r=await req(path,{...opt,headers:h});
   if(r.status===204)return null;
   const j=await r.json().catch(()=>null);
   if(!r.ok)throw new Error(j?.['hydra:description']||j?.message||'Error '+r.status);
@@ -183,8 +192,12 @@ function ago(d){const s=(Date.now()-new Date(d))/1000;if(s<60)return'baru saja';
 
 /* ---------- Akun ---------- */
 async function loadDomains(){
-  try{const j=await api('/domains');const d=j['hydra:member'].filter(x=>x.isActive);$('#dom').innerHTML=d.map(x=>`<option>${esc(x.domain)}</option>`).join('')}
-  catch(e){toast('Gagal memuat domain. Cek koneksi internet.')}
+  try{
+    const j=await api('/domains');const d=(j['hydra:member']||j).filter(x=>x.isActive);
+    if(!d.length)throw new Error('daftar domain kosong');
+    $('#dom').innerHTML=d.map(x=>`<option>${esc(x.domain)}</option>`).join('');
+  }catch(e){$('#addr').textContent='Menghubungkan ke server...';toast('Gagal memuat domain: '+e.message+' (coba lagi otomatis)');return false}
+  return true;
 }
 async function make(user,domain){
   user=(user||words[Math.random()*words.length|0]+rnd(5)).toLowerCase().replace(/[^a-z0-9._-]/g,'');
@@ -266,7 +279,7 @@ async function openMsg(id){
   }catch(e){toast(e.message)}
 }
 async function dl(a){
-  try{const r=await fetch(API+a.downloadUrl,{headers:{Authorization:'Bearer '+acc.token}});const u=URL.createObjectURL(await r.blob());const l=document.createElement('a');l.href=u;l.download=a.filename;l.click();URL.revokeObjectURL(u)}catch{toast('Gagal mengunduh lampiran')}
+  try{const r=await req(a.downloadUrl,{headers:{Authorization:'Bearer '+acc.token}});const u=URL.createObjectURL(await r.blob());const l=document.createElement('a');l.href=u;l.download=a.filename;l.click();URL.revokeObjectURL(u)}catch{toast('Gagal mengunduh lampiran')}
 }
 async function delMsg(){
   if(!openId)return;
@@ -318,7 +331,8 @@ setDark(store.get('zt_dark',false));
 
 /* ---------- Mulai ---------- */
 (async()=>{
-  await loadDomains();renderHist();render();
+  let ok=await loadDomains();renderHist();render();
+  while(!ok){await new Promise(r=>setTimeout(r,4000));ok=await loadDomains()}
   const cur=store.get('pm_cur'),i=hist.findIndex(h=>h.address===cur);
   if(i>=0)switchTo(i);else make();
 })();
