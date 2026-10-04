@@ -1,5 +1,5 @@
 // Service worker ZukaiTemp: halaman selalu coba versi terbaru dulu, cadangan dari cache.
-const V = 'zukaitemp-v6';
+const V = 'zukaitemp-v8';
 const SHELL = ['/', '/index.html', '/email.html', '/music.html', '/download.html', '/tools.html', '/base.css', '/glass.css', '/dark-sync.js', '/manifest.json', '/icon-192.png', '/icon-512.png', '/icon-maskable.png', '/apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
@@ -16,9 +16,11 @@ self.addEventListener('fetch', e => {
   // API email & situs lain tidak pernah di-cache
   if (r.method !== 'GET' || u.origin !== location.origin || u.pathname.startsWith('/api/')) return;
   if (r.mode === 'navigate') {
+    // hanya halaman utama yang boleh menimpa cache /index.html (iframe musik dll tidak)
+    const home = u.pathname === '/' || u.pathname === '/index.html';
     e.respondWith(
-      fetch(r).then(res => { const cp = res.clone(); caches.open(V).then(c => c.put('/index.html', cp)); return res; })
-        .catch(() => caches.match('/index.html'))
+      fetch(r).then(res => { if (home) { const cp = res.clone(); caches.open(V).then(c => c.put('/index.html', cp)); } return res; })
+        .catch(() => (home ? caches.match('/index.html') : caches.match(u.pathname).then(h => h || caches.match('/index.html'))))
     );
     return;
   }
