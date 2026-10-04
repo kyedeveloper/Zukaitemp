@@ -107,8 +107,8 @@ input[type=color]{border-radius:12px;width:100%;height:46px}
 <div class="blob b1"></div><div class="blob b2"></div>
 <div class="wrap">
   <header class="nav">
-    <a class="logo f" href="/tools.html"><span class="lg">🛠</span><span>ZukaiTools</span></a>
-    <a class="btn o sm" href="/">📧 Email</a>
+    <a class="logo f" href="#" onclick="return false"><span class="lg">🛠</span><span>ZukaiTools</span></a>
+    
   </header>
 
   <section class="hero">
@@ -123,6 +123,7 @@ input[type=color]{border-radius:12px;width:100%;height:46px}
     <button class="tab" data-t="qr" role="tab">🔗 QR Code</button>
     <button class="tab" data-t="sp" role="tab">📶 Speed Test</button>
     <button class="tab" data-t="cp" role="tab">🗜 Kompres</button>
+    <button class="tab" data-t="ut" role="tab">🧰 Utilitas</button>
     <button class="tab" data-t="pw" role="tab">🔑 Password</button>
   </div>
 
@@ -298,6 +299,42 @@ input[type=color]{border-radius:12px;width:100%;height:46px}
     </div>
   </section>
 
+  <!-- UTILITAS -->
+  <section class="card panel" id="p-ut">
+    <h2>🧰 Utilitas</h2>
+    <p class="sub">Alat kecil yang sering dipakai.</p>
+    <div class="fld"><label for="utKind">Pilih alat</label>
+      <select id="utKind"><option value="cnt">📝 Penghitung kata & ubah huruf</option><option value="b64">🔐 Base64 encode / decode</option><option value="hash">#️⃣ Hash SHA-256</option><option value="tts">🔊 Teks ke suara</option><option value="fx">💱 Kurs mata uang</option></select></div>
+    <div class="ut" id="ut-cnt" style="margin-top:16px">
+      <textarea id="utT1" rows="6" placeholder="Tempel atau ketik teks di sini..."></textarea>
+      <div class="stat" id="utCnt">0 kata · 0 karakter</div>
+      <div class="ctl"><button class="btn o sm" data-c="up">HURUF BESAR</button><button class="btn o sm" data-c="lo">huruf kecil</button><button class="btn o sm" data-c="ti">Kapital Tiap Kata</button><button class="btn o sm" data-c="sp">Rapikan spasi</button></div>
+    </div>
+    <div class="ut" id="ut-b64" style="margin-top:16px" hidden>
+      <textarea id="utT2" rows="4" placeholder="Teks atau Base64..."></textarea>
+      <div class="ctl"><button class="btn p sm" id="b64e">Encode →</button><button class="btn o sm" id="b64d">← Decode</button></div>
+      <textarea id="utO2" rows="4" readonly placeholder="Hasil"></textarea>
+    </div>
+    <div class="ut" id="ut-hash" style="margin-top:16px" hidden>
+      <textarea id="utT3" rows="4" placeholder="Ketik teks untuk di-hash..."></textarea>
+      <div class="pwout" id="utH" style="margin-top:12px;font-size:.9rem">–</div>
+    </div>
+    <div class="ut" id="ut-tts" style="margin-top:16px" hidden>
+      <textarea id="utT4" rows="4" placeholder="Ketik teks yang mau dibacakan..."></textarea>
+      <div class="ctl"><div class="fld"><label for="utV">Suara</label><select id="utV"></select></div></div>
+      <div class="ctl" style="margin-top:0"><button class="btn p" id="ttsGo">🔊 Bacakan</button><button class="btn o" id="ttsStop">⏹ Stop</button></div>
+    </div>
+    <div class="ut" id="ut-fx" style="margin-top:16px" hidden>
+      <div class="ctl" style="margin-top:0">
+        <div class="fld"><label for="fxA">Jumlah</label><input type="number" id="fxA" value="1" min="0" step="any"></div>
+        <div class="fld"><label for="fxF">Dari</label><select id="fxF"></select></div>
+        <div class="fld"><label for="fxT">Ke</label><select id="fxT"></select></div>
+      </div>
+      <div class="ctl"><button class="btn p" id="fxGo">💱 Hitung</button></div>
+      <div class="pwout" id="fxO" style="font-size:1.15rem">–</div>
+    </div>
+  </section>
+
   <!-- PASSWORD -->
   <section class="card panel" id="p-pw">
     <h2>🔑 Generator Password</h2>
@@ -319,6 +356,7 @@ input[type=color]{border-radius:12px;width:100%;height:46px}
 <div class="toast" id="toast"></div>
 
 <script>
+addEventListener('storage',e=>{if(e.key==='zt_dark'){try{document.documentElement.toggleAttribute('data-dark',!!JSON.parse(e.newValue))}catch{}}});
 try{if(JSON.parse(localStorage.getItem('zt_dark')))document.documentElement.setAttribute('data-dark','')}catch{}
 const $=s=>document.querySelector(s);
 function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('on'),2800)}
@@ -675,6 +713,30 @@ $('#spGo').onclick=async()=>{
     stat('sp',`Selesai ✨ Download ${dl.toFixed(1)} Mbps, upload ${ul.toFixed(1)} Mbps, ping ${Math.round(ping)} ms`+(c?` · jaringan ${c}`:''));
   }catch(e){stat('sp',e.message==='Dibatalkan'?'Dibatalkan.':'Gagal: '+e.message+'. Tes ini butuh akses ke speed.cloudflare.com.');gauge(0,'Siap')}
   sp.busy=false;$('#spGo').textContent='▶ Mulai tes';
+};
+
+/* ---------- Utilitas ---------- */
+const utShow=()=>document.querySelectorAll('.ut').forEach(d=>d.hidden=d.id!=='ut-'+$('#utKind').value);
+$('#utKind').onchange=utShow;
+const cnt=()=>{const t=$('#utT1').value,w=(t.trim().match(/\S+/g)||[]).length;$('#utCnt').textContent=`${w} kata · ${t.length} karakter · ${t?t.split(/\n/).length:0} baris`};
+$('#utT1').oninput=cnt;
+document.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{const t=$('#utT1'),v=t.value;t.value={up:v.toUpperCase(),lo:v.toLowerCase(),ti:v.toLowerCase().replace(/(^|\s)\S/g,m=>m.toUpperCase()),sp:v.replace(/[ \t]+/g,' ').replace(/\n{3,}/g,'\n\n').trim()}[b.dataset.c];cnt()});
+const u8=s=>new TextEncoder().encode(s);
+$('#b64e').onclick=()=>{let b='';u8($('#utT2').value).forEach(x=>b+=String.fromCharCode(x));$('#utO2').value=btoa(b)};
+$('#b64d').onclick=()=>{try{const b=atob($('#utT2').value.trim()),a=Uint8Array.from(b,c=>c.charCodeAt(0));$('#utO2').value=new TextDecoder().decode(a)}catch{$('#utO2').value='(bukan Base64 yang valid)'}};
+$('#utT3').oninput=async()=>{const v=$('#utT3').value;if(!v){$('#utH').textContent='–';return}const h=await crypto.subtle.digest('SHA-256',u8(v));$('#utH').textContent=[...new Uint8Array(h)].map(x=>x.toString(16).padStart(2,'0')).join('')};
+function voices(){const vs=speechSynthesis.getVoices().sort((a,b)=>(/^id/.test(b.lang)-/^id/.test(a.lang)));$('#utV').innerHTML=vs.map((v,i)=>`<option value="${i}">${v.name} (${v.lang})</option>`).join('')||'<option>Suara bawaan</option>';window._vs=vs}
+if('speechSynthesis' in window){voices();speechSynthesis.onvoiceschanged=voices}
+$('#ttsGo').onclick=()=>{if(!('speechSynthesis' in window))return toast('Browser ini tidak mendukung suara');const t=$('#utT4').value.trim();if(!t)return toast('Isi teksnya dulu');speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t),v=(window._vs||[])[+$('#utV').value];if(v){u.voice=v;u.lang=v.lang}else u.lang='id-ID';speechSynthesis.speak(u)};
+$('#ttsStop').onclick=()=>speechSynthesis.cancel();
+const CUR=['IDR','USD','EUR','SGD','MYR','JPY','GBP','AUD','SAR','KRW','CNY','THB'];
+$('#fxF').innerHTML=$('#fxT').innerHTML=CUR.map(c=>`<option>${c}</option>`).join('');$('#fxF').value='USD';$('#fxT').value='IDR';
+$('#fxGo').onclick=async()=>{
+  const a=+$('#fxA').value,f=$('#fxF').value,t=$('#fxT').value;
+  if(f===t){$('#fxO').textContent=a.toLocaleString('id-ID')+' '+t;return}
+  $('#fxO').textContent='Menghitung...';
+  try{const r=await fetch(`https://api.frankfurter.app/latest?amount=${a}&from=${f}&to=${t}`);if(!r.ok)throw new Error('HTTP '+r.status);const j=await r.json();$('#fxO').textContent=`${a.toLocaleString('id-ID')} ${f} = ${j.rates[t].toLocaleString('id-ID',{maximumFractionDigits:2})} ${t}  (kurs ${j.date})`}
+  catch(e){$('#fxO').textContent='Gagal mengambil kurs: '+e.message}
 };
 
 /* ---------- 4. Password ---------- */

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unduh</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/base.css">
+<style>
+.plats{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.pt{background:var(--w);border:2px solid var(--p3);border-radius:99px;padding:6px 14px;font-weight:700;font-size:.85rem;color:var(--mut)}
+.res{margin-top:18px;display:flex;flex-direction:column;gap:14px}
+.res img{width:100%;max-height:300px;object-fit:cover;border-radius:16px}
+.res h3{font-size:1.05rem}
+.dls{display:flex;flex-direction:column;gap:10px}
+.note{background:var(--p4);border-radius:14px;padding:12px 14px;font-size:.84rem;color:var(--mut);font-weight:600;margin-top:16px}
+.err{color:#d6336c;font-weight:700}
+</style></head>
+<body><div class="wrap">
+  <div class="hd"><h1>⬇️ Downloader</h1></div>
+  <div class="card">
+    <p class="sub" style="margin-bottom:12px">Tempel link video, lalu pilih hasil unduhan.</p>
+    <input id="u" type="url" inputmode="url" placeholder="https://www.tiktok.com/@user/video/...">
+    <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+      <button class="btn p" id="go" style="flex:1">⬇ Ambil video</button>
+      <button class="btn o" id="paste">📋 Tempel</button>
+    </div>
+    <div class="plats"><span class="pt">🎵 TikTok</span><span class="pt">📸 Instagram</span><span class="pt">▶️ YouTube</span><span class="pt">🐦 X / Twitter</span><span class="pt">👥 Facebook</span></div>
+    <div class="sub" id="st"></div>
+    <div class="res" id="res"></div>
+    <p class="note">TikTok langsung jalan. Platform lain (YouTube, Instagram, dll) butuh server Cobalt yang diatur di Vercel (variabel COBALT_API). Unduh hanya konten milikmu atau yang boleh disimpan, dan hargai hak cipta pembuatnya.</p>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script src="/dark-sync.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('on'),2600)}
+$('#paste').onclick=async()=>{try{$('#u').value=await navigator.clipboard.readText();$('#u').focus()}catch{toast('Izin tempel ditolak, tempel manual ya')}};
+async function run(){
+  const u=$('#u').value.trim();
+  if(!/^https?:\/\//i.test(u))return toast('Masukkan link yang diawali https://');
+  $('#go').disabled=true;$('#res').innerHTML='';$('#st').textContent='Mengambil data video...';
+  try{
+    const r=await fetch('/api/dl?u='+encodeURIComponent(u),{cache:'no-store'});
+    const j=await r.json().catch(()=>({error:'Balasan server tidak valid'}));
+    if(!r.ok||j.error)throw new Error(j.error||'HTTP '+r.status);
+    $('#st').textContent='Siap! Ketuk tombol untuk membuka atau menyimpan.';
+    $('#res').innerHTML=(j.cover?`<img src="${esc(j.cover)}" alt="" referrerpolicy="no-referrer">`:'')+
+      `<div><h3>${esc(j.title||'Video')}</h3><span class="sub">${esc(j.author||'')}</span></div>
+       <div class="dls">${j.items.map(i=>`<a class="btn ${i.type==='video'?'p':'o'}" href="${esc(i.url)}" target="_blank" rel="noopener noreferrer" download>${i.type==='audio'?'🎵':i.type==='image'?'🖼':'🎬'} ${esc(i.label)}</a>`).join('')}</div>
+       <p class="sub">Kalau cuma terbuka di tab baru, tahan lama video lalu pilih "Simpan/Unduh".</p>`;
+  }catch(e){$('#st').innerHTML='<span class="err">'+esc(e.message)+'</span>'}
+  $('#go').disabled=false;
+}
+$('#go').onclick=run;$('#u').onkeydown=e=>{if(e.key==='Enter')run()};
+</script></body></html>

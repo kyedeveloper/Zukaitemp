@@ -32,9 +32,28 @@
   ],
   "shortcuts": [
     {
+      "name": "Musik",
+      "url": "/#musik",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Unduh video",
+      "url": "/#unduh",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
       "name": "ZukaiTools",
-      "short_name": "Tools",
-      "url": "/tools.html",
+      "url": "/#tools",
       "icons": [
         {
           "src": "/icon-192.png",
