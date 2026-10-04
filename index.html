@@ -24,7 +24,8 @@ iframe.before{transform:translateX(-8%) scale(.96)}
 iframe.on{opacity:1;visibility:visible;pointer-events:auto;transform:none;filter:none;transition:transform .55s cubic-bezier(.22,1,.36,1),opacity .4s ease,filter .45s ease,visibility 0s}
 #load{position:absolute;left:50%;top:42%;width:46px;height:46px;margin:-23px;border-radius:50%;border:4px solid rgba(255,77,148,.2);border-top-color:var(--p1);animation:sp .8s linear infinite;z-index:3}
 @keyframes sp{to{transform:rotate(360deg)}}
-#bar{position:absolute;left:14px;right:14px;bottom:calc(10px + var(--sb));height:68px;border-radius:30px;display:grid;grid-template-columns:repeat(4,1fr);padding:6px;z-index:10}
+#bar{position:absolute;left:14px;right:14px;bottom:calc(10px + var(--sb));height:68px;border-radius:30px;display:grid;grid-template-columns:repeat(4,1fr);padding:6px;z-index:10;transition:transform .55s cubic-bezier(.22,1,.36,1),opacity .4s}
+body.npo #bar,body.npo #mini{transform:translateY(190%);opacity:0;pointer-events:none}
 #ind{position:absolute;top:6px;bottom:6px;left:6px;width:calc((100% - 12px)/4);border-radius:24px;background:linear-gradient(145deg,rgba(255,255,255,.95),rgba(255,255,255,.45));box-shadow:inset 0 1.5px 0 #fff,0 8px 22px -8px rgba(255,77,148,.7);transform:translateX(calc(var(--i,0)*100%));transition:transform .6s cubic-bezier(.34,1.46,.64,1)}
 :root[data-dark] #ind{background:linear-gradient(145deg,rgba(255,255,255,.28),rgba(255,255,255,.1))}
 #bar button{position:relative;z-index:1;border:0;background:none;color:var(--mut);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font:600 .72rem Fredoka;transition:color .3s}
@@ -114,12 +115,14 @@ function go(v){
   $('#bar').style.setProperty('--i',n);
   $('#load').hidden=$('#v-'+v).dataset.r==='1';
   syncMini();
+  if(v!=='musik'&&document.body.classList.contains('npo'))cmd('closeNp');
   if(location.hash.slice(1)!==v)history.replaceState(null,'','#'+v);
 }
 document.querySelectorAll('#bar [data-v]').forEach(b=>b.onclick=()=>go(b.dataset.v));
 addEventListener('message',e=>{
   if(e.origin!==location.origin||!e.data)return;
   if(e.data.go)go(e.data.go);
+  if('np' in e.data)document.body.classList.toggle('npo',!!e.data.np);
   if(e.data.stats){mailStats=e.data.stats;mailResolve(mailStats)}
   if(e.data.mini){mini=e.data.mini;$('#mT').textContent=mini.title||'';$('#mA').textContent=mini.artist||'';$('#mArt').style.backgroundImage=mini.art?`url("${String(mini.art).replace(/"/g,'')}")`:'';$('#mPl').textContent=mini.playing?'⏸':'▶';syncMini()}
 });
