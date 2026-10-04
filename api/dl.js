@@ -18,10 +18,10 @@ async function tiktok(u) {
 }
 
 async function cobalt(u) {
-  const base = (process.env.COBALT_API || '').replace(/\/+$/, '');
+  const base = (process.env.API_URL || '').replace(/\/+$/, '');
   if (!base) throw new Error('Platform ini butuh server Cobalt. Atur variabel COBALT_API di Vercel (Settings > Environment Variables), lalu deploy ulang.');
   const headers = { accept: 'application/json', 'content-type': 'application/json', 'user-agent': UA };
-  if (process.env.COBALT_KEY) headers.authorization = 'Api-Key ' + process.env.COBALT_KEY;
+  if (process.env.COBALT_API_KEY) headers.authorization = 'Api-Key ' + process.env.COBALT_API_KEY;
   const r = await fetch(base + '/', { method: 'POST', headers, body: JSON.stringify({ url: u, videoQuality: '720', filenameStyle: 'basic' }), signal: AbortSignal.timeout(9000) });
   const j = await r.json().catch(() => ({}));
   if (j.status === 'error' || (r.status === 400 && j.error)) {
