@@ -189,6 +189,7 @@ details[open]>summary{margin-bottom:18px}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
+<link rel="stylesheet" href="/glass.css">
 </head>
 <body>
 <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
@@ -347,7 +348,8 @@ async function loadDomains(){
       if(!l.length)throw new Error('daftar domain kosong');
       got[p]=l;paint();if(!done){done=true;res(true)}
     }).catch(e=>errs.push(pn(p)+': '+e.message)).finally(()=>{
-      if(--pending===0&&!done){$('#addr').textContent='Menghubungkan ke server...';toast('Gagal memuat domain: '+errs[0]+' (coba lagi otomatis)');res(false)}
+      if(--pending===0)try{parent.postMessage({stats:{ok:Object.keys(got).length,total:ks.length,domains:Object.values(got).reduce((n,l)=>n+l.length,0)}},location.origin)}catch{}
+      if(pending===0&&!done){$('#addr').textContent='Menghubungkan ke server...';toast('Gagal memuat domain: '+errs[0]+' (coba lagi otomatis)');res(false)}
     }));
   });
 }

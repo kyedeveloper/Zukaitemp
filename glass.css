@@ -1,0 +1,21 @@
+/* ZukaiTemp · Liquid Glass: dimuat paling akhir di semua halaman */
+:root{--gl:rgba(255,255,255,.58);--gl2:rgba(255,255,255,.2);--glb:rgba(255,255,255,.72);--gls:rgba(255,77,148,.38);--sb:0px;--navh:calc(86px + var(--sb))}
+:root[data-dark]{--gl:rgba(255,255,255,.12);--gl2:rgba(255,255,255,.04);--glb:rgba(255,255,255,.2);--gls:rgba(0,0,0,.55)}
+html{background:var(--p4)}
+body{background:radial-gradient(55% 38% at 12% 0%,rgba(255,143,189,.6),transparent 72%),radial-gradient(45% 36% at 100% 18%,rgba(255,77,148,.28),transparent 72%),radial-gradient(60% 42% at 55% 100%,rgba(255,196,224,.7),transparent 72%),var(--p4);background-attachment:fixed;color:var(--ink)}
+:root[data-dark] body{background:radial-gradient(55% 38% at 12% 0%,rgba(255,77,148,.3),transparent 72%),radial-gradient(60% 42% at 85% 100%,rgba(140,60,200,.28),transparent 72%),var(--p4);background-attachment:fixed}
+.glass,.card,.st,.pv,.note,.mini>div,.pwout,.box,.tab:not(.on),.chip:not(.on),.m:not(.un),.h:not(.cur),.pt{
+  background:linear-gradient(145deg,var(--gl),var(--gl2))!important;
+  -webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);
+  border:1px solid var(--glb)!important;
+  box-shadow:inset 0 1.5px 0 rgba(255,255,255,.75),inset 0 -1px 0 rgba(255,255,255,.12),0 14px 34px -16px var(--gls)!important}
+.drop,a.tools{background:linear-gradient(145deg,var(--gl),var(--gl2))!important;-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%)}
+input:not([type=range]):not([type=color]):not([type=checkbox]),select,textarea{background:rgba(255,255,255,.42)!important;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid var(--glb)!important}
+:root[data-dark] input:not([type=range]):not([type=color]):not([type=checkbox]),:root[data-dark] select,:root[data-dark] textarea{background:rgba(255,255,255,.08)!important}
+.wrap{padding-bottom:calc(var(--navh) + 96px)!important}
+.modal{background:rgba(64,24,45,.3)!important;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);padding-bottom:calc(var(--navh) + 8px)!important}
+.box{max-height:calc(100vh - var(--navh) - 40px)!important}
+.toast{bottom:calc(var(--navh) + 12px)!important}
+.btn,.tab,.chip{transition:transform .25s cubic-bezier(.34,1.56,.64,1),background .25s,box-shadow .25s}
+.card,.st{animation:glassIn .6s cubic-bezier(.22,1,.36,1) both}
+@keyframes glassIn{from{opacity:0;transform:translateY(14px) scale(.985)}}
