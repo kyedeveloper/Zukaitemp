@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="id"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<script src="/core.js"></script><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Unduh</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/base.css">
@@ -13,7 +14,7 @@
 .dls{display:flex;flex-direction:column;gap:10px}
 .note{background:var(--p4);border-radius:14px;padding:12px 14px;font-size:.84rem;color:var(--mut);font-weight:600;margin-top:16px}
 .err{color:#d6336c;font-weight:700}
-</style><link rel="stylesheet" href="/glass.css">
+</style><link rel="stylesheet" href="/glass.css"><link rel="stylesheet" href="/theme.css">
 </head>
 <body><div class="wrap">
   <div class="hd"><h1>⬇️ Downloader</h1></div>
@@ -31,7 +32,7 @@
   </div>
 </div>
 <div class="toast" id="toast"></div>
-<script src="/dark-sync.js"></script>
+
 <script>
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

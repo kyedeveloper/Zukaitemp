@@ -2,6 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
+<script src="/core.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ZukaiTools · Hapus Background, Upscale & Lainnya</title>
 <meta name="description" content="Tools gambar gratis: hapus background, upscale, kompres foto, dan generator password.">
@@ -11,7 +12,7 @@
 <link rel="icon" type="image/png" href="/icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--p1:#ff4d94;--p2:#ff8fbd;--p3:#ffd9e8;--p4:#fff5f9;--ink:#40182d;--mut:#936079;--w:#fff;--sh:0 14px 34px -18px rgba(255,77,148,.55)}
+:root{--p1:#ff4d94;--p2:#ff8fbd;--p3:#ffd9e8;--p4:#fff5f9;--ink:#40182d;--mut:#936079;--w:#fff;--sh:0 14px 34px -18px color-mix(in srgb,var(--p1) 55%,transparent)}
 :root[data-dark]{--p4:#1f0d18;--w:#33172a;--ink:#ffe6f1;--mut:#d79ab9;--p3:#5a2a45}
 *{box-sizing:border-box;margin:0}
 body{font:400 16px/1.55 Nunito,system-ui,sans-serif;color:var(--ink);background:var(--p4);min-height:100vh;overflow-x:hidden}
@@ -32,7 +33,7 @@ button{font-family:inherit}
 .btn.p{background:var(--p1);color:#fff;box-shadow:0 10px 20px -10px var(--p1)}
 .btn.o{background:var(--p4);color:var(--p1);border:2px solid var(--p3)}
 .btn:focus-visible,.tab:focus-visible,.drop:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--p1);outline-offset:2px}
-.hero{background:linear-gradient(135deg,var(--p1),#ff78ae);border-radius:30px;padding:30px 28px;color:#fff;box-shadow:0 24px 46px -20px rgba(255,77,148,.7);margin-bottom:22px;position:relative;overflow:hidden}
+.hero{background:linear-gradient(135deg,var(--p1),color-mix(in srgb,var(--p1) 72%,var(--g2)));border-radius:30px;padding:30px 28px;color:#fff;box-shadow:0 24px 46px -20px color-mix(in srgb,var(--p1) 70%,transparent);margin-bottom:22px;position:relative;overflow:hidden}
 .hero::after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.13);right:-60px;top:-80px}
 .hero h1{font-size:clamp(1.5rem,5vw,2.1rem);line-height:1.2;position:relative}
 .hero p{opacity:.95;font-weight:600;margin-top:8px;position:relative}
@@ -102,7 +103,7 @@ input[type=color]{border-radius:12px;width:100%;height:46px}
 @media(max-width:640px){.mini{grid-template-columns:repeat(2,1fr)}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
-<link rel="stylesheet" href="/glass.css">
+<link rel="stylesheet" href="/glass.css"><link rel="stylesheet" href="/theme.css">
 </head>
 <body>
 <div class="blob b1"></div><div class="blob b2"></div>

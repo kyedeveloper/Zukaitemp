@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<script src="/core.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Menu · ZukaiTemp</title>
+<meta name="theme-color" content="#ff4d94">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/base.css">
+<style>
+.top{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.ib{flex:none;width:46px;height:46px;border-radius:16px;display:grid;place-items:center;color:var(--ink);transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+.ib:active{transform:scale(.9)}
+.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.tt h1{font-size:1.6rem;line-height:1.1;background:linear-gradient(90deg,var(--p1),var(--g2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.pg.in>*{animation:ztRise .6s cubic-bezier(.22,1,.36,1) both}
+.pg.in>*:nth-child(2){animation-delay:.05s}.pg.in>*:nth-child(3){animation-delay:.1s}.pg.in>*:nth-child(4){animation-delay:.15s}.pg.in>*:nth-child(5){animation-delay:.2s}.pg.in>*:nth-child(n+6){animation-delay:.25s}
+.card{margin-bottom:14px}.card h3{font-size:1.02rem;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.card p.d,p.d{color:var(--mut);font-weight:600;font-size:.84rem;line-height:1.5}
+.hero{display:flex;align-items:center;gap:14px;padding:18px;border-radius:30px;margin-bottom:16px;color:#fff;background:linear-gradient(135deg,var(--p1),color-mix(in srgb,var(--p1) 38%,var(--g2)));box-shadow:0 24px 44px -20px var(--p1);position:relative;overflow:hidden}
+.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.16);pointer-events:none}
+.hero::before{width:170px;height:170px;right:-50px;top:-70px}.hero::after{width:90px;height:90px;right:60px;bottom:-50px;background:rgba(255,255,255,.1)}
+.av2{flex:none;width:62px;height:62px;border-radius:50%;background:rgba(255,255,255,.28);border:2px solid rgba(255,255,255,.75);display:grid;place-items:center;font:600 1.6rem Fredoka;overflow:hidden;position:relative;z-index:1}
+.av2 img{width:100%;height:100%;object-fit:cover}
+.ht{min-width:0;flex:1;position:relative;z-index:1}.ht b{display:block;font:600 1.12rem Fredoka;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ht span{display:block;font-size:.8rem;font-weight:700;opacity:.92;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ht em{display:inline-block;margin-top:5px;font:700 .7rem Nunito;font-style:normal;padding:2px 10px;border-radius:99px;background:rgba(255,255,255,.3)}
+.hb{position:relative;z-index:1;flex:none;border:0;border-radius:99px;min-height:40px;padding:0 16px;font:600 .86rem Fredoka;background:#fff;color:var(--p1);box-shadow:0 10px 20px -10px rgba(0,0,0,.4);transition:transform .25s cubic-bezier(.34,1.56,.64,1)}.hb:active{transform:scale(.93)}
+.tiles2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.tile2{border:0;text-align:left;display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:24px;color:var(--ink);font:600 .96rem Fredoka;min-height:112px;transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.tile2:active{transform:scale(.94)}
+.tile2 .em{width:46px;height:46px;border-radius:16px;display:grid;place-items:center;font-size:1.4rem;background:linear-gradient(135deg,color-mix(in srgb,var(--p1) 22%,transparent),color-mix(in srgb,var(--g2) 22%,transparent))}
+.tile2 small{display:block;font:700 .72rem Nunito;color:var(--mut);margin-top:-6px}
+.row{display:flex;align-items:center;gap:12px;width:100%;min-height:58px;padding:8px 4px;border:0;background:none;color:var(--ink);font:600 .96rem Fredoka;text-align:left;border-radius:16px}
+.row+.row{border-top:1px solid color-mix(in srgb,var(--p1) 10%,transparent)}
+.row .em{flex:none;width:40px;height:40px;border-radius:14px;display:grid;place-items:center;font-size:1.2rem;background:color-mix(in srgb,var(--p1) 12%,transparent)}
+.row .tx{flex:1;min-width:0}.row .tx small{display:block;font:700 .76rem Nunito;color:var(--mut);white-space:normal}
+.row .ch{color:var(--mut);font-size:1.3rem}
+.seg{display:flex;gap:4px;padding:4px;border-radius:18px;background:color-mix(in srgb,var(--p1) 9%,transparent);margin-bottom:12px}
+.seg button{flex:1;min-height:42px;border:0;border-radius:14px;background:transparent;color:var(--mut);font:600 .84rem Fredoka;transition:background .3s,color .3s,box-shadow .3s}
+.seg button.on{background:linear-gradient(135deg,var(--p1),color-mix(in srgb,var(--p1) 55%,var(--g2)));color:#fff;box-shadow:0 8px 16px -8px var(--p1)}
+.tg{flex:none;width:54px;height:32px;border:0;border-radius:99px;background:color-mix(in srgb,var(--mut) 35%,transparent);position:relative;transition:background .3s}
+.tg::after{content:"";position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 3px 8px rgba(0,0,0,.3);transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
+.tg.on{background:linear-gradient(135deg,var(--p1),var(--g2))}.tg.on::after{transform:translateX(22px)}
+.swg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.sw2{border:2px solid transparent;border-radius:20px;padding:10px 6px;background:var(--w);display:flex;flex-direction:column;align-items:center;gap:6px;font:600 .78rem Fredoka;color:var(--ink);transition:transform .3s cubic-bezier(.34,1.56,.64,1),border-color .25s}
+.sw2:active{transform:scale(.92)}.sw2.on{border-color:var(--c1)}
+.sw2 i{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--c1),var(--c2));box-shadow:0 10px 18px -8px var(--c1);display:grid;place-items:center;color:#fff;font-style:normal;font-weight:700}
+.chp{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:99px;font:700 .72rem Nunito;background:color-mix(in srgb,var(--p1) 14%,transparent);color:var(--p1);white-space:nowrap}
+.chp.ok{color:#0f9a63;background:rgba(16,185,129,.15)}.chp.er{color:#e0334f;background:rgba(255,59,92,.14)}.chp.wr{color:#c27400;background:rgba(255,157,47,.17)}
+.f2{display:block;width:100%;border-radius:14px;padding:12px 14px;font:600 .95rem Nunito;color:var(--ink);resize:vertical;min-height:100px;margin-bottom:10px}
+input+input,input+.f2,.f2+input{margin-top:0}
+.fl{display:flex;flex-direction:column;gap:10px}
+.cps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.cps button{border:2px solid var(--p3);background:var(--p4);color:var(--mut);border-radius:99px;min-height:38px;padding:0 14px;font:600 .82rem Fredoka;transition:all .25s}
+.cps button.on{background:linear-gradient(135deg,var(--p1),var(--g2));border-color:transparent;color:#fff}
+.li{padding:14px;border-radius:20px;margin-bottom:10px}
+.li .lh{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.li .lh b{font:600 .98rem Fredoka;flex:1;min-width:0}
+.li .lm2{font-size:.9rem;font-weight:600;white-space:pre-wrap;word-break:break-word}
+.li .ls{margin-top:8px;font:700 .74rem Nunito;color:var(--mut);display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.li .la{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.sm{border:0;border-radius:12px;min-height:36px;padding:0 13px;font:600 .8rem Fredoka;background:color-mix(in srgb,var(--p1) 13%,transparent);color:var(--p1)}
+.sm.dg{background:rgba(255,59,92,.13);color:#e0334f}
+.sm:disabled{opacity:.5}
+.meter{height:12px;border-radius:99px;background:color-mix(in srgb,var(--p1) 12%,transparent);overflow:hidden;margin:10px 0 6px}
+.meter i{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,var(--p1),var(--g2));transition:width 1s cubic-bezier(.22,1,.36,1)}
+.big{font:600 1.5rem Fredoka}
+.empty{text-align:center;padding:26px 10px;color:var(--mut);font-weight:700}.empty i{display:block;font-style:normal;font-size:2.2rem;margin-bottom:6px}
+.logr{display:flex;gap:10px;padding:10px 4px;border-top:1px solid color-mix(in srgb,var(--p1) 9%,transparent);cursor:pointer}
+.logr:first-child{border-top:0}
+.logr .dt{flex:none;width:10px;height:10px;border-radius:50%;margin-top:6px;background:var(--p1)}
+.logr.error .dt{background:#ff3b5c}.logr.warn .dt{background:#ff9d2f}
+.logr .lm{font:600 .82rem ui-monospace,Menlo,monospace;word-break:break-word;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.logr.open .lm{-webkit-line-clamp:unset}
+.logr small{display:block;font:700 .7rem Nunito;color:var(--mut);margin-top:2px}
+.foot{text-align:center;font:700 .74rem Nunito;color:var(--mut);margin-top:6px;word-break:break-all}
+#sheet{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(14,8,24,.5);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);animation:ztFade .3s}
+.sh2{width:min(100%,380px);border-radius:28px;padding:20px;background:var(--p4);box-shadow:0 30px 60px -24px rgba(0,0,0,.6);animation:ztDlg .5s cubic-bezier(.22,1.2,.36,1)}
+.sh2 h3{margin-bottom:6px}.sh2 p{margin-bottom:12px}.sh2 .r{display:flex;gap:10px;margin-top:12px}.sh2 .r .btn{flex:1}
+</style>
+<link rel="stylesheet" href="/glass.css">
+<link rel="stylesheet" href="/theme.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top"><button class="ib glass" id="back" aria-label="Kembali"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="tt"><h1 id="ttl">Menu</h1></div></header>
+  <main id="pg" class="pg"></main>
+</div>
+<div id="sheet" hidden><div class="sh2"><h3 id="shT"></h3><p class="d" id="shM"></p><textarea class="f2 glass" id="shI" rows="3" hidden></textarea><div class="r"><button class="btn o" id="shN">Batal</button><button class="btn p" id="shY">OK</button></div></div></div>
+<script>
+const $=s=>document.querySelector(s),O=location.origin,esc=ZT.esc,pg=$('#pg');
+const rd=(k,d)=>{try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch{return d}},wr=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
+const isOwner=()=>ZT.role()==='owner';
+const fmtB=n=>n==null?'—':n<1024?n+' B':n<1048576?(n/1024).toFixed(1)+' KB':n<1073741824?(n/1048576).toFixed(1)+' MB':(n/1073741824).toFixed(2)+' GB';
+const ago=t=>{const s=(Date.now()-t)/1000;return s<60?'baru saja':s<3600?Math.floor(s/60)+' mnt lalu':s<86400?Math.floor(s/3600)+' jam lalu':Math.floor(s/86400)+' hari lalu'};
+const clock=t=>new Date(t).toLocaleString('id-ID',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+const avatar=a=>a&&a.picture?`<img src="${esc(a.picture)}" referrerpolicy="no-referrer" alt="">`:(a?esc((a.name||'?')[0].toUpperCase()):'🙂');
+async function api(path,o={}){
+  const h={'content-type':'application/json'},t=ZT.token();if(t)h.authorization='Bearer '+t;
+  const r=await fetch(path,{method:o.method||'GET',headers:h,body:o.body?JSON.stringify(o.body):undefined,cache:'no-store'});
+  let j={};try{j=await r.json()}catch{}
+  if(!r.ok){const e=new Error(j.error||('HTTP '+r.status));e.status=r.status;throw e}return j;
+}
+function ask(o){return new Promise(res=>{
+  $('#shT').textContent=o.title||'';$('#shM').textContent=o.msg||'';const i=$('#shI');i.hidden=!o.input;i.value='';i.placeholder=o.input||'';
+  $('#shY').textContent=o.ok||'OK';$('#shY').className='btn '+(o.danger?'o':'p');$('#shN').hidden=o.single;
+  const done=v=>{$('#sheet').hidden=true;res(v)};
+  $('#shY').onclick=()=>done(o.input?i.value.trim():true);$('#shN').onclick=()=>done(o.input?null:false);
+  $('#sheet').hidden=false;if(o.input)setTimeout(()=>i.focus(),50);
+})}
+/* ---- bagian halaman ---- */
+const S={
+  home:{t:'Menu',r:rHome},akun:{t:'Akun & YouTube',r:rAkun,up:'home'},pengumuman:{t:'Pengumuman',r:rAnn,up:'home'},request:{t:'Request',r:rReq,up:'home'},
+  pengaturan:{t:'Pengaturan',r:rSet,up:'home'},tampilan:{t:'Tampilan',r:rLook,up:'pengaturan'},penyimpanan:{t:'Penyimpanan & cache',r:rStore,up:'pengaturan'},log:{t:'Log',r:rLog,up:'pengaturan'}
+};
+let cur='home';
+function nav(id){
+  if(!S[id])id='home';cur=id;$('#ttl').textContent=S[id].t;
+  pg.classList.remove('in');void pg.offsetWidth;pg.classList.add('in');
+  scrollTo({top:0});S[id].r();
+}
+const A={
+  nav:v=>nav(v),
+  login:()=>ZT.login(),logout:async()=>{if(await ask({title:'Keluar dari akun?',msg:'Akun Google akan diputus dari ZukaiTemp di perangkat ini.',ok:'Keluar'}))ZT.logout()},
+  set:v=>{const [k,val]=v.split(':');ZT.set({[k]:val==='true'?true:val==='false'?false:val});rLook(true)},
+  tg:v=>{ZT.set({[v]:!ZT.prefs()[v]});rLook(true)}
+};
+pg.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const i=b.dataset.a.indexOf(':'),k=i<0?b.dataset.a:b.dataset.a.slice(0,i),v=i<0?'':b.dataset.a.slice(i+1);if(A[k])A[k](v,b,e)});
+$('#back').onclick=()=>{const u=S[cur].up;if(u)nav(u);else parent.postMessage({back:1},O)};
+/* ---- beranda ---- */
+function rHome(){
+  const a=ZT.acct();
+  pg.innerHTML=`<section class="hero"><div class="av2">${avatar(a)}</div><div class="ht"><b>${a?esc(a.name):'Selamat datang 👋'}</b><span>${a?esc(a.email):'Hubungkan Google untuk sinkron YouTube'}</span>${a&&isOwner()?'<em>👑 Owner</em>':''}</div><button class="hb" data-a="${a?'nav:akun':'login'}">${a?'Kelola':'Hubungkan'}</button></section>
+  <div class="tiles2">${[['pengumuman','📣','Pengumuman','Kabar dari owner'],['request','💬','Request','Kirim ke owner'],['tampilan','🎨','Tampilan','Warna & animasi'],['penyimpanan','💾','Penyimpanan','Cache & data'],['log','📜','Log','Catatan aplikasi'],['akun','▶️','YouTube','Impor playlist']].map(t=>`<button class="tile2 glass" data-a="nav:${t[0]}"><span class="em">${t[1]}</span>${t[2]}<small>${t[3]}</small></button>`).join('')}</div>
+  <p class="foot">ID perangkat: ${esc(ZT.dev())}</p>`;
+}
+/* ---- pengaturan ---- */
+function rSet(){
+  pg.innerHTML=`<div class="card">${[['tampilan','🎨','Tampilan','Mode gelap, warna aksen, animasi'],['penyimpanan','💾','Penyimpanan & cache','Pemakaian ruang dan pembersihan'],['log','📜','Log','Catatan kesalahan dan kejadian']].map(r=>`<button class="row" data-a="nav:${r[0]}"><span class="em">${r[1]}</span><span class="tx">${r[2]}<small>${r[3]}</small></span><span class="ch">›</span></button>`).join('')}</div>
+  <div class="card"><h3>ℹ️ Tentang</h3><p class="d">ZukaiTemp · email sementara, musik, downloader, dan tools. Semua pengaturan tampilan tersimpan di perangkat ini.</p></div>`;
+}
+/* ---- tampilan ---- */
+const SWS={sakura:['Sakura','#ff4d94','#b388ff'],aurora:['Aurora','#7c5cff','#ff6fb1'],samudra:['Samudra','#2f7bff','#22d3c5'],mint:['Mint','#10b981','#38bdf8'],senja:['Senja','#ff7a2f','#ff4d94'],mocha:['Mocha','#a0714f','#e8b86d']};
+function rLook(keep){
+  const p=ZT.prefs(),seg=(k,o)=>`<div class="seg">${o.map(x=>`<button data-a="set:${k}:${x[0]}" class="${p[k]===x[0]?'on':''}">${x[1]}</button>`).join('')}</div>`;
+  const tg=(k,em,t,s)=>`<div class="row"><span class="em">${em}</span><span class="tx">${t}<small>${s}</small></span><button class="tg ${p[k]?'on':''}" role="switch" aria-checked="${!!p[k]}" aria-label="${t}" data-a="tg:${k}"></button></div>`;
+  pg.innerHTML=`<div class="card"><h3>🌗 Mode</h3>${seg('theme',[['light','☀️ Terang'],['dark','🌙 Gelap'],['auto','✨ Otomatis']])}<p class="d">Otomatis mengikuti pengaturan HP kamu.</p></div>
+  <div class="card"><h3>🎨 Warna aksen</h3><div class="swg">${Object.entries(SWS).map(([k,v])=>`<button class="sw2 ${p.acc===k?'on':''}" style="--c1:${v[1]};--c2:${v[2]}" data-a="set:acc:${k}"><i>${p.acc===k?'✓':''}</i>${v[0]}</button>`).join('')}</div></div>
+  <div class="card"><h3>✨ Animasi</h3>${seg('anim',[['full','Penuh'],['lite','Hemat'],['off','Mati']])}<p class="d">Hemat mematikan latar bergerak dan animasi masuk. Mati menghentikan semua gerakan (bagus untuk HP lawas atau baterai tipis).</p></div>
+  <div class="card"><h3>🔤 Ukuran teks</h3>${seg('fs',[['s','Kecil'],['m','Normal'],['l','Besar']])}</div>
+  <div class="card">${tg('glass','🪟','Efek kaca','Blur transparan di kartu dan menu')}${tg('swipe','👆','Geser pindah tab','Geser kiri/kanan untuk ganti tab, dari tepi kiri untuk buka menu')}</div>`;
+}
+/* ---- penyimpanan & cache ---- */
+function lsGroups(){
+  const g={musik:0,email:0,pengaturan:0,log:0,lain:0};
+  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i),n=(k.length+(localStorage.getItem(k)||'').length)*2;g[/^zm_/.test(k)?'musik':/^pm_/.test(k)?'email':k==='zt_log'?'log':/^zt_/.test(k)?'pengaturan':'lain']+=n}
+  return g;
+}
+async function rStore(){
+  pg.innerHTML=`<div class="card"><div class="sk" style="height:110px"></div></div>`;
+  const est=navigator.storage&&navigator.storage.estimate?await navigator.storage.estimate().catch(()=>null):null;
+  const persisted=navigator.storage&&navigator.storage.persisted?await navigator.storage.persisted().catch(()=>false):false;
+  const ck=window.caches?await caches.keys().catch(()=>[]):[],g=lsGroups(),lsT=Object.values(g).reduce((a,b)=>a+b,0),d=(est&&est.usageDetails)||{};
+  if(cur!=='penyimpanan')return;
+  const pct=est&&est.quota?Math.max(1,Math.min(100,est.usage/est.quota*100)):0;
+  pg.innerHTML=`<div class="card"><h3>📊 Pemakaian ruang</h3><div class="big">${fmtB(est&&est.usage)}</div><div class="meter"><i style="width:0" data-w="${pct.toFixed(1)}%"></i></div><p class="d">${est?'dari sekitar '+fmtB(est.quota)+' yang boleh dipakai browser':'Browser ini tidak melaporkan pemakaian ruang.'}</p></div>
+  <div class="card"><h3>🧱 Rincian</h3>
+    <div class="row"><span class="em">🧩</span><span class="tx">Cache aplikasi<small>${ck.length} cache · halaman &amp; aset untuk mode offline</small></span><b>${fmtB(d.caches)}</b></div>
+    <div class="row"><span class="em">🧠</span><span class="tx">Data &amp; model AI (IndexedDB)<small>Model Tools yang diunduh sekali</small></span><b>${fmtB(d.indexedDB)}</b></div>
+    <div class="row"><span class="em">🗂️</span><span class="tx">Data aplikasi<small>Musik ${fmtB(g.musik)} · Email ${fmtB(g.email)} · Pengaturan ${fmtB(g.pengaturan)} · Log ${fmtB(g.log)}${g.lain?' · Lain '+fmtB(g.lain):''}</small></span><b>${fmtB(lsT)}</b></div></div>
+  <div class="card"><h3>🧹 Bersihkan</h3>
+    <button class="row" data-a="clr:cache"><span class="em">🧩</span><span class="tx">Bersihkan cache aplikasi<small>Aman. Halaman diunduh ulang saat dibuka berikutnya.</small></span><span class="ch">›</span></button>
+    <button class="row" data-a="clr:musik"><span class="em">🎵</span><span class="tx">Bersihkan cache musik<small>Menghapus hasil pencocokan video. Favorit dan playlist tetap aman.</small></span><span class="ch">›</span></button>
+    <button class="row" data-a="clr:log"><span class="em">📜</span><span class="tx">Hapus log<small>${(rd('zt_log',[])).length} catatan</small></span><span class="ch">›</span></button>
+    <button class="row" data-a="clr:look"><span class="em">🎨</span><span class="tx">Reset tampilan<small>Kembali ke warna dan animasi bawaan</small></span><span class="ch">›</span></button>
+    <button class="row" data-a="persist"><span class="em">🔒</span><span class="tx">Penyimpanan permanen<small>${persisted?'Aktif: browser tidak akan menghapus data otomatis':'Minta browser agar tidak menghapus data saat ruang menipis'}</small></span><span class="ch">${persisted?'✓':'›'}</span></button></div>
+  <div class="card"><h3>⚠️ Zona bahaya</h3><p class="d" style="margin-bottom:10px">Menghapus favorit, playlist, akun, pengaturan, cache, dan model AI di perangkat ini.</p><button class="btn o" style="width:100%;color:#e0334f;border-color:rgba(255,59,92,.4)" data-a="clr:all">Hapus semua data</button></div>`;
+  requestAnimationFrame(()=>{const m=pg.querySelector('.meter i');if(m)m.style.width=m.dataset.w});
+}
+A.persist=async()=>{try{const ok=await navigator.storage.persist();ZT.toast(ok?'Penyimpanan permanen aktif ✓':'Browser belum mengizinkan');ZT.log('info','Penyimpanan permanen: '+(ok?'aktif':'ditolak'),'storage')}catch{ZT.toast('Tidak didukung browser ini')}rStore()};
+A.clr=async k=>{
+  if(k==='cache'){const ks=await caches.keys();await Promise.all(ks.map(x=>caches.delete(x)));ZT.log('info','Cache aplikasi dibersihkan ('+ks.length+')','storage');ZT.toast('Cache aplikasi dibersihkan')}
+  else if(k==='musik'){Object.keys(localStorage).filter(x=>/^zm_/.test(x)&&x!=='zm_fav'&&x!=='zm_pl').forEach(x=>localStorage.removeItem(x));ZT.log('info','Cache musik dibersihkan','storage');ZT.toast('Cache musik dibersihkan')}
+  else if(k==='log'){localStorage.removeItem('zt_log');ZT.toast('Log dihapus')}
+  else if(k==='look'){localStorage.removeItem('zt_prefs');ZT.set({});ZT.toast('Tampilan di-reset')}
+  else if(k==='all'){
+    if(!await ask({title:'Hapus semua data?',msg:'Favorit, playlist, akun, dan pengaturan akan hilang dari perangkat ini. Tindakan ini tidak bisa dibatalkan.',ok:'Hapus semua',danger:true}))return;
+    try{localStorage.clear();sessionStorage.clear()}catch{}
+    try{(await caches.keys()).forEach(x=>caches.delete(x))}catch{}
+    try{(await navigator.serviceWorker.getRegistrations()).forEach(r=>r.unregister())}catch{}
+    try{if(indexedDB.databases)(await indexedDB.databases()).forEach(d=>indexedDB.deleteDatabase(d.name))}catch{}
+    top.location.reload();return;
+  }
+  rStore();
+};
+/* ---- log ---- */
+let lf='all';
+function rLog(){
+  const all=rd('zt_log',[]).slice().reverse(),c={error:0,warn:0,info:0};all.forEach(x=>c[x.l]=(c[x.l]||0)+1);
+  const rows=(lf==='all'?all:all.filter(x=>x.l===lf)).slice(0,150);
+  const f=(k,t)=>`<button data-a="lf:${k}" class="${lf===k?'on':''}">${t}</button>`;
+  pg.innerHTML=`<div class="seg">${f('all','Semua '+all.length)}${f('error','Error '+(c.error||0))}${f('warn','Peringatan '+(c.warn||0))}${f('info','Info '+(c.info||0))}</div>
+  <div class="card">${rows.length?rows.map(x=>`<div class="logr ${x.l}"><i class="dt"></i><div><div class="lm">${esc(x.m)}</div><small>${esc(x.s||'')} · ${clock(x.t)}</small></div></div>`).join(''):'<div class="empty"><i>🍃</i>Belum ada catatan.</div>'}</div>
+  <div class="cps"><button data-a="logcopy">📋 Salin</button><button data-a="logdl">⬇️ Unduh .txt</button><button data-a="clr:log">🗑 Hapus</button></div>`;
+}
+A.lf=v=>{lf=v;rLog()};
+const logTxt=()=>rd('zt_log',[]).map(x=>`${new Date(x.t).toISOString()} [${x.l}] (${x.s}) ${x.m}`).join('\n');
+A.logcopy=async()=>{try{await navigator.clipboard.writeText(logTxt()||'(kosong)');ZT.toast('Log disalin')}catch{ZT.toast('Tidak bisa menyalin')}};
+A.logdl=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([logTxt()||'(kosong)'],{type:'text/plain'}));a.download='zukaitemp-log.txt';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)};
+pg.addEventListener('click',e=>{const r=e.target.closest('.logr');if(r)r.classList.toggle('open')});
+/* ---- akun & YouTube ---- */
+const YT={pl:null,liked:0,err:'',busy:false};
+async function ytApi(path,params){
+  const t=ZT.token();if(!t)throw new Error('Sesi Google habis. Masuk lagi dulu.');
+  const r=await fetch('https://www.googleapis.com/youtube/v3/'+path+'?'+new URLSearchParams(params),{headers:{authorization:'Bearer '+t}});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok){const m=(j.error&&j.error.message)||('HTTP '+r.status);throw new Error(/not been used|accessNotConfigured|disabled/i.test(m)?'YouTube Data API v3 belum diaktifkan di Google Cloud proyekmu.':m)}
+  return j;
+}
+async function rAkun(){
+  const a=ZT.acct(),tok=ZT.token(),c=await ZT.config();if(cur!=='akun')return;
+  if(!a){
+    pg.innerHTML=`<div class="card" style="text-align:center"><div style="font-size:3rem">🔗</div><h3 style="justify-content:center">Hubungkan Google &amp; YouTube</h3><p class="d" style="margin-bottom:14px">Masuk dengan akun Google untuk melihat playlist dan video yang kamu sukai di YouTube, lalu impor ke Musik. Kami hanya meminta izin <b>baca saja</b> (read-only).</p>${c.googleClientId?'<button class="btn p" style="width:100%" data-a="login">Masuk dengan Google</button>':'<p class="d" style="color:#c27400">Login Google belum aktif di server: isi variabel <b>GOOGLE_CLIENT_ID</b> di Vercel (lihat README).</p>'}</div>`;
+    return;
+  }
+  const left=a.exp?Math.max(0,Math.round((a.exp-Date.now())/60000)):0;
+  pg.innerHTML=`<section class="hero"><div class="av2">${avatar(a)}</div><div class="ht"><b>${esc(a.name)}</b><span>${esc(a.email)}</span>${isOwner()?'<em>👑 Owner</em>':''}</div></section>
+  <div class="card"><h3>🔐 Sesi</h3><div class="cps" style="margin-bottom:10px"><span class="chp ${tok?'ok':'er'}">${tok?'Aktif · sekitar '+left+' mnt lagi':'Sesi habis'}</span><span class="chp ${a.yt?'ok':'wr'}">${a.yt?'YouTube terhubung':'Izin YouTube belum diberikan'}</span></div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn o" style="flex:1" data-a="login">${tok&&a.yt?'Segarkan sesi':'Masuk lagi'}</button><button class="btn o" style="flex:1" data-a="logout">Keluar</button></div></div>
+  <div class="card" id="ytCard"><h3>▶️ YouTube</h3><p class="d" style="margin-bottom:12px">Impor playlist atau video yang kamu sukai ke tab Musik. Lagu diputar lewat pemutar resmi YouTube.</p>${tok&&a.yt?'<button class="btn p" style="width:100%" data-a="ytload">Muat playlist saya</button>':'<p class="d">Masuk lagi dan centang izin YouTube untuk memakai fitur ini.</p>'}<div id="ytOut"></div></div>`;
+  if(YT.pl&&tok&&a.yt)renderYT();
+}
+function renderYT(){
+  const o=$('#ytOut');if(!o)return;
+  if(YT.err){o.innerHTML=`<p class="d" style="color:#e0334f;margin-top:12px">${esc(YT.err)}</p>`;return}
+  o.innerHTML=`<label class="row" style="margin-top:6px"><input type="checkbox" id="onlyShort" checked style="width:20px;min-height:20px;flex:none"><span class="tx">Hanya video ≤ 10 menit<small>Lebih mirip lagu, bukan podcast atau live</small></span></label>
+  <div class="li glass"><div class="lh"><b>👍 Video yang kamu sukai</b><span class="chp">${YT.liked}</span></div><div class="la"><button class="sm" data-a="imp:liked">Impor ke playlist</button></div></div>
+  ${YT.pl.map(p=>`<div class="li glass"><div class="lh"><b>${esc(p.snippet.title)}</b><span class="chp">${p.contentDetails.itemCount}</span></div><div class="la"><button class="sm" data-a="imp:${esc(p.id)}">Impor ke playlist</button></div></div>`).join('')||'<div class="empty"><i>📭</i>Belum ada playlist.</div>'}`;
+}
+A.ytload=async b=>{
+  b.disabled=true;b.textContent='Memuat...';YT.err='';
+  try{const [pl,lk]=await Promise.all([ytApi('playlists',{part:'snippet,contentDetails',mine:'true',maxResults:'50'}),ytApi('videos',{part:'id',myRating:'like',maxResults:'1'})]);YT.pl=pl.items||[];YT.liked=(lk.pageInfo&&lk.pageInfo.totalResults)||0;ZT.log('info','YouTube: '+YT.pl.length+' playlist dimuat','akun')}
+  catch(e){YT.err=e.message;ZT.log('warn','YouTube: '+e.message,'akun')}
+  b.remove();renderYT();
+};
+const iso=s=>{const m=/^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/.exec(s||'');return m?(+m[1]||0)*3600+(+m[2]||0)*60+(+m[3]||0):0};
+const toTrack=v=>({vid:v.id,title:v.snippet.title,channel:v.snippet.channelTitle,dur:iso(v.contentDetails&&v.contentDetails.duration),thumb:((v.snippet.thumbnails||{}).medium||(v.snippet.thumbnails||{}).default||{}).url||''});
+A.imp=async(id,b)=>{
+  const short=($('#onlyShort')||{}).checked!==false,old=b.textContent;b.disabled=true;b.textContent='Mengambil...';
+  try{
+    let tr=[],tok='',n=0,name='YouTube · Video disukai';
+    if(id==='liked'){do{const j=await ytApi('videos',{part:'snippet,contentDetails',myRating:'like',maxResults:'50',...(tok?{pageToken:tok}:{})});(j.items||[]).forEach(v=>tr.push(toTrack(v)));tok=j.nextPageToken;n++}while(tok&&n<4)}
+    else{
+      const p=YT.pl.find(x=>x.id===id);name='YouTube · '+(p?p.snippet.title:'Playlist');let ids=[];
+      do{const j=await ytApi('playlistItems',{part:'contentDetails',playlistId:id,maxResults:'50',...(tok?{pageToken:tok}:{})});(j.items||[]).forEach(i=>ids.push(i.contentDetails.videoId));tok=j.nextPageToken;n++}while(tok&&n<4);
+      for(let i=0;i<ids.length;i+=50){const j=await ytApi('videos',{part:'snippet,contentDetails',id:ids.slice(i,i+50).join(',')});(j.items||[]).forEach(v=>tr.push(toTrack(v)))}
+    }
+    tr=tr.filter(t=>t.dur>0&&(!short||t.dur<=600)&&!/^(private|deleted) video$/i.test(t.title));
+    if(!tr.length){ZT.toast('Tidak ada video yang cocok untuk diimpor');b.textContent=old;b.disabled=false;return}
+    parent.postMessage({ytImport:{name:name.slice(0,60),tracks:tr}},O);
+    ZT.log('info','Impor YouTube: '+tr.length+' lagu ke "'+name+'"','akun');ZT.toast('Mengimpor '+tr.length+' lagu…');
+  }catch(e){ZT.toast(e.message);ZT.log('warn','Impor YouTube gagal: '+e.message,'akun')}
+  b.textContent=old;b.disabled=false;
+};
+/* ---- pengumuman ---- */
+const cmp={kind:'info',hours:72};
+function composer(){
+  if(!ZT.token())return `<div class="card"><h3>📢 Kirim pengumuman</h3><p class="d" style="margin-bottom:10px">Sesi Google habis. Masuk lagi untuk mengirim pengumuman.</p><button class="btn p" data-a="login">Masuk lagi</button></div>`;
+  const H=[[1,'1 jam'],[24,'1 hari'],[72,'3 hari'],[168,'7 hari'],[0,'Tanpa batas']];
+  return `<div class="card"><h3>📢 Kirim ke semua pengguna</h3><div class="fl"><input id="aT" maxlength="80" placeholder="Judul pengumuman"><textarea class="f2 glass" id="aB" maxlength="600" rows="4" placeholder="Isi pengumuman…"></textarea></div>
+  <div class="seg"><button data-a="ck:info" class="${cmp.kind==='info'?'on':''}">📣 Info (banner)</button><button data-a="ck:penting" class="${cmp.kind==='penting'?'on':''}">⚠️ Penting (popup)</button></div>
+  <div class="cps">${H.map(h=>`<button data-a="ch:${h[0]}" class="${cmp.hours===h[0]?'on':''}">${h[1]}</button>`).join('')}</div>
+  <p class="d" style="margin-bottom:10px">Muncul di semua tab bagi siapa pun yang membuka aplikasi.</p><button class="btn p" style="width:100%" data-a="asend">Kirim ke semua</button></div>`;
+}
+A.ck=v=>{cmp.kind=v;keepForm(rAnn)};A.ch=v=>{cmp.hours=+v;keepForm(rAnn)};
+function keepForm(fn){const t=($('#aT')||{}).value||'',b=($('#aB')||{}).value||'';fn();if($('#aT')){$('#aT').value=t;$('#aB').value=b}}
+async function rAnn(keep){
+  const own=isOwner();
+  pg.innerHTML=(own?composer():'')+`<div id="annList"><div class="sk" style="height:86px;margin-bottom:10px"></div></div>`;
+  try{
+    const j=await api('/api/announce');if(cur!=='pengumuman')return;
+    const items=j.items||[];
+    $('#annList').innerHTML=j.db===false?`<div class="card"><h3>🗄️ Database belum aktif</h3><p class="d">Pengumuman butuh database Upstash Redis. Ikuti langkah di README, lalu fitur ini langsung hidup.</p></div>`:items.length?items.map(a=>`<div class="li glass"><div class="lh"><span style="font-size:1.2rem">${a.kind==='penting'?'⚠️':'📣'}</span><b>${esc(a.title)}</b>${a.kind==='penting'?'<span class="chp wr">Penting</span>':''}</div><div class="lm2">${esc(a.body)}</div><div class="ls"><span>${ago(a.ts)}</span>${a.exp?'<span>· berakhir '+clock(a.exp)+'</span>':''}</div>${own?`<div class="la"><button class="sm dg" data-a="adel:${esc(a.id)}">Hapus</button></div>`:''}</div>`).join(''):'<div class="empty"><i>🔔</i>Belum ada pengumuman.</div>';
+    const s=new Set(rd('zt_ann_seen',[]));items.forEach(a=>s.add(a.id));wr('zt_ann_seen',[...s].slice(-80));
+  }catch(e){if(cur==='pengumuman')$('#annList').innerHTML=`<div class="card"><p class="d" style="color:#e0334f">Gagal memuat: ${esc(e.message)}</p></div>`}
+}
+A.asend=async b=>{
+  const title=$('#aT').value.trim(),body=$('#aB').value.trim();if(!title||!body)return ZT.toast('Isi judul dan pesan dulu');
+  b.disabled=true;
+  try{await api('/api/announce',{method:'POST',body:{title,body,kind:cmp.kind,hours:cmp.hours}});ZT.toast('Terkirim ke semua pengguna 📣');ZT.log('info','Pengumuman dikirim: '+title,'owner');parent.postMessage({annRefresh:1},O);rAnn()}
+  catch(e){ZT.toast(e.message);b.disabled=false}
+};
+A.adel=async id=>{if(!await ask({title:'Hapus pengumuman?',msg:'Pengumuman ini hilang untuk semua pengguna.',ok:'Hapus',danger:true}))return;try{await api('/api/announce',{method:'POST',body:{action:'delete',id}});parent.postMessage({annRefresh:1},O);rAnn()}catch(e){ZT.toast(e.message)}};
+/* ---- request ---- */
+let rt='send',rk='fitur';
+const KIND={fitur:'💡 Fitur',bug:'🐞 Bug',lagu:'🎵 Lagu/Artis',lain:'💬 Lainnya'},ST={baru:['Baru','wr'],dibaca:['Dibaca',''],selesai:['Selesai','ok']};
+function rReq(){
+  const tabs=[['send','✉️ Kirim'],['mine','📨 Request saya']];if(isOwner())tabs.push(['inbox','📥 Inbox']);
+  pg.innerHTML=`<div class="seg">${tabs.map(t=>`<button data-a="rt:${t[0]}" class="${rt===t[0]?'on':''}">${t[1]}</button>`).join('')}</div><div id="rBody"></div>`;
+  if(rt==='send'){
+    const a=ZT.acct();
+    $('#rBody').innerHTML=`<div class="card"><h3>💬 Kirim request ke owner</h3><div class="cps">${Object.entries(KIND).map(([k,v])=>`<button data-a="rk:${k}" class="${rk===k?'on':''}">${v}</button>`).join('')}</div>
+    <div class="fl"><textarea class="f2 glass" id="rM" maxlength="800" rows="5" placeholder="Tulis request atau masukanmu…"></textarea><input id="rC" maxlength="120" placeholder="Kontak (opsional): email atau @telegram"></div>
+    <p class="d" style="margin:10px 0 12px">Dikirim sebagai <b>${a?esc(a.name):'Tamu'}</b>${a?' (akun Google terverifikasi)':''}. Maksimal 5 request per jam.</p><button class="btn p" style="width:100%" data-a="rsend">Kirim request</button></div>`;
+  }else loadReq();
+}
+A.rt=v=>{rt=v;rReq()};A.rk=v=>{rk=v;const m=$('#rM'),c=$('#rC'),mv=m&&m.value,cv=c&&c.value;rReq();if(mv)$('#rM').value=mv;if(cv)$('#rC').value=cv};
+A.rsend=async b=>{
+  const msg=$('#rM').value.trim();if(msg.length<5)return ZT.toast('Tulis minimal 5 karakter');
+  const a=ZT.acct();b.disabled=true;
+  try{await api('/api/request',{method:'POST',body:{kind:rk,msg,contact:$('#rC').value.trim(),name:a?a.name:'',dev:ZT.dev()}});ZT.toast('Request terkirim ke owner ✓');ZT.log('info','Request dikirim ('+rk+')','request');rt='mine';rReq()}
+  catch(e){ZT.toast(e.status===503?'Fitur ini butuh database di server (lihat README)':e.message);b.disabled=false}
+};
+async function loadReq(){
+  const box=$('#rBody');box.innerHTML='<div class="sk" style="height:90px"></div>';
+  try{
+    const own=rt==='inbox',j=await api(own?'/api/request?all=1':'/api/request?dev='+encodeURIComponent(ZT.dev()));if(cur!=='request'||rt==='send')return;
+    if(j.db===false){box.innerHTML='<div class="card"><h3>🗄️ Database belum aktif</h3><p class="d">Request butuh database Upstash Redis. Ikuti langkah di README.</p></div>';return}
+    const items=j.items||[];
+    box.innerHTML=items.length?items.map(x=>`<div class="li glass"><div class="lh"><b>${KIND[x.kind]||x.kind}${own?' · '+esc(x.name||'Tamu'):''}</b>${own&&x.email?'<span class="chp ok">✔ Google</span>':''}<span class="chp ${ST[x.status]?ST[x.status][1]:''}">${ST[x.status]?ST[x.status][0]:x.status}</span></div><div class="lm2">${esc(x.msg)}</div>${x.note?`<div class="ls" style="color:var(--p1)">💬 Balasan owner: ${esc(x.note)}</div>`:''}<div class="ls"><span>${ago(x.ts)}</span>${own&&x.contact?'<span>· '+esc(x.contact)+'</span>':''}${own&&x.email?'<span>· '+esc(x.email)+'</span>':''}</div>${own?`<div class="la"><button class="sm" data-a="rst:${x.id}:dibaca">Dibaca</button><button class="sm" data-a="rst:${x.id}:selesai">Selesai</button><button class="sm" data-a="rnote:${x.id}">Catatan</button><button class="sm dg" data-a="rdel:${x.id}">Hapus</button></div>`:''}</div>`).join(''):`<div class="empty"><i>${own?'📭':'🌱'}</i>${own?'Inbox kosong.':'Kamu belum mengirim request.'}</div>`;
+  }catch(e){if(cur==='request')box.innerHTML=`<div class="card"><p class="d" style="color:#e0334f">${e.status===401||e.status===403?'Sesi Google habis atau bukan owner. Masuk lagi.':'Gagal memuat: '+esc(e.message)}</p>${e.status===401||e.status===403?'<button class="btn p" style="margin-top:10px" data-a="login">Masuk lagi</button>':''}</div>`}
+}
+const ownerAct=async body=>{try{await api('/api/request',{method:'POST',body});parent.postMessage({reqRefresh:1},O);loadReq()}catch(e){ZT.toast(e.message)}};
+A.rst=v=>{const [id,s]=v.split(':');ownerAct({action:'status',id,status:s})};
+A.rdel=async id=>{if(await ask({title:'Hapus request ini?',ok:'Hapus',danger:true}))ownerAct({action:'delete',id})};
+A.rnote=async id=>{const n=await ask({title:'Catatan untuk pengirim',msg:'Catatan ini bisa dibaca pengirim di “Request saya”.',input:'Tulis catatan…',ok:'Simpan'});if(n)ownerAct({action:'status',id,status:'dibaca',note:n})};
+/* ---- sinkron dengan sisa aplikasi ---- */
+addEventListener('message',e=>{if(e.origin===O&&e.data&&e.data.sec)nav(e.data.sec)});
+addEventListener('storage',e=>{
+  if(e.key==='zt_acct'||e.key==='zt_role'){if(['home','akun','pengumuman','request'].includes(cur))nav(cur)}
+  else if(e.key==='zt_log'&&cur==='log')rLog();
+  else if(e.key==='zt_prefs'&&cur==='tampilan')rLook(true);
+});
+ZT.onacct=()=>nav(cur);
+nav(location.hash.slice(1)||'home');
+</script>
+</body>
+</html>

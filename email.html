@@ -2,6 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
+<script src="/core.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="ZukaiTemp - email sementara gratis dengan banyak server dan domain.">
 <meta name="theme-color" content="#ff4d94">
@@ -15,7 +16,7 @@
 <link rel="icon" type="image/png" href="/icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--p1:#ff4d94;--p2:#ff8fbd;--p3:#ffd9e8;--p4:#fff5f9;--ink:#40182d;--mut:#936079;--w:#fff;--sh:0 14px 34px -18px rgba(255,77,148,.55)}
+:root{--p1:#ff4d94;--p2:#ff8fbd;--p3:#ffd9e8;--p4:#fff5f9;--ink:#40182d;--mut:#936079;--w:#fff;--sh:0 14px 34px -18px color-mix(in srgb,var(--p1) 55%,transparent)}
 :root[data-dark]{--p4:#1f0d18;--w:#33172a;--ink:#ffe6f1;--mut:#d79ab9;--p3:#5a2a45}
 *{box-sizing:border-box;margin:0}
 body{font:400 16px/1.55 Nunito,system-ui,sans-serif;color:var(--ink);background:var(--p4);min-height:100vh;overflow-x:hidden}
@@ -24,7 +25,7 @@ button{font-family:inherit}
 .blob{position:fixed;border-radius:50%;filter:blur(70px);opacity:.5;z-index:0;animation:drift 16s ease-in-out infinite alternate;pointer-events:none}
 .b1{width:360px;height:360px;background:var(--p2);top:-100px;left:-100px}
 .b2{width:320px;height:320px;background:var(--p3);bottom:-80px;right:-80px;animation-delay:-5s}
-.b3{width:220px;height:220px;background:#ffb3d1;top:45%;left:60%;animation-delay:-9s}
+.b3{width:220px;height:220px;background:var(--p2);top:45%;left:60%;animation-delay:-9s}
 @keyframes drift{to{transform:translate(60px,40px) scale(1.15)}}
 .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:max(28px,env(safe-area-inset-top)) 20px max(64px,env(safe-area-inset-bottom))}
 
@@ -52,11 +53,11 @@ button{font-family:inherit}
 .btn.o{background:var(--p4);color:var(--p1);border:2px solid var(--p3)}
 .btn:focus-visible,.chip:focus-visible,input:focus-visible,select:focus-visible,.m:focus-visible,.lnk:focus-visible{outline:3px solid var(--p1);outline-offset:2px}
 .hero .btn:focus-visible{outline-color:#fff}
-.rip{position:absolute;border-radius:50%;background:rgba(255,77,148,.35);transform:scale(0);animation:rip .6s linear;pointer-events:none}
+.rip{position:absolute;border-radius:50%;background:color-mix(in srgb,var(--p1) 35%,transparent);transform:scale(0);animation:rip .6s linear;pointer-events:none}
 @keyframes rip{to{transform:scale(4);opacity:0}}
 
 /* hero */
-.hero{background:linear-gradient(135deg,var(--p1),#ff78ae);border-radius:32px;padding:36px 32px;color:#fff;box-shadow:0 24px 46px -20px rgba(255,77,148,.7);position:relative;overflow:hidden;margin-bottom:24px}
+.hero{background:linear-gradient(135deg,var(--p1),color-mix(in srgb,var(--p1) 72%,var(--g2)));border-radius:32px;padding:36px 32px;color:#fff;box-shadow:0 24px 46px -20px color-mix(in srgb,var(--p1) 70%,transparent);position:relative;overflow:hidden;margin-bottom:24px}
 .hero::before,.hero::after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.13)}
 .hero::before{width:260px;height:260px;right:-70px;top:-90px}
 .hero::after{width:150px;height:150px;left:-40px;bottom:-60px}
@@ -110,7 +111,7 @@ input:focus,select:focus{border-color:var(--p1);outline:0}
 .mi span{display:block;font-size:.84rem;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mt{flex:none;font-size:.76rem;color:var(--mut);font-weight:700;text-align:right;line-height:1.8}
 .dot{width:10px;height:10px;border-radius:50%;background:var(--p1);display:inline-block;animation:pulse 1.4s infinite}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,77,148,.6)}50%{transform:scale(1.2)}100%{box-shadow:0 0 0 8px rgba(255,77,148,0)}}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--p1) 60%,transparent)}50%{transform:scale(1.2)}100%{box-shadow:0 0 0 8px color-mix(in srgb,var(--p1) 0%,transparent)}}
 .empty{text-align:center;color:var(--mut);padding:44px 16px;font-weight:700;line-height:1.7}
 .empty i{display:block;font-style:normal;font-size:3.2rem;margin-bottom:8px;animation:float 3s ease-in-out infinite}
 @keyframes float{50%{transform:translateY(-12px)}}
@@ -189,7 +190,7 @@ details[open]>summary{margin-bottom:18px}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
-<link rel="stylesheet" href="/glass.css">
+<link rel="stylesheet" href="/glass.css"><link rel="stylesheet" href="/theme.css">
 </head>
 <body>
 <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>

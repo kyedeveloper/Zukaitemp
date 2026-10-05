@@ -1,0 +1,71 @@
+/* ZukaiTemp · theme.css — dimuat paling akhir di semua halaman.
+   Mengatur warna aksen (data-acc), mode gelap (data-dark), animasi (data-anim), kaca (data-glass), ukuran teks (data-fs). */
+:root{--p1:#ff4d94;--p2:#ff8fbd;--g2:#b388ff}
+:root[data-acc=sakura]{--p1:#ff4d94;--p2:#ff8fbd;--g2:#b388ff}
+:root[data-acc=aurora]{--p1:#7c5cff;--p2:#b3a1ff;--g2:#ff6fb1}
+:root[data-acc=samudra]{--p1:#2f7bff;--p2:#86b6ff;--g2:#22d3c5}
+:root[data-acc=mint]{--p1:#10b981;--p2:#6ee7b7;--g2:#38bdf8}
+:root[data-acc=senja]{--p1:#ff7a2f;--p2:#ffb27a;--g2:#ff4d94}
+:root[data-acc=mocha]{--p1:#a0714f;--p2:#d2a67f;--g2:#e8b86d}
+/* warna turunan dari aksen: terang */
+:root[data-acc]{
+  --p3:color-mix(in srgb,var(--p1) 22%,#fff);
+  --p4:color-mix(in srgb,var(--p1) 5%,#fcfbff);
+  --w:#fff;
+  --ink:color-mix(in srgb,var(--p1) 14%,#16111c);
+  --mut:color-mix(in srgb,var(--p1) 24%,#6c6478);
+  --sh:0 14px 34px -18px color-mix(in srgb,var(--p1) 60%,transparent);
+  --gls:color-mix(in srgb,var(--p1) 36%,transparent);
+  --gl:rgba(255,255,255,.64);--gl2:rgba(255,255,255,.22);--glb:rgba(255,255,255,.78)}
+/* gelap */
+:root[data-acc][data-dark]{
+  --p3:color-mix(in srgb,var(--p1) 32%,#1b1724);
+  --p4:color-mix(in srgb,var(--p1) 9%,#0d0a13);
+  --w:color-mix(in srgb,var(--p1) 12%,#181420);
+  --ink:color-mix(in srgb,var(--p2) 12%,#fff);
+  --mut:color-mix(in srgb,var(--p2) 50%,#a49cb6);
+  --gls:rgba(0,0,0,.55);--gl:rgba(255,255,255,.1);--gl2:rgba(255,255,255,.035);--glb:rgba(255,255,255,.16)}
+:root[data-fs=s]{font-size:14.5px}:root[data-fs=l]{font-size:17.5px}
+html{background:var(--p4)}
+/* latar aurora yang bergerak pelan (hanya transform, ringan di HP) */
+:root body,:root[data-dark] body{background:transparent!important}
+body::before{content:"";position:fixed;inset:-25%;z-index:-1;pointer-events:none;will-change:transform;
+  background:
+    radial-gradient(38% 30% at 18% 14%,color-mix(in srgb,var(--p2) 62%,transparent),transparent 70%),
+    radial-gradient(34% 28% at 88% 22%,color-mix(in srgb,var(--g2) 40%,transparent),transparent 70%),
+    radial-gradient(44% 34% at 60% 92%,color-mix(in srgb,var(--p1) 26%,transparent),transparent 72%);
+  animation:ztAur 26s ease-in-out infinite alternate}
+:root[data-dark] body::before{opacity:.68}
+@keyframes ztAur{to{transform:translate3d(4%,3%,0) rotate(6deg) scale(1.08)}}
+::selection{background:color-mix(in srgb,var(--p1) 30%,transparent)}
+*{scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--p1) 40%,transparent) transparent}
+/* judul, tombol, kartu */
+.hd h1{background:linear-gradient(90deg,var(--p1),var(--g2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.btn.p{background:linear-gradient(135deg,var(--p1),color-mix(in srgb,var(--p1) 55%,var(--g2)))!important;box-shadow:0 12px 24px -12px var(--p1)!important;position:relative;overflow:hidden;color:#fff!important}
+.btn.p::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.38) 50%,transparent 70%);transform:translateX(-130%);transition:transform .8s cubic-bezier(.22,1,.36,1);pointer-events:none}
+.btn.p:active::after{transform:translateX(130%);transition-duration:.5s}
+.chip.on,.tab.on{background-image:linear-gradient(135deg,var(--p1),color-mix(in srgb,var(--p1) 60%,var(--g2)))}
+input:not([type=range]):not([type=color]):not([type=checkbox]):focus,textarea:focus,select:focus{box-shadow:0 0 0 4px color-mix(in srgb,var(--p1) 18%,transparent)!important;border-color:var(--p1)!important;outline:none}
+.card,.st{border-radius:26px}
+.card:active{transform:scale(.995)}
+/* masuk halaman: elemen anak .wrap muncul bertahap */
+.wrap>*{animation:ztRise .7s cubic-bezier(.22,1,.36,1) both}
+.wrap>*:nth-child(2){animation-delay:.05s}.wrap>*:nth-child(3){animation-delay:.1s}.wrap>*:nth-child(4){animation-delay:.15s}
+.wrap>*:nth-child(5){animation-delay:.2s}.wrap>*:nth-child(6){animation-delay:.25s}.wrap>*:nth-child(n+7){animation-delay:.3s}
+@keyframes ztRise{from{opacity:0;transform:translateY(18px)}}
+dialog[open]{animation:ztDlg .45s cubic-bezier(.22,1.2,.36,1)}
+dialog[open]::backdrop{animation:ztFade .3s ease}
+@keyframes ztDlg{from{opacity:0;transform:translateY(26px) scale(.96)}}
+@keyframes ztFade{from{opacity:0}}
+.toast{width:max-content;max-width:min(90vw,420px);border-radius:22px;box-shadow:0 18px 40px -16px rgba(0,0,0,.5)}
+/* kerangka loading */
+.sk{border-radius:14px;min-height:16px;background:linear-gradient(90deg,var(--p3),color-mix(in srgb,var(--p3) 40%,var(--w)),var(--p3));background-size:200% 100%;animation:ztSk 1.3s linear infinite}
+@keyframes ztSk{to{background-position:-200% 0}}
+/* pilihan pengguna */
+:root[data-anim=lite] body::before{animation:none}
+:root[data-anim=lite] .wrap>*{animation:none}
+:root[data-anim=off] *,:root[data-anim=off] *::before,:root[data-anim=off] *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+:root[data-glass=off] *{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+:root[data-glass=off]{--gl:rgba(255,255,255,.94);--gl2:rgba(255,255,255,.88)}
+:root[data-glass=off][data-dark]{--gl:rgba(40,32,52,.96);--gl2:rgba(32,26,42,.94)}
+@media(prefers-reduced-motion:reduce){body::before{animation:none}.wrap>*{animation:none}}

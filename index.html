@@ -2,6 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
+<script src="/core.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ZukaiTemp</title>
 <meta name="description" content="ZukaiTemp: email sementara, musik, downloader, dan banyak tools.">
@@ -22,30 +23,73 @@ html,body{height:100%;overflow:hidden}
 iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:transparent;opacity:0;visibility:hidden;pointer-events:none;transform:translateX(8%) scale(.96);filter:blur(6px);transition:transform .55s cubic-bezier(.22,1,.36,1),opacity .4s ease,filter .45s ease,visibility 0s linear .55s}
 iframe.before{transform:translateX(-8%) scale(.96)}
 iframe.on{opacity:1;visibility:visible;pointer-events:auto;transform:none;filter:none;transition:transform .55s cubic-bezier(.22,1,.36,1),opacity .4s ease,filter .45s ease,visibility 0s}
-#load{position:absolute;left:50%;top:42%;width:46px;height:46px;margin:-23px;border-radius:50%;border:4px solid rgba(255,77,148,.2);border-top-color:var(--p1);animation:sp .8s linear infinite;z-index:3}
+#load{position:absolute;left:50%;top:42%;width:46px;height:46px;margin:-23px;border-radius:50%;border:4px solid color-mix(in srgb,var(--p1) 20%,transparent);border-top-color:var(--p1);animation:sp .8s linear infinite;z-index:3}
 @keyframes sp{to{transform:rotate(360deg)}}
-#bar{position:absolute;left:14px;right:14px;bottom:calc(10px + var(--sb));height:68px;border-radius:30px;display:grid;grid-template-columns:repeat(4,1fr);padding:6px;z-index:10;transition:transform .55s cubic-bezier(.22,1,.36,1),opacity .4s}
+/* navigasi bawah: tab Menu di kiri + 4 tab */
+#bar{position:absolute;left:14px;right:14px;bottom:calc(10px + var(--sb));height:70px;border-radius:32px;display:grid;grid-template-columns:repeat(5,1fr);padding:6px;z-index:10;transition:transform .55s cubic-bezier(.22,1,.36,1),opacity .4s}
 body.npo #bar,body.npo #mini{transform:translateY(190%);opacity:0;pointer-events:none}
-#ind{position:absolute;top:6px;bottom:6px;left:6px;width:calc((100% - 12px)/4);border-radius:24px;background:linear-gradient(145deg,rgba(255,255,255,.95),rgba(255,255,255,.45));box-shadow:inset 0 1.5px 0 #fff,0 8px 22px -8px rgba(255,77,148,.7);transform:translateX(calc(var(--i,0)*100%));transition:transform .6s cubic-bezier(.34,1.46,.64,1)}
-:root[data-dark] #ind{background:linear-gradient(145deg,rgba(255,255,255,.28),rgba(255,255,255,.1))}
-#bar button{position:relative;z-index:1;border:0;background:none;color:var(--mut);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font:600 .72rem Fredoka;transition:color .3s}
-#bar button i{font-style:normal;font-size:1.4rem;line-height:1;transition:transform .5s cubic-bezier(.34,1.8,.64,1)}
-#bar button.on{color:var(--p1)}#bar button.on i{transform:translateY(-1px) scale(1.18)}
-#bar button:focus-visible{outline:3px solid var(--p1);outline-offset:-3px;border-radius:24px}
+#ind{position:absolute;top:6px;bottom:6px;left:6px;width:calc((100% - 12px)/5);border-radius:26px;background:linear-gradient(145deg,color-mix(in srgb,var(--p1) 20%,#fff),color-mix(in srgb,var(--p2) 28%,rgba(255,255,255,.55)));box-shadow:inset 0 1.5px 0 rgba(255,255,255,.95),0 10px 26px -10px var(--p1);transform:translateX(calc(var(--i,1)*100%));transition:transform .6s cubic-bezier(.34,1.46,.64,1)}
+:root[data-dark] #ind{background:linear-gradient(145deg,color-mix(in srgb,var(--p1) 42%,transparent),color-mix(in srgb,var(--p1) 14%,transparent));box-shadow:inset 0 1.5px 0 rgba(255,255,255,.25),0 10px 26px -10px var(--p1)}
+#bar button{position:relative;z-index:1;border:0;background:none;color:var(--mut);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font:600 .68rem Fredoka;transition:color .3s}
+#bar button svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .5s cubic-bezier(.34,1.8,.64,1)}
+#bar button.on{color:var(--p1)}#bar button.on svg{transform:translateY(-1px) scale(1.14)}
+#bar button:focus-visible{outline:3px solid var(--p1);outline-offset:-3px;border-radius:26px}
+#bar .dot{position:absolute;top:9px;left:calc(50% + 7px);width:10px;height:10px;border-radius:50%;background:#ff3b5c;border:2px solid var(--p4);animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.25)}}
+/* mini player */
 #mini{position:absolute;left:14px;right:14px;bottom:var(--navh);border-radius:26px;display:flex;align-items:center;gap:10px;padding:8px 10px;z-index:9;transform:translateY(170%);opacity:0;transition:transform .6s cubic-bezier(.22,1,.36,1),opacity .4s}
 #mini.on{transform:none;opacity:1}
 #mini .a{flex:none;width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--p2),var(--p1)) center/cover}
 #mini .i{flex:1;min-width:0;cursor:pointer}#mini b,#mini span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #mini b{font-size:.9rem}#mini span{font-size:.76rem;color:var(--mut);font-weight:700}
 #mini button{border:0;background:none;font-size:1.25rem;width:42px;height:42px;border-radius:50%;color:var(--ink)}
-#mini button.pl{background:var(--p1);color:#fff;box-shadow:0 8px 16px -8px var(--p1)}
+#mini button.pl{background:linear-gradient(135deg,var(--p1),var(--g2));color:#fff;box-shadow:0 8px 16px -8px var(--p1)}
 #ins{position:absolute;left:14px;right:14px;top:calc(env(safe-area-inset-top) + 8px);z-index:12;display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:20px;font:600 .85rem Fredoka;animation:drop .6s cubic-bezier(.34,1.56,.64,1)}
 @keyframes drop{from{opacity:0;transform:translateY(-30px)}}
 #ins span{flex:1}#ins button{border:0;border-radius:99px;min-height:34px;padding:0 14px;font:600 .82rem Fredoka;background:var(--p1);color:#fff}
 #ins button.x{background:none;color:var(--mut);padding:0 8px;font-size:1rem}
+/* tab kiri (drawer) */
+#scrim{position:fixed;inset:0;z-index:28;background:rgba(14,8,24,.42);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .4s}
+#scrim.on{opacity:1;pointer-events:auto}
+#edge{position:fixed;left:0;top:18%;bottom:18%;width:14px;z-index:25;touch-action:none}
+#drawer{position:fixed;top:0;bottom:0;left:0;width:min(86vw,340px);z-index:30;display:flex;flex-direction:column;gap:12px;padding:calc(env(safe-area-inset-top) + 16px) 14px calc(var(--sb) + 16px);border-radius:0 34px 34px 0;background:color-mix(in srgb,var(--p4) 86%,transparent);-webkit-backdrop-filter:blur(34px) saturate(180%);backdrop-filter:blur(34px) saturate(180%);border-right:1px solid var(--glb);box-shadow:30px 0 70px -30px rgba(0,0,0,.5);transform:translateX(-108%);transition:transform .55s cubic-bezier(.22,1,.36,1);overflow-y:auto}
+#drawer.on{transform:none}
+.prof{display:flex;gap:12px;align-items:center;padding:16px;border-radius:26px;color:#fff;background:linear-gradient(135deg,var(--p1),color-mix(in srgb,var(--p1) 40%,var(--g2)));box-shadow:0 20px 36px -18px var(--p1);position:relative;overflow:hidden}
+.prof::after{content:"";position:absolute;right:-30px;top:-40px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.18)}
+.av{flex:none;width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.28);display:grid;place-items:center;font:600 1.4rem Fredoka;overflow:hidden;border:2px solid rgba(255,255,255,.7)}
+.av img{width:100%;height:100%;object-fit:cover}
+.prof .t{min-width:0;position:relative;z-index:1}
+.prof b{display:block;font:600 1.05rem Fredoka;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prof span{display:block;font-size:.78rem;opacity:.9;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prof em{display:inline-block;margin-top:4px;font:700 .68rem Nunito;font-style:normal;padding:2px 9px;border-radius:99px;background:rgba(255,255,255,.3)}
+.gb{border:0;border-radius:18px;min-height:46px;font:600 .92rem Fredoka;color:var(--p1);background:var(--w);box-shadow:var(--sh);display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+.gb:active{transform:scale(.96)}
+.dl{display:flex;flex-direction:column;gap:2px}
+.dl hr{border:0;height:1px;margin:6px 10px;background:var(--p3)}
+.dl button{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:0 10px;border:0;border-radius:18px;background:transparent;color:var(--ink);font:600 .98rem Fredoka;text-align:left;transition:background .2s,transform .25s cubic-bezier(.34,1.56,.64,1)}
+.dl button:active{transform:scale(.97);background:color-mix(in srgb,var(--p1) 12%,transparent)}
+.ic2{flex:none;width:38px;height:38px;border-radius:13px;display:grid;place-items:center;background:color-mix(in srgb,var(--p1) 14%,transparent);color:var(--p1)}
+.ic2 svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.bg2{margin-left:auto;min-width:22px;height:22px;border-radius:99px;background:var(--p1);color:#fff;font:700 .72rem Nunito;display:grid;place-items:center;padding:0 6px}
+#drawer.on .dl>*{animation:dIn .55s cubic-bezier(.22,1,.36,1) both}
+#drawer.on .dl>*:nth-child(1){animation-delay:.05s}#drawer.on .dl>*:nth-child(2){animation-delay:.09s}#drawer.on .dl>*:nth-child(3){animation-delay:.13s}#drawer.on .dl>*:nth-child(4){animation-delay:.17s}#drawer.on .dl>*:nth-child(5){animation-delay:.21s}#drawer.on .dl>*:nth-child(6){animation-delay:.25s}#drawer.on .dl>*:nth-child(7){animation-delay:.29s}#drawer.on .dl>*:nth-child(8){animation-delay:.33s}
+@keyframes dIn{from{opacity:0;transform:translateX(-22px)}}
+.dfoot{margin-top:auto;text-align:center;font:700 .74rem Nunito;color:var(--mut);padding-top:6px}
+/* pengumuman global: tampil di atas semua tab */
+#annHost{position:fixed;inset:0;z-index:60;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top) + 10px) 14px 14px}
+#annHost.modal{justify-content:center;background:rgba(14,8,24,.5);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);pointer-events:auto}
+.an{pointer-events:auto;width:min(100%,430px);padding:16px 16px 14px;border-radius:26px;background:color-mix(in srgb,var(--w) 92%,transparent);-webkit-backdrop-filter:blur(26px);backdrop-filter:blur(26px);border:1px solid var(--glb);box-shadow:0 26px 50px -22px rgba(0,0,0,.55);animation:anIn .65s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden}
+.an::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(var(--p1),var(--g2))}
+.an.p::before{background:linear-gradient(#ff3b5c,#ff9d2f)}
+@keyframes anIn{from{opacity:0;transform:translateY(-34px) scale(.94)}}
+.an h3{font:600 1.02rem Fredoka;display:flex;gap:8px;align-items:center;padding-left:6px}
+.an p{margin:6px 0 12px 6px;font-weight:600;font-size:.9rem;color:var(--mut);white-space:pre-wrap;word-break:break-word}
+.an .r{display:flex;gap:8px;justify-content:flex-end}
+.an button{border:0;border-radius:14px;min-height:38px;padding:0 16px;font:600 .86rem Fredoka;background:var(--p3);color:var(--p1)}
+.an button.pr{background:linear-gradient(135deg,var(--p1),var(--g2));color:#fff;box-shadow:0 10px 18px -10px var(--p1)}
 /* splash */
-#splash{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;background:radial-gradient(60% 45% at 20% 10%,#ff8fbd,transparent 70%),radial-gradient(55% 45% at 90% 90%,#ffc4e0,transparent 70%),linear-gradient(160deg,#fff5f9,#ffd9e8);transition:opacity .8s ease,transform .9s cubic-bezier(.22,1,.36,1),filter .8s}
-:root[data-dark] #splash{background:radial-gradient(60% 45% at 20% 10%,rgba(255,77,148,.4),transparent 70%),radial-gradient(55% 45% at 90% 90%,rgba(140,60,200,.35),transparent 70%),#1f0d18}
+#splash{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;background:radial-gradient(60% 45% at 20% 10%,var(--p2),transparent 70%),radial-gradient(55% 45% at 90% 90%,color-mix(in srgb,var(--g2) 50%,#fff),transparent 70%),linear-gradient(160deg,var(--p4),color-mix(in srgb,var(--p1) 14%,#fff));transition:opacity .8s ease,transform .9s cubic-bezier(.22,1,.36,1),filter .8s}
+:root[data-dark] #splash{background:radial-gradient(60% 45% at 20% 10%,color-mix(in srgb,var(--p1) 40%,transparent),transparent 70%),radial-gradient(55% 45% at 90% 90%,color-mix(in srgb,var(--g2) 35%,transparent),transparent 70%),var(--p4)}
 #splash.out{opacity:0;transform:scale(1.12);filter:blur(14px);pointer-events:none}
 .lgo{position:relative;width:112px;height:112px;display:grid;place-items:center;font-size:3.2rem;border-radius:34px;background:linear-gradient(145deg,var(--p1),var(--p2));box-shadow:0 24px 50px -16px var(--p1),inset 0 2px 0 rgba(255,255,255,.6);animation:pop 1s cubic-bezier(.34,1.56,.64,1) both,fl 3s 1s ease-in-out infinite}
 .lgo::before,.lgo::after{content:"";position:absolute;inset:0;border-radius:inherit;border:2px solid var(--p2);animation:ring 2.2s ease-out infinite}
@@ -54,15 +98,16 @@ body.npo #bar,body.npo #mini{transform:translateY(190%);opacity:0;pointer-events
 @keyframes fl{50%{transform:translateY(-8px) rotate(3deg)}}
 @keyframes ring{from{opacity:.8;transform:scale(1)}to{opacity:0;transform:scale(1.9)}}
 #splash h1{font-size:2rem;color:var(--p1);animation:rise .8s .2s both}
-#splash h1 span{background:linear-gradient(90deg,var(--p1),#ff9ec7,var(--p1));background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 2.4s linear infinite}
+#splash h1 span{background:linear-gradient(90deg,var(--p1),var(--g2),var(--p1));background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 2.4s linear infinite}
 @keyframes shine{to{background-position:-200% 0}}
 @keyframes rise{from{opacity:0;transform:translateY(16px)}}
 #spT{font-weight:700;color:var(--mut);font-size:.92rem;min-height:1.4em;animation:rise .8s .35s both}
 .pb{width:min(280px,70vw);height:10px;border-radius:99px;padding:2px;animation:rise .8s .45s both}
-.pb i{display:block;height:100%;width:4%;border-radius:99px;background:linear-gradient(90deg,var(--p1),var(--p2));box-shadow:0 0 14px var(--p1);transition:width .6s cubic-bezier(.22,1,.36,1)}
+.pb i{display:block;height:100%;width:4%;border-radius:99px;background:linear-gradient(90deg,var(--p1),var(--g2));box-shadow:0 0 14px var(--p1);transition:width .6s cubic-bezier(.22,1,.36,1)}
 #spS{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:340px;margin-top:6px}
 #spS span{padding:7px 14px;border-radius:99px;font:700 .78rem Nunito;color:var(--ink);animation:rise .6s both}
 </style>
+<link rel="stylesheet" href="/theme.css">
 </head>
 <body>
 <div id="app">
@@ -71,18 +116,39 @@ body.npo #bar,body.npo #mini{transform:translateY(190%);opacity:0;pointer-events
     <iframe id="v-musik" title="Musik" data-src="/music.html" allow="autoplay; encrypted-media"></iframe>
     <iframe id="v-unduh" title="Downloader" data-src="/download.html"></iframe>
     <iframe id="v-tools" title="Tools" data-src="/tools.html" allow="clipboard-write"></iframe>
+    <iframe id="v-me" title="Menu dan pengaturan" data-src="/me.html" allow="clipboard-write"></iframe>
     <div id="load" hidden></div>
   </div>
   <div id="ins" class="glass" hidden><span>📲 Pasang ZukaiTemp sebagai aplikasi</span><button id="insGo">Pasang</button><button class="x" id="insX" aria-label="Tutup">✕</button></div>
   <div id="mini" class="glass"><div class="a" id="mArt"></div><div class="i" id="mInfo"><b id="mT"></b><span id="mA"></span></div><button id="mPv" aria-label="Sebelumnya">⏮</button><button class="pl" id="mPl" aria-label="Putar atau jeda">⏸</button><button id="mNx" aria-label="Berikutnya">⏭</button></div>
   <nav id="bar" class="glass" aria-label="Navigasi utama">
     <i id="ind"></i>
-    <button data-v="email"><i>📧</i>Email</button>
-    <button data-v="musik"><i>🎵</i>Musik</button>
-    <button data-v="unduh"><i>⬇️</i>Unduh</button>
-    <button data-v="tools"><i>🛠</i>Tools</button>
+    <button id="tabMenu" aria-label="Buka menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h10M4 17h16"/></svg>Menu<b class="dot" id="mDot" hidden></b></button>
+    <button data-v="email"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3.5"/><path d="M4.5 8.5L12 13.5l7.5-5"/></svg>Email</button>
+    <button data-v="musik"><svg viewBox="0 0 24 24"><path d="M9 18V6.5l10-2V16"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></svg>Musik</button>
+    <button data-v="unduh"><svg viewBox="0 0 24 24"><path d="M12 4v11m0 0l-4.2-4.2M12 15l4.2-4.2"/><path d="M5 19.5h14"/></svg>Unduh</button>
+    <button data-v="tools"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.2 5.1L4 17l3 3 5.6-5.5a4 4 0 0 0 5.1-5.2l-2.4 2.4-2.6-.6-.6-2.6z"/></svg>Tools</button>
   </nav>
 </div>
+
+<div id="edge"></div>
+<div id="scrim"></div>
+<aside id="drawer" aria-label="Menu samping" aria-hidden="true">
+  <div class="prof"><div class="av" id="dAv">🙂</div><div class="t"><b id="dName">Tamu</b><span id="dMail">Belum terhubung</span><em id="dRole" hidden>👑 Owner</em></div></div>
+  <button class="gb" id="dLogin">🔗 Hubungkan Google &amp; YouTube</button>
+  <div class="dl">
+    <button data-me="akun"><span class="ic2"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg></span>Akun &amp; YouTube</button>
+    <button data-me="pengumuman"><span class="ic2"><svg viewBox="0 0 24 24"><path d="M4 10v4h3l7 4V6l-7 4z"/><path d="M17.5 9a4 4 0 0 1 0 6"/></svg></span>Pengumuman<em class="bg2" id="bAnn" hidden></em></button>
+    <button data-me="request"><span class="ic2"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg></span>Request<em class="bg2" id="bReq" hidden></em></button>
+    <hr>
+    <button data-me="tampilan"><span class="ic2"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M12 12h9"/></svg></span>Tampilan</button>
+    <button data-me="penyimpanan"><span class="ic2"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></span>Penyimpanan &amp; cache</button>
+    <button data-me="log"><span class="ic2"><svg viewBox="0 0 24 24"><path d="M7 3h8l4 4v14H7z"/><path d="M10 12h6M10 16h6M10 8h2"/></svg></span>Log</button>
+    <button data-me="pengaturan"><span class="ic2"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></span>Semua pengaturan</button>
+  </div>
+  <div class="dfoot">ZukaiTemp · geser dari tepi kiri untuk membuka menu</div>
+</aside>
+<div id="annHost"></div>
 
 <div id="splash">
   <div class="lgo">💌</div>
@@ -93,10 +159,9 @@ body.npo #bar,body.npo #mini{transform:translateY(190%);opacity:0;pointer-events
 </div>
 
 <script>
-try{if(JSON.parse(localStorage.getItem('zt_dark')))document.documentElement.setAttribute('data-dark','')}catch{}
-addEventListener('storage',e=>{if(e.key==='zt_dark'){try{document.documentElement.toggleAttribute('data-dark',!!JSON.parse(e.newValue))}catch{}}});
-const $=s=>document.querySelector(s);
-const V=['email','musik','unduh','tools'];let curV='email',mini=null;
+const $=s=>document.querySelector(s),O=location.origin;
+const rd=(k,d)=>{try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch{return d}},wr=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
+const TABS=['email','musik','unduh','tools'],V=[...TABS,'me'];let curV='email',prevTab='email',mini=null;
 /* inset layar bawah (iPhone) diteruskan ke semua halaman */
 const SB=(()=>{const d=document.createElement('div');d.style.cssText='position:fixed;bottom:0;left:0;padding-bottom:env(safe-area-inset-bottom);visibility:hidden';document.body.appendChild(d);const v=parseFloat(getComputedStyle(d).paddingBottom)||0;d.remove();return v})();
 document.documentElement.style.setProperty('--sb',SB+'px');
@@ -106,25 +171,109 @@ document.querySelectorAll('iframe').forEach(f=>f.addEventListener('load',()=>{
   if('v-'+curV===f.id)$('#load').hidden=true;
 }));
 const syncMini=()=>$('#mini').classList.toggle('on',!!(mini&&mini.has&&curV!=='musik'));
-const cmd=c=>{const f=$('#v-musik');f.contentWindow&&f.contentWindow.postMessage({cmd:c},location.origin)};
-function go(v){
+const toMusic=m=>{const f=$('#v-musik');f.contentWindow&&f.contentWindow.postMessage(m,O)};
+const cmd=c=>toMusic({cmd:c});
+function go(v,sec){
   if(!V.includes(v))v='email';
+  if(v!=='me')prevTab=v;
+  if(v==='me'){const f=$('#v-me');if(!f.src)f.src='/me.html#'+(sec||'home');else if(sec&&f.contentWindow)f.contentWindow.postMessage({sec},O)}
   const n=V.indexOf(v);curV=v;
   V.forEach((k,i)=>{const f=$('#v-'+k);if(k===v&&!f.src)f.src=f.dataset.src;f.classList.toggle('on',k===v);f.classList.toggle('before',i<n)});
   document.querySelectorAll('#bar [data-v]').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
-  $('#bar').style.setProperty('--i',n);
+  $('#tabMenu').classList.toggle('on',v==='me'||drawerOn);
+  $('#bar').style.setProperty('--i',drawerOn||v==='me'?0:TABS.indexOf(v)+1);
   $('#load').hidden=$('#v-'+v).dataset.r==='1';
   syncMini();
   if(v!=='musik'&&document.body.classList.contains('npo'))cmd('closeNp');
-  if(location.hash.slice(1)!==v)history.replaceState(null,'','#'+v);
+  const h=v==='me'?'me':v;if(location.hash.slice(1)!==h)history.replaceState(null,'','#'+h);
 }
-document.querySelectorAll('#bar [data-v]').forEach(b=>b.onclick=()=>go(b.dataset.v));
+document.querySelectorAll('#bar [data-v]').forEach(b=>b.onclick=()=>{closeDrawer();go(b.dataset.v)});
+/* ---- tab kiri (drawer) ---- */
+let drawerOn=false;
+function setDrawer(on){
+  drawerOn=on;$('#drawer').classList.toggle('on',on);$('#scrim').classList.toggle('on',on);$('#drawer').setAttribute('aria-hidden',on?'false':'true');
+  $('#tabMenu').classList.toggle('on',on||curV==='me');
+  $('#bar').style.setProperty('--i',on||curV==='me'?0:Math.max(0,TABS.indexOf(curV))+1);
+}
+const openDrawer=()=>setDrawer(true),closeDrawer=()=>setDrawer(false);
+$('#tabMenu').onclick=()=>setDrawer(!drawerOn);
+$('#scrim').onclick=closeDrawer;
+addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer()});
+document.querySelectorAll('#drawer [data-me]').forEach(b=>b.onclick=()=>{closeDrawer();go('me',b.dataset.me);if(b.dataset.me==='pengumuman')ANN.forEach(a=>seen(a.id))});
+$('#dLogin').onclick=()=>{closeDrawer();ZT.login()};
+(()=>{ /* geser buka dari tepi kiri, geser ke kiri untuk menutup */
+  let x0=0,y0=0,on=false;
+  const st=e=>{const t=e.touches[0];x0=t.clientX;y0=t.clientY;on=true},mv=e=>{if(!on)return;const t=e.touches[0],dx=t.clientX-x0,dy=Math.abs(t.clientY-y0);if(!drawerOn&&dx>46&&dy<40){on=false;openDrawer()}else if(drawerOn&&dx<-60&&dy<40){on=false;closeDrawer()}};
+  $('#edge').addEventListener('touchstart',st,{passive:true});$('#edge').addEventListener('touchmove',mv,{passive:true});
+  $('#drawer').addEventListener('touchstart',st,{passive:true});$('#drawer').addEventListener('touchmove',mv,{passive:true});
+})();
+/* ---- akun di drawer ---- */
+function renderAcct(){
+  const a=ZT.acct(),role=ZT.role();
+  $('#dName').textContent=a?a.name:'Tamu';$('#dMail').textContent=a?a.email:'Belum terhubung';
+  const av=$('#dAv');av.innerHTML=a&&a.picture?`<img src="${ZT.esc(a.picture)}" referrerpolicy="no-referrer" alt="">`:(a?ZT.esc((a.name||'?')[0].toUpperCase()):'🙂');
+  $('#dRole').hidden=!(a&&role==='owner');$('#dLogin').hidden=!!a;
+}
+ZT.onacct=()=>{renderAcct();pollReq();};
+renderAcct();
+/* ---- pengumuman global + inbox owner ---- */
+let ANN=[],reqNew=0;
+const seenSet=()=>new Set(rd('zt_ann_seen',[]));
+function seen(id){const s=seenSet();s.add(id);wr('zt_ann_seen',[...s].slice(-80))}
+function badges(){
+  const unread=ANN.filter(a=>!seenSet().has(a.id)).length;
+  const set=(el,n)=>{el.hidden=!n;el.textContent=n>99?'99+':n};
+  set($('#bAnn'),unread);set($('#bReq'),reqNew);$('#mDot').hidden=!(unread||reqNew);
+}
+const icons={info:'📣',penting:'⚠️',req:'📥'};
+function showCards(cards){
+  const host=$('#annHost');host.innerHTML='';host.classList.toggle('modal',cards.some(c=>c.kind==='penting'));
+  cards.slice(0,3).forEach(c=>{
+    const d=document.createElement('div');d.className='an'+(c.kind==='penting'?' p':'');
+    d.innerHTML=`<h3>${icons[c.kind]||'📣'} <span>${ZT.esc(c.title)}</span></h3><p>${ZT.esc(c.body)}</p><div class="r">${c.open?'<button class="pr" data-o="1">Buka</button>':''}<button data-x="1">${c.open?'Nanti':'Mengerti'}</button></div>`;
+    const done=()=>{c.done&&c.done();d.remove();if(!host.children.length){host.classList.remove('modal')}badges()};
+    d.querySelector('[data-x]').onclick=done;
+    const o=d.querySelector('[data-o]');if(o)o.onclick=()=>{done();go('me',c.open)};
+    host.appendChild(d);
+  });
+}
+function presentAnn(){
+  const s=seenSet(),fresh=ANN.filter(a=>!s.has(a.id)).sort((a,b)=>(b.kind==='penting')-(a.kind==='penting')||b.ts-a.ts);
+  badges();
+  if(!fresh.length)return;
+  if($('#annHost').children.length)return;
+  showCards(fresh.map(a=>({kind:a.kind,title:a.title,body:a.body,done:()=>seen(a.id)})));
+}
+async function pollAnn(){try{const r=await fetch('/api/announce',{cache:'no-store'});if(!r.ok)return;const j=await r.json();ANN=j.items||[];presentAnn()}catch{}}
+async function pollReq(){
+  const t=ZT.token();if(!t||ZT.role()!=='owner'){reqNew=0;badges();return}
+  try{
+    const r=await fetch('/api/request?all=1',{headers:{authorization:'Bearer '+t},cache:'no-store'});if(!r.ok)return;
+    const nw=((await r.json()).items||[]).filter(x=>x.status==='baru');reqNew=nw.length;badges();
+    const sn=new Set(rd('zt_req_seen',[])),add=nw.filter(x=>!sn.has(x.id));
+    if(add.length&&!$('#annHost').children.length){const x=add[0];showCards([{kind:'req',title:'Request baru'+(add.length>1?' ('+add.length+')':''),body:(x.name||'Tamu')+': '+x.msg.slice(0,140),open:'request',done:()=>{add.forEach(a=>sn.add(a.id));wr('zt_req_seen',[...sn].slice(-200))}}])}
+  }catch{}
+}
+addEventListener('storage',e=>{if(e.key==='zt_ann_seen')badges();if(e.key==='zt_acct'||e.key==='zt_role')renderAcct()});
+setInterval(()=>{if(!document.hidden){pollAnn();pollReq()}},60000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){pollAnn();pollReq()}});
+/* ---- pesan dari halaman di dalam iframe ---- */
 addEventListener('message',e=>{
-  if(e.origin!==location.origin||!e.data)return;
-  if(e.data.go)go(e.data.go);
-  if('np' in e.data)document.body.classList.toggle('npo',!!e.data.np);
-  if(e.data.stats){mailStats=e.data.stats;mailResolve(mailStats)}
-  if(e.data.mini){mini=e.data.mini;$('#mT').textContent=mini.title||'';$('#mA').textContent=mini.artist||'';$('#mArt').style.backgroundImage=mini.art?`url("${String(mini.art).replace(/"/g,'')}")`:'';$('#mPl').textContent=mini.playing?'⏸':'▶';syncMini()}
+  if(e.origin!==O||!e.data)return;const d=e.data;
+  if(d.go)go(d.go,d.sec);
+  if(d.back)go(prevTab);
+  if('np' in d)document.body.classList.toggle('npo',!!d.np);
+  if(d.stats){mailStats=d.stats;mailResolve(mailStats)}
+  if(d.mini){mini=d.mini;$('#mT').textContent=mini.title||'';$('#mA').textContent=mini.artist||'';$('#mArt').style.backgroundImage=mini.art?`url("${String(mini.art).replace(/"/g,'')}")`:'';$('#mPl').textContent=mini.playing?'⏸':'▶';syncMini()}
+  if(d.ytImport){go('musik');const f=$('#v-musik'),send=()=>toMusic({cmd:'ytImport',data:d.ytImport});if(f.dataset.r==='1')setTimeout(send,350);else f.addEventListener('load',()=>setTimeout(send,600),{once:true})}
+  if(d.annRefresh)pollAnn();
+  if(d.reqRefresh)pollReq();
+  if(d.swipe&&!drawerOn){
+    const i=TABS.indexOf(curV);
+    if(d.swipe==='edge')openDrawer();
+    else if(d.swipe==='next'&&i>-1&&i<TABS.length-1)go(TABS[i+1]);
+    else if(d.swipe==='prev'){if(i>0)go(TABS[i-1]);else if(i===0)openDrawer()}
+  }
 });
 $('#mPl').onclick=()=>cmd('toggle');$('#mNx').onclick=()=>cmd('next');$('#mPv').onclick=()=>cmd('prev');$('#mInfo').onclick=()=>go('musik');
 addEventListener('hashchange',()=>go(location.hash.slice(1)));
@@ -160,8 +309,10 @@ addEventListener('appinstalled',()=>{$('#ins').hidden=true});
   prog(100,st?'Siap digunakan!':'Siap (server email sedang lambat)');
   await new Promise(r=>setTimeout(r,Math.max(900,2200-(performance.now()-t0))));
   $('#splash').classList.add('out');setTimeout(()=>$('#splash').remove(),950);
+  ZT.log('info','Aplikasi dibuka ('+(standalone?'terpasang':'browser')+')','app');
+  pollAnn();ZT.config().then(c=>{if(c.me)wr('zt_role',c.me.owner?'owner':'user');renderAcct();pollReq()});
 })();
-if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(e=>ZT.log('warn','Service worker gagal: '+e.message,'app')));
 </script>
 </body>
 </html>
