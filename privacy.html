@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<script src="/core.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kebijakan Privasi · ZukaiTemp</title>
+<meta name="description" content="Kebijakan privasi ZukaiTemp: data apa yang diproses, untuk apa, dan bagaimana menghapusnya.">
+<link rel="icon" type="image/png" href="/icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/base.css">
+<link rel="stylesheet" href="/glass.css">
+<style>
+.wrap{max-width:760px}
+.top{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.top a{flex:none;width:46px;height:46px;border-radius:16px;display:grid;place-items:center;color:var(--ink);text-decoration:none;font-size:1.3rem}
+h1{font-size:1.7rem;line-height:1.15}
+.up{color:var(--mut);font-weight:700;font-size:.82rem;margin:0 0 16px 58px}
+.card h2{font:600 1.05rem Fredoka;margin-bottom:8px;color:var(--p1)}
+.card p,.card li{font-weight:600;font-size:.92rem;line-height:1.65;color:var(--ink)}
+.card p+p,.card p+ul,.card ul+p{margin-top:8px}
+.card ul{padding-left:20px}.card li+li{margin-top:5px}
+.card a,.up a{color:var(--p1);word-break:break-word}
+.en{border-left:4px solid var(--p1);padding-left:12px;color:var(--mut)!important}
+footer{text-align:center;font-weight:700;font-size:.8rem;color:var(--mut);margin-top:10px}
+footer a{color:var(--p1)}
+.wrap{padding-bottom:40px!important}
+</style>
+<link rel="stylesheet" href="/theme.css">
+</head>
+<body>
+<div class="wrap">
+<header class="top"><a class="glass" href="/" aria-label="Kembali ke aplikasi">‹</a><h1 class="hd" style="margin:0"><span style="background:linear-gradient(90deg,var(--p1),var(--g2));-webkit-background-clip:text;background-clip:text;color:transparent">Kebijakan Privasi</span></h1></header>
+<p class="up">ZukaiTemp · diperbarui 6 Oktober 2026 · <a href="/">zukaitemp.vercel.app</a></p>
+
+<section class="card glass"><p class="en">Summary: ZukaiTemp only reads your Google name, email and profile photo if you choose to sign in, and your YouTube playlists (read-only) only if you separately tap "Hubungkan YouTube". YouTube data is fetched by your browser and stored only on your device. We do not sell data or use it for ads. Requests you send to the owner are stored in our database until deleted.</p></section>
+<section class="card glass"><h2>1. Siapa kami</h2><p>ZukaiTemp (<a href="/">zukaitemp.vercel.app</a>) adalah aplikasi web berisi email sementara, pemutar musik, downloader, dan tools, yang dikelola oleh pengembang perorangan. Kontak: <a href="mailto:GANTI-EMAIL-KAMU@gmail.com">GANTI-EMAIL-KAMU@gmail.com</a>, atau lewat menu <b>Request</b> di aplikasi.</p></section>
+<section class="card glass"><h2>2. Data yang kami proses</h2>
+<p><b>Akun Google (hanya jika kamu masuk).</b> Nama, alamat email, dan foto profil. Data ini disimpan di browser perangkatmu (localStorage). Token akses Google berlaku sekitar 1 jam. Server hanya menerima token itu untuk memverifikasi identitasmu ke Google (fitur owner dan pelabelan request); token tidak disimpan di database kami.</p>
+<p><b>Data YouTube (hanya jika kamu menekan "Hubungkan YouTube").</b> Kami meminta izin baca saja (<code>youtube.readonly</code>) untuk melihat daftar playlist dan video yang kamu sukai. Data ini diambil langsung oleh browsermu dari YouTube, tidak dikirim ke server kami, dan hanya judul, nama kanal, durasi, dan gambar mini lagu yang kamu pilih untuk diimpor yang disimpan di perangkatmu sebagai playlist. Kami tidak mengubah atau menghapus apa pun di akun YouTube-mu.</p>
+<p><b>Request ke owner.</b> Kategori, isi pesan, kontak (opsional), nama tampilan, ID perangkat acak, email Google (bila kamu masuk), dan waktu kirim. Disimpan di database (Upstash Redis) dan bisa dibaca owner.</p>
+<p><b>Alamat IP.</b> Dipakai sementara untuk membatasi pengiriman berlebihan (penghitung otomatis hilang dalam 1 jam). Penyedia hosting (Vercel) dapat mencatat log server standar.</p>
+<p><b>Data di perangkatmu.</b> Favorit, playlist, pengaturan tampilan, log aplikasi, dan cache tersimpan di browser dan tidak dikirim ke server kami.</p></section>
+<section class="card glass"><h2>3. Untuk apa data dipakai</h2><ul><li>Menampilkan profilmu dan mengaktifkan fitur akun.</li><li>Mengimpor playlist YouTube yang kamu pilih ke tab Musik.</li><li>Menerima dan menjawab request, serta mengenali owner untuk mengirim pengumuman.</li><li>Mencegah penyalahgunaan (batas kirim request).</li></ul><p>Kami tidak menjual data, tidak menampilkan iklan, dan tidak memakai data Google untuk periklanan atau melatih model AI.</p></section>
+<section class="card glass"><h2>4. Layanan pihak ketiga</h2><p>Beberapa fitur memakai layanan luar, dan permintaan yang relevan (misalnya kata pencarian lagu) dikirim ke mereka: Google/YouTube (login, pemutar, dan Data API), Audius, Deezer, Apple (pencarian musik), Internet Archive, LRCLIB (lirik), penyedia email sementara, Vercel (hosting), dan Upstash (database). Masing-masing punya kebijakan privasinya sendiri. Pesan yang masuk ke alamat email sementara diproses oleh penyedia email sementara tersebut, jadi jangan dipakai untuk akun yang penting.</p></section>
+<section class="card glass"><h2>5. Kepatuhan Google API</h2><p>Penggunaan dan pengalihan informasi yang diterima dari Google API oleh ZukaiTemp mematuhi <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener">Kebijakan Data Pengguna Layanan Google API</a>, termasuk persyaratan Penggunaan Terbatas (Limited Use). Dengan memakai fitur YouTube, kamu juga terikat <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener">Ketentuan Layanan YouTube</a> dan <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Kebijakan Privasi Google</a>.</p></section>
+<section class="card glass"><h2>6. Penyimpanan dan penghapusan</h2><ul><li>Keluar dari akun (Menu → Akun → Keluar) menghapus profil dan token dari perangkat serta mencabut token di Google.</li><li>Menu → Penyimpanan &amp; cache → <i>Hapus semua data</i> membersihkan seluruh data di perangkat.</li><li>Cabut izin kapan saja di <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener">myaccount.google.com/permissions</a>.</li><li>Request dan pengumuman tersimpan di database sampai dihapus. Minta penghapusan request-mu lewat kontak di atas dan sertakan ID perangkat dari Menu.</li></ul></section>
+<section class="card glass"><h2>7. Anak-anak</h2><p>Layanan ini tidak ditujukan untuk anak di bawah 13 tahun.</p></section>
+<section class="card glass"><h2>8. Perubahan kebijakan</h2><p>Kebijakan ini dapat diperbarui. Tanggal pembaruan terakhir tertera di bagian atas halaman. Kontak: <a href="mailto:GANTI-EMAIL-KAMU@gmail.com">GANTI-EMAIL-KAMU@gmail.com</a>, atau lewat menu <b>Request</b> di aplikasi.</p></section>
+<footer><a href="/">Beranda</a> · <a href="/privacy.html">Kebijakan Privasi</a> · <a href="/terms.html">Ketentuan Layanan</a></footer>
+</div>
+</body>
+</html>

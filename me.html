@@ -123,7 +123,7 @@ function nav(id){
 }
 const A={
   nav:v=>nav(v),
-  login:()=>ZT.login(),logout:async()=>{if(await ask({title:'Keluar dari akun?',msg:'Akun Google akan diputus dari ZukaiTemp di perangkat ini.',ok:'Keluar'}))ZT.logout()},
+  login:()=>ZT.login(),ytlink:()=>ZT.linkYT(),logout:async()=>{if(await ask({title:'Keluar dari akun?',msg:'Akun Google akan diputus dari ZukaiTemp di perangkat ini.',ok:'Keluar'}))ZT.logout()},
   set:v=>{const [k,val]=v.split(':');ZT.set({[k]:val==='true'?true:val==='false'?false:val});rLook(true)},
   tg:v=>{ZT.set({[v]:!ZT.prefs()[v]});rLook(true)}
 };
@@ -132,14 +132,14 @@ $('#back').onclick=()=>{const u=S[cur].up;if(u)nav(u);else parent.postMessage({b
 /* ---- beranda ---- */
 function rHome(){
   const a=ZT.acct();
-  pg.innerHTML=`<section class="hero"><div class="av2">${avatar(a)}</div><div class="ht"><b>${a?esc(a.name):'Selamat datang 👋'}</b><span>${a?esc(a.email):'Hubungkan Google untuk sinkron YouTube'}</span>${a&&isOwner()?'<em>👑 Owner</em>':''}</div><button class="hb" data-a="${a?'nav:akun':'login'}">${a?'Kelola':'Hubungkan'}</button></section>
+  pg.innerHTML=`<section class="hero"><div class="av2">${avatar(a)}</div><div class="ht"><b>${a?esc(a.name):'Selamat datang 👋'}</b><span>${a?esc(a.email):'Masuk dengan Google untuk fitur akun'}</span>${a&&isOwner()?'<em>👑 Owner</em>':''}</div><button class="hb" data-a="${a?'nav:akun':'login'}">${a?'Kelola':'Masuk'}</button></section>
   <div class="tiles2">${[['pengumuman','📣','Pengumuman','Kabar dari owner'],['request','💬','Request','Kirim ke owner'],['tampilan','🎨','Tampilan','Warna & animasi'],['penyimpanan','💾','Penyimpanan','Cache & data'],['log','📜','Log','Catatan aplikasi'],['akun','▶️','YouTube','Impor playlist']].map(t=>`<button class="tile2 glass" data-a="nav:${t[0]}"><span class="em">${t[1]}</span>${t[2]}<small>${t[3]}</small></button>`).join('')}</div>
   <p class="foot">ID perangkat: ${esc(ZT.dev())}</p>`;
 }
 /* ---- pengaturan ---- */
 function rSet(){
   pg.innerHTML=`<div class="card">${[['tampilan','🎨','Tampilan','Mode gelap, warna aksen, animasi'],['penyimpanan','💾','Penyimpanan & cache','Pemakaian ruang dan pembersihan'],['log','📜','Log','Catatan kesalahan dan kejadian']].map(r=>`<button class="row" data-a="nav:${r[0]}"><span class="em">${r[1]}</span><span class="tx">${r[2]}<small>${r[3]}</small></span><span class="ch">›</span></button>`).join('')}</div>
-  <div class="card"><h3>ℹ️ Tentang</h3><p class="d">ZukaiTemp · email sementara, musik, downloader, dan tools. Semua pengaturan tampilan tersimpan di perangkat ini.</p></div>`;
+  <div class="card"><h3>ℹ️ Tentang</h3><p class="d">ZukaiTemp · email sementara, musik, downloader, dan tools. Semua pengaturan tampilan tersimpan di perangkat ini.</p><p class="d" style="margin-top:8px"><a href="/privacy.html" target="_blank" rel="noopener" style="color:var(--p1)">Kebijakan Privasi</a> · <a href="/terms.html" target="_blank" rel="noopener" style="color:var(--p1)">Ketentuan Layanan</a></p></div>`;
 }
 /* ---- tampilan ---- */
 const SWS={sakura:['Sakura','#ff4d94','#b388ff'],aurora:['Aurora','#7c5cff','#ff6fb1'],samudra:['Samudra','#2f7bff','#22d3c5'],mint:['Mint','#10b981','#38bdf8'],senja:['Senja','#ff7a2f','#ff4d94'],mocha:['Mocha','#a0714f','#e8b86d']};
@@ -222,14 +222,14 @@ async function ytApi(path,params){
 async function rAkun(){
   const a=ZT.acct(),tok=ZT.token(),c=await ZT.config();if(cur!=='akun')return;
   if(!a){
-    pg.innerHTML=`<div class="card" style="text-align:center"><div style="font-size:3rem">🔗</div><h3 style="justify-content:center">Hubungkan Google &amp; YouTube</h3><p class="d" style="margin-bottom:14px">Masuk dengan akun Google untuk melihat playlist dan video yang kamu sukai di YouTube, lalu impor ke Musik. Kami hanya meminta izin <b>baca saja</b> (read-only).</p>${c.googleClientId?'<button class="btn p" style="width:100%" data-a="login">Masuk dengan Google</button>':'<p class="d" style="color:#c27400">Login Google belum aktif di server: isi variabel <b>GOOGLE_CLIENT_ID</b> di Vercel (lihat README).</p>'}</div>`;
+    pg.innerHTML=`<div class="card" style="text-align:center"><div style="font-size:3rem">🔗</div><h3 style="justify-content:center">Masuk dengan Google</h3><p class="d" style="margin-bottom:14px">Login hanya meminta nama, email, dan foto profil. Izin YouTube (baca saja) bersifat opsional dan diminta terpisah, nanti saat kamu ingin mengimpor playlist.</p>${c.googleClientId?'<button class="btn p" style="width:100%" data-a="login">Masuk dengan Google</button>':'<p class="d" style="color:#c27400">Login Google belum aktif di server: isi variabel <b>GOOGLE_CLIENT_ID</b> di Vercel (lihat README).</p>'}</div>`;
     return;
   }
   const left=a.exp?Math.max(0,Math.round((a.exp-Date.now())/60000)):0;
   pg.innerHTML=`<section class="hero"><div class="av2">${avatar(a)}</div><div class="ht"><b>${esc(a.name)}</b><span>${esc(a.email)}</span>${isOwner()?'<em>👑 Owner</em>':''}</div></section>
-  <div class="card"><h3>🔐 Sesi</h3><div class="cps" style="margin-bottom:10px"><span class="chp ${tok?'ok':'er'}">${tok?'Aktif · sekitar '+left+' mnt lagi':'Sesi habis'}</span><span class="chp ${a.yt?'ok':'wr'}">${a.yt?'YouTube terhubung':'Izin YouTube belum diberikan'}</span></div>
+  <div class="card"><h3>🔐 Sesi</h3><div class="cps" style="margin-bottom:10px"><span class="chp ${tok?'ok':'er'}">${tok?'Aktif · sekitar '+left+' mnt lagi':'Sesi habis'}</span><span class="chp ${a.yt?'ok':''}">${a.yt?'YouTube terhubung':'YouTube belum dihubungkan'}</span></div>
   <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn o" style="flex:1" data-a="login">${tok&&a.yt?'Segarkan sesi':'Masuk lagi'}</button><button class="btn o" style="flex:1" data-a="logout">Keluar</button></div></div>
-  <div class="card" id="ytCard"><h3>▶️ YouTube</h3><p class="d" style="margin-bottom:12px">Impor playlist atau video yang kamu sukai ke tab Musik. Lagu diputar lewat pemutar resmi YouTube.</p>${tok&&a.yt?'<button class="btn p" style="width:100%" data-a="ytload">Muat playlist saya</button>':'<p class="d">Masuk lagi dan centang izin YouTube untuk memakai fitur ini.</p>'}<div id="ytOut"></div></div>`;
+  <div class="card" id="ytCard"><h3>▶️ YouTube</h3><p class="d" style="margin-bottom:12px">Impor playlist atau video yang kamu sukai ke tab Musik. Lagu diputar lewat pemutar resmi YouTube.</p>${!a.yt?'<button class="btn p" style="width:100%" data-a="ytlink">Hubungkan YouTube</button><p class="d" style="margin-top:10px">Google akan meminta izin membaca playlist. Aplikasi ini tidak bisa mengubah atau menghapus apa pun di akun YouTube-mu.</p>':tok?'<button class="btn p" style="width:100%" data-a="ytload">Muat playlist saya</button>':'<p class="d">Sesi habis. Tekan “Masuk lagi” di atas.</p>'}<div id="ytOut"></div></div>`;
   if(YT.pl&&tok&&a.yt)renderYT();
 }
 function renderYT(){

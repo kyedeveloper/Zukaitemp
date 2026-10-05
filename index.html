@@ -74,7 +74,8 @@ body.npo #bar,body.npo #mini{transform:translateY(190%);opacity:0;pointer-events
 #drawer.on .dl>*{animation:dIn .55s cubic-bezier(.22,1,.36,1) both}
 #drawer.on .dl>*:nth-child(1){animation-delay:.05s}#drawer.on .dl>*:nth-child(2){animation-delay:.09s}#drawer.on .dl>*:nth-child(3){animation-delay:.13s}#drawer.on .dl>*:nth-child(4){animation-delay:.17s}#drawer.on .dl>*:nth-child(5){animation-delay:.21s}#drawer.on .dl>*:nth-child(6){animation-delay:.25s}#drawer.on .dl>*:nth-child(7){animation-delay:.29s}#drawer.on .dl>*:nth-child(8){animation-delay:.33s}
 @keyframes dIn{from{opacity:0;transform:translateX(-22px)}}
-.dfoot{margin-top:auto;text-align:center;font:700 .74rem Nunito;color:var(--mut);padding-top:6px}
+.dfoot a{color:var(--p1)}
+.dfoot{margin-top:auto;line-height:1.7;text-align:center;font:700 .74rem Nunito;color:var(--mut);padding-top:6px}
 /* pengumuman global: tampil di atas semua tab */
 #annHost{position:fixed;inset:0;z-index:60;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top) + 10px) 14px 14px}
 #annHost.modal{justify-content:center;background:rgba(14,8,24,.5);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);pointer-events:auto}
@@ -135,7 +136,7 @@ body.npo #bar,body.npo #mini{transform:translateY(190%);opacity:0;pointer-events
 <div id="scrim"></div>
 <aside id="drawer" aria-label="Menu samping" aria-hidden="true">
   <div class="prof"><div class="av" id="dAv">🙂</div><div class="t"><b id="dName">Tamu</b><span id="dMail">Belum terhubung</span><em id="dRole" hidden>👑 Owner</em></div></div>
-  <button class="gb" id="dLogin">🔗 Hubungkan Google &amp; YouTube</button>
+  <button class="gb" id="dLogin">🔗 Masuk dengan Google</button>
   <div class="dl">
     <button data-me="akun"><span class="ic2"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg></span>Akun &amp; YouTube</button>
     <button data-me="pengumuman"><span class="ic2"><svg viewBox="0 0 24 24"><path d="M4 10v4h3l7 4V6l-7 4z"/><path d="M17.5 9a4 4 0 0 1 0 6"/></svg></span>Pengumuman<em class="bg2" id="bAnn" hidden></em></button>
@@ -146,7 +147,7 @@ body.npo #bar,body.npo #mini{transform:translateY(190%);opacity:0;pointer-events
     <button data-me="log"><span class="ic2"><svg viewBox="0 0 24 24"><path d="M7 3h8l4 4v14H7z"/><path d="M10 12h6M10 16h6M10 8h2"/></svg></span>Log</button>
     <button data-me="pengaturan"><span class="ic2"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></span>Semua pengaturan</button>
   </div>
-  <div class="dfoot">ZukaiTemp · geser dari tepi kiri untuk membuka menu</div>
+  <div class="dfoot">ZukaiTemp · geser dari tepi kiri untuk membuka menu<br><a href="/privacy.html" target="_blank" rel="noopener">Kebijakan Privasi</a> · <a href="/terms.html" target="_blank" rel="noopener">Ketentuan Layanan</a></div>
 </aside>
 <div id="annHost"></div>
 
