@@ -43,6 +43,7 @@ body.npo #bar,body.npo #mini{transform:translateY(190%);opacity:0;pointer-events
 #mini .i{flex:1;min-width:0;cursor:pointer}#mini b,#mini span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #mini b{font-size:.9rem}#mini span{font-size:.76rem;color:var(--mut);font-weight:700}
 #mini button{border:0;background:none;font-size:1.25rem;width:42px;height:42px;border-radius:50%;color:var(--ink)}
+#mini button.x{font-size:.95rem;width:32px;color:var(--mut)}
 #mini button.pl{background:linear-gradient(135deg,var(--p1),var(--g2));color:#fff;box-shadow:0 8px 16px -8px var(--p1)}
 #ins{position:absolute;left:14px;right:14px;top:calc(env(safe-area-inset-top) + 8px);z-index:12;display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:20px;font:600 .85rem Fredoka;animation:drop .6s cubic-bezier(.34,1.56,.64,1)}
 @keyframes drop{from{opacity:0;transform:translateY(-30px)}}
@@ -72,7 +73,7 @@ body.npo #bar,body.npo #mini{transform:translateY(190%);opacity:0;pointer-events
 .ic2 svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .bg2{margin-left:auto;min-width:22px;height:22px;border-radius:99px;background:var(--p1);color:#fff;font:700 .72rem Nunito;display:grid;place-items:center;padding:0 6px}
 #drawer.on .dl>*{animation:dIn .55s cubic-bezier(.22,1,.36,1) both}
-#drawer.on .dl>*:nth-child(1){animation-delay:.05s}#drawer.on .dl>*:nth-child(2){animation-delay:.09s}#drawer.on .dl>*:nth-child(3){animation-delay:.13s}#drawer.on .dl>*:nth-child(4){animation-delay:.17s}#drawer.on .dl>*:nth-child(5){animation-delay:.21s}#drawer.on .dl>*:nth-child(6){animation-delay:.25s}#drawer.on .dl>*:nth-child(7){animation-delay:.29s}#drawer.on .dl>*:nth-child(8){animation-delay:.33s}
+#drawer.on .dl>*:nth-child(1){animation-delay:.05s}#drawer.on .dl>*:nth-child(2){animation-delay:.09s}#drawer.on .dl>*:nth-child(3){animation-delay:.13s}#drawer.on .dl>*:nth-child(4){animation-delay:.17s}#drawer.on .dl>*:nth-child(5){animation-delay:.21s}#drawer.on .dl>*:nth-child(6){animation-delay:.25s}#drawer.on .dl>*:nth-child(7){animation-delay:.29s}#drawer.on .dl>*:nth-child(8){animation-delay:.33s}#drawer.on .dl>*:nth-child(9){animation-delay:.37s}
 @keyframes dIn{from{opacity:0;transform:translateX(-22px)}}
 .dfoot a{color:var(--p1)}
 .dfoot{margin-top:auto;line-height:1.7;text-align:center;font:700 .74rem Nunito;color:var(--mut);padding-top:6px}
@@ -121,7 +122,7 @@ body.npo #bar,body.npo #mini{transform:translateY(190%);opacity:0;pointer-events
     <div id="load" hidden></div>
   </div>
   <div id="ins" class="glass" hidden><span>📲 Pasang ZukaiTemp sebagai aplikasi</span><button id="insGo">Pasang</button><button class="x" id="insX" aria-label="Tutup">✕</button></div>
-  <div id="mini" class="glass"><div class="a" id="mArt"></div><div class="i" id="mInfo"><b id="mT"></b><span id="mA"></span></div><button id="mPv" aria-label="Sebelumnya">⏮</button><button class="pl" id="mPl" aria-label="Putar atau jeda">⏸</button><button id="mNx" aria-label="Berikutnya">⏭</button></div>
+  <div id="mini" class="glass"><div class="a" id="mArt"></div><div class="i" id="mInfo"><b id="mT"></b><span id="mA"></span></div><button id="mPv" aria-label="Sebelumnya">⏮</button><button class="pl" id="mPl" aria-label="Putar atau jeda">⏸</button><button id="mNx" aria-label="Berikutnya">⏭</button><button class="x" id="mX" aria-label="Tutup pemutar mini">✕</button></div>
   <nav id="bar" class="glass" aria-label="Navigasi utama">
     <i id="ind"></i>
     <button id="tabMenu" aria-label="Buka menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h10M4 17h16"/></svg>Menu<b class="dot" id="mDot" hidden></b></button>
@@ -140,6 +141,7 @@ body.npo #bar,body.npo #mini{transform:translateY(190%);opacity:0;pointer-events
   <div class="dl">
     <button data-me="akun"><span class="ic2"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg></span>Akun &amp; YouTube</button>
     <button data-me="pengumuman"><span class="ic2"><svg viewBox="0 0 24 24"><path d="M4 10v4h3l7 4V6l-7 4z"/><path d="M17.5 9a4 4 0 0 1 0 6"/></svg></span>Pengumuman<em class="bg2" id="bAnn" hidden></em></button>
+    <button data-me="chat"><span class="ic2"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8.5 9.5h7M8.5 12.5h4"/></svg></span>Chat global</button>
     <button data-me="request"><span class="ic2"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg></span>Request<em class="bg2" id="bReq" hidden></em></button>
     <hr>
     <button data-me="tampilan"><span class="ic2"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M12 12h9"/></svg></span>Tampilan</button>
@@ -162,7 +164,7 @@ body.npo #bar,body.npo #mini{transform:translateY(190%);opacity:0;pointer-events
 <script>
 const $=s=>document.querySelector(s),O=location.origin;
 const rd=(k,d)=>{try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch{return d}},wr=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
-const TABS=['email','musik','unduh','tools'],V=[...TABS,'me'];let curV='email',prevTab='email',mini=null;
+const TABS=['email','musik','unduh','tools'],V=[...TABS,'me'];let curV='email',prevTab='email',mini=null,miniOff=false;
 /* inset layar bawah (iPhone) diteruskan ke semua halaman */
 const SB=(()=>{const d=document.createElement('div');d.style.cssText='position:fixed;bottom:0;left:0;padding-bottom:env(safe-area-inset-bottom);visibility:hidden';document.body.appendChild(d);const v=parseFloat(getComputedStyle(d).paddingBottom)||0;d.remove();return v})();
 document.documentElement.style.setProperty('--sb',SB+'px');
@@ -171,7 +173,7 @@ document.querySelectorAll('iframe').forEach(f=>f.addEventListener('load',()=>{
   f.dataset.r='1';try{f.contentDocument.documentElement.style.setProperty('--sb',SB+'px')}catch{}
   if('v-'+curV===f.id)$('#load').hidden=true;
 }));
-const syncMini=()=>$('#mini').classList.toggle('on',!!(mini&&mini.has&&curV!=='musik'));
+const syncMini=()=>$('#mini').classList.toggle('on',!!(mini&&mini.has&&curV!=='musik'&&!miniOff));
 const toMusic=m=>{const f=$('#v-musik');f.contentWindow&&f.contentWindow.postMessage(m,O)};
 const cmd=c=>toMusic({cmd:c});
 function go(v,sec){
@@ -184,6 +186,7 @@ function go(v,sec){
   $('#tabMenu').classList.toggle('on',v==='me'||drawerOn);
   $('#bar').style.setProperty('--i',drawerOn||v==='me'?0:TABS.indexOf(v)+1);
   $('#load').hidden=$('#v-'+v).dataset.r==='1';
+  try{const m=$('#v-me');m.contentWindow&&m.contentWindow.postMessage({active:v==='me'},O)}catch{}
   syncMini();
   if(v!=='musik'&&document.body.classList.contains('npo'))cmd('closeNp');
   const h=v==='me'?'me':v;if(location.hash.slice(1)!==h)history.replaceState(null,'','#'+h);
@@ -265,7 +268,7 @@ addEventListener('message',e=>{
   if(d.back)go(prevTab);
   if('np' in d)document.body.classList.toggle('npo',!!d.np);
   if(d.stats){mailStats=d.stats;mailResolve(mailStats)}
-  if(d.mini){mini=d.mini;$('#mT').textContent=mini.title||'';$('#mA').textContent=mini.artist||'';$('#mArt').style.backgroundImage=mini.art?`url("${String(mini.art).replace(/"/g,'')}")`:'';$('#mPl').textContent=mini.playing?'⏸':'▶';syncMini()}
+  if(d.mini){if(d.mini.playing||(mini&&mini.title!==d.mini.title))miniOff=false;mini=d.mini;$('#mT').textContent=mini.title||'';$('#mA').textContent=mini.artist||'';$('#mArt').style.backgroundImage=mini.art?`url("${String(mini.art).replace(/"/g,'')}")`:'';$('#mPl').textContent=mini.playing?'⏸':'▶';syncMini()}
   if(d.ytImport){go('musik');const f=$('#v-musik'),send=()=>toMusic({cmd:'ytImport',data:d.ytImport});if(f.dataset.r==='1')setTimeout(send,350);else f.addEventListener('load',()=>setTimeout(send,600),{once:true})}
   if(d.annRefresh)pollAnn();
   if(d.reqRefresh)pollReq();
@@ -276,6 +279,7 @@ addEventListener('message',e=>{
     else if(d.swipe==='prev'){if(i>0)go(TABS[i-1]);else if(i===0)openDrawer()}
   }
 });
+$('#mX').onclick=()=>{miniOff=true;cmd('stop');syncMini()};
 $('#mPl').onclick=()=>cmd('toggle');$('#mNx').onclick=()=>cmd('next');$('#mPv').onclick=()=>cmd('prev');$('#mInfo').onclick=()=>go('musik');
 addEventListener('hashchange',()=>go(location.hash.slice(1)));
 go(location.hash.slice(1)||'email');

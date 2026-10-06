@@ -79,6 +79,18 @@ input+input,input+.f2,.f2+input{margin-top:0}
 #sheet{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(14,8,24,.5);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);animation:ztFade .3s}
 .sh2{width:min(100%,380px);border-radius:28px;padding:20px;background:var(--p4);box-shadow:0 30px 60px -24px rgba(0,0,0,.6);animation:ztDlg .5s cubic-bezier(.22,1.2,.36,1)}
 .sh2 h3{margin-bottom:6px}.sh2 p{margin-bottom:12px}.sh2 .r{display:flex;gap:10px;margin-top:12px}.sh2 .r .btn{flex:1}
+.chat{display:flex;flex-direction:column;gap:10px}
+.cm{display:flex}.cm.me{justify-content:flex-end}
+.cb{position:relative;max-width:86%;padding:9px 14px 10px;border-radius:20px 20px 20px 6px;background:var(--w);box-shadow:var(--sh);animation:ztRise .4s cubic-bezier(.22,1,.36,1)}
+.cm.me .cb{border-radius:20px 20px 6px 20px;color:#fff;background:linear-gradient(135deg,var(--p1),color-mix(in srgb,var(--p1) 50%,var(--g2)))}
+.cn{display:flex;gap:6px;align-items:center;font:700 .72rem Nunito;color:var(--p1)}.cn i{font-style:normal;color:#0f9a63}.cn span{color:var(--mut);font-weight:700}
+.cm.me .cn,.cm.me .cn span,.cm.me .cn i{color:rgba(255,255,255,.8)}
+.ct{margin-top:2px;font-weight:600;font-size:.94rem;line-height:1.45;word-break:break-word;white-space:pre-wrap}
+.cx{position:absolute;right:-6px;top:-8px;width:26px;height:26px;border:0;border-radius:50%;background:#fff;box-shadow:0 4px 10px rgba(0,0,0,.25);font-size:.75rem}
+.cform{position:sticky;bottom:calc(var(--navh) + 10px);z-index:5;display:flex;gap:8px;align-items:center;padding:8px;border-radius:26px;margin-top:14px}
+.cform input{flex:1;min-width:0;border:0!important;background:transparent!important;box-shadow:none!important;font:600 .95rem Nunito;padding:0 10px;min-height:44px}
+.cform .btn{min-height:44px;padding:0 20px}
+.lk{color:var(--p1);text-decoration:underline;cursor:pointer}
 </style>
 <link rel="stylesheet" href="/glass.css">
 <link rel="stylesheet" href="/theme.css">
@@ -113,11 +125,11 @@ function ask(o){return new Promise(res=>{
 /* ---- bagian halaman ---- */
 const S={
   home:{t:'Menu',r:rHome},akun:{t:'Akun & YouTube',r:rAkun,up:'home'},pengumuman:{t:'Pengumuman',r:rAnn,up:'home'},request:{t:'Request',r:rReq,up:'home'},
-  pengaturan:{t:'Pengaturan',r:rSet,up:'home'},tampilan:{t:'Tampilan',r:rLook,up:'pengaturan'},penyimpanan:{t:'Penyimpanan & cache',r:rStore,up:'pengaturan'},log:{t:'Log',r:rLog,up:'pengaturan'}
+  pengaturan:{t:'Pengaturan',r:rSet,up:'home'},chat:{t:'Chat global',r:rChat,up:'home'},tampilan:{t:'Tampilan',r:rLook,up:'pengaturan'},penyimpanan:{t:'Penyimpanan & cache',r:rStore,up:'pengaturan'},log:{t:'Log',r:rLog,up:'pengaturan'}
 };
 let cur='home';
 function nav(id){
-  if(!S[id])id='home';cur=id;$('#ttl').textContent=S[id].t;
+  clearTimeout(CH.t);if(!S[id])id='home';cur=id;$('#ttl').textContent=S[id].t;
   pg.classList.remove('in');void pg.offsetWidth;pg.classList.add('in');
   scrollTo({top:0});S[id].r();
 }
@@ -133,7 +145,7 @@ $('#back').onclick=()=>{const u=S[cur].up;if(u)nav(u);else parent.postMessage({b
 function rHome(){
   const a=ZT.acct();
   pg.innerHTML=`<section class="hero"><div class="av2">${avatar(a)}</div><div class="ht"><b>${a?esc(a.name):'Selamat datang 👋'}</b><span>${a?esc(a.email):'Masuk dengan Google untuk fitur akun'}</span>${a&&isOwner()?'<em>👑 Owner</em>':''}</div><button class="hb" data-a="${a?'nav:akun':'login'}">${a?'Kelola':'Masuk'}</button></section>
-  <div class="tiles2">${[['pengumuman','📣','Pengumuman','Kabar dari owner'],['request','💬','Request','Kirim ke owner'],['tampilan','🎨','Tampilan','Warna & animasi'],['penyimpanan','💾','Penyimpanan','Cache & data'],['log','📜','Log','Catatan aplikasi'],['akun','▶️','YouTube','Impor playlist']].map(t=>`<button class="tile2 glass" data-a="nav:${t[0]}"><span class="em">${t[1]}</span>${t[2]}<small>${t[3]}</small></button>`).join('')}</div>
+  <div class="tiles2">${[['pengumuman','📣','Pengumuman','Kabar dari owner'],['request','💬','Request','Kirim ke owner'],['tampilan','🎨','Tampilan','Warna & animasi'],['penyimpanan','💾','Penyimpanan','Cache & data'],['log','📜','Log','Catatan aplikasi'],['chat','💬','Chat global','Ngobrol bareng'],['akun','▶️','YouTube','Impor playlist'],['pengaturan','⚙️','Pengaturan','Semua opsi']].map(t=>`<button class="tile2 glass" data-a="nav:${t[0]}"><span class="em">${t[1]}</span>${t[2]}<small>${t[3]}</small></button>`).join('')}</div>
   <p class="foot">ID perangkat: ${esc(ZT.dev())}</p>`;
 }
 /* ---- pengaturan ---- */
@@ -326,8 +338,55 @@ const ownerAct=async body=>{try{await api('/api/request',{method:'POST',body});p
 A.rst=v=>{const [id,s]=v.split(':');ownerAct({action:'status',id,status:s})};
 A.rdel=async id=>{if(await ask({title:'Hapus request ini?',ok:'Hapus',danger:true}))ownerAct({action:'delete',id})};
 A.rnote=async id=>{const n=await ask({title:'Catatan untuk pengirim',msg:'Catatan ini bisa dibaca pengirim di “Request saya”.',input:'Tulis catatan…',ok:'Simpan'});if(n)ownerAct({action:'status',id,status:'dibaca',note:n})};
+/* ---- chat global ---- */
+let CH={items:[],t:0,idle:0,db:true,sig:''},ACTIVE=true;
+const hhmm=t=>new Date(t).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+function chatHtml(){
+  if(!CH.db)return '<div class="card"><h3>🗄️ Database belum aktif</h3><p class="d">Chat butuh database Upstash Redis. Ikuti langkah di README.</p></div>';
+  const u=rd('zt_chat_u',''),own=isOwner();
+  return CH.items.length?CH.items.map(m=>{const me=u&&m.u===u;return `<div class="cm ${me?'me':''}"><div class="cb"><div class="cn">${m.o?'👑 ':''}${esc(m.name)}${m.v&&!m.o?'<i>✔</i>':''}<span>${hhmm(m.ts)}</span></div><div class="ct">${esc(m.text)}</div>${own?`<button class="cx" aria-label="Hapus pesan" data-a="cdel:${esc(m.id)}">🗑</button>`:''}</div></div>`}).join(''):'<div class="empty"><i>💬</i>Belum ada pesan. Jadi yang pertama menyapa!</div>';
+}
+function chatPaint(bottom){
+  const el=$('#cl');if(!el)return;
+  const near=bottom||innerHeight+scrollY>=document.documentElement.scrollHeight-160;
+  el.innerHTML=chatHtml();
+  if(near)requestAnimationFrame(()=>scrollTo({top:document.documentElement.scrollHeight}));
+}
+async function chatPull(first){
+  try{
+    const j=await api('/api/chat');if(cur!=='chat')return;
+    CH.db=j.db!==false;const it=j.items||[],sig=it.length+':'+(it.length?it[it.length-1].id:'');
+    if(sig!==CH.sig){CH.sig=sig;CH.items=it;CH.idle=0;chatPaint(first)}else CH.idle++;
+  }catch{CH.idle++}
+}
+function chatLoop(){
+  clearTimeout(CH.t);if(cur!=='chat'||!ACTIVE)return;
+  CH.t=setTimeout(async()=>{if(!document.hidden&&ACTIVE)await chatPull();chatLoop()},4000+Math.min(CH.idle,10)*1000);
+}
+function rChat(){
+  pg.innerHTML=`<div class="chat" id="cl"></div><div class="cform glass"><input id="ci" maxlength="300" placeholder="Tulis pesan…" autocomplete="off" enterkeyhint="send"><button class="btn p" data-a="csend">Kirim</button></div><p class="d" style="text-align:center;margin-top:10px">Chat terlihat oleh semua pengguna. Jaga sopan santun.${ZT.acct()?'':' <a class="lk" data-a="cnick">Ganti nama</a>'}</p>`;
+  $('#ci').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();A.csend()}});
+  CH.idle=0;chatPaint(true);chatPull(true);chatLoop();
+}
+A.csend=async b=>{
+  const inp=$('#ci'),text=inp.value.trim();if(!text)return;
+  const a=ZT.acct();let name=a?a.name:rd('zt_nick','');
+  if(!name){const n=await ask({title:'Pilih nama panggilan',msg:'Nama ini tampil di chat global.',input:'Nama (maks 20 huruf)',ok:'Simpan'});if(!n)return;name=n.slice(0,20);wr('zt_nick',name)}
+  if(b&&b.disabled!==undefined)b.disabled=true;
+  try{
+    const j=await api('/api/chat',{method:'POST',body:{text,name:name.slice(0,20),dev:ZT.dev()}});
+    wr('zt_chat_u',j.u);inp.value='';CH.items=CH.items.concat(j.item).slice(-60);CH.sig=CH.items.length+':'+j.item.id;CH.idle=0;chatPaint(true);chatLoop();
+  }catch(e){ZT.toast(e.status===503?'Chat butuh database di server (lihat README)':e.message)}
+  if(b&&b.disabled!==undefined)b.disabled=false;inp.focus();
+};
+A.cnick=async()=>{const n=await ask({title:'Ganti nama',msg:'Nama ini tampil di chat global.',input:'Nama (maks 20 huruf)',ok:'Simpan'});if(n){wr('zt_nick',n.slice(0,20));ZT.toast('Nama diganti')}};
+A.cdel=async id=>{if(!await ask({title:'Hapus pesan ini?',msg:'Pesan hilang untuk semua orang.',ok:'Hapus',danger:true}))return;try{await api('/api/chat',{method:'POST',body:{action:'delete',id}});CH.sig='';chatPull()}catch(e){ZT.toast(e.message)}};
 /* ---- sinkron dengan sisa aplikasi ---- */
-addEventListener('message',e=>{if(e.origin===O&&e.data&&e.data.sec)nav(e.data.sec)});
+addEventListener('message',e=>{
+  if(e.origin!==O||!e.data)return;
+  if(e.data.sec)nav(e.data.sec);
+  if('active' in e.data){ACTIVE=!!e.data.active;if(!ACTIVE)clearTimeout(CH.t);else if(cur==='chat'){chatPull();chatLoop()}}
+});
 addEventListener('storage',e=>{
   if(e.key==='zt_acct'||e.key==='zt_role'){if(['home','akun','pengumuman','request'].includes(cur))nav(cur)}
   else if(e.key==='zt_log'&&cur==='log')rLog();

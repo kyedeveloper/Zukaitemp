@@ -29,22 +29,31 @@
 .cd:active{transform:scale(.95)}
 .cd .im{position:relative;width:156px;height:156px;border-radius:26px;background:linear-gradient(135deg,var(--p2),var(--p1)) center/cover;box-shadow:0 18px 30px -16px color-mix(in srgb,var(--p1) 80%,transparent);overflow:hidden}
 .cd .im::after{content:"▶";position:absolute;right:10px;bottom:10px;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:.85rem;color:#fff;background:rgba(255,255,255,.3);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.6)}
+.cd .rk{position:absolute;left:8px;top:8px;z-index:1;min-width:26px;height:26px;padding:0 7px;border-radius:99px;display:grid;place-items:center;font:700 .76rem Fredoka;font-style:normal;color:#fff;background:rgba(0,0,0,.45);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.cd .rk.t{background:linear-gradient(135deg,var(--p1),var(--g2))}
+.mc{flex:none;width:156px;height:156px;scroll-snap-align:start;border:0;border-radius:26px;color:var(--p1);font:600 .92rem Fredoka;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:color-mix(in srgb,var(--p1) 10%,transparent)}
+.mc b{font-size:1.5rem}.mc.ar2{width:112px;height:112px;border-radius:50%}
+.sa{display:flex;align-items:center;gap:12px}
+.sl{border:0;background:none;color:var(--p1);font:700 .8rem Nunito;padding:6px 0;white-space:nowrap}
+.rn{flex:none;width:28px;text-align:center;font:600 .95rem Fredoka;color:var(--mut)}.rn.t{color:var(--p1);font-size:1.1rem}
+.agrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:18px 14px;margin-top:16px}
+.agrid .ar{width:auto}.agrid .ar .im{width:100%;height:auto;aspect-ratio:1}
 .cd b,.cd span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cd b{margin-top:10px;font-size:.94rem}.cd span{font-size:.8rem;color:var(--mut);font-weight:700}
 .sk{width:156px;height:156px;border-radius:26px;flex:none;background:linear-gradient(100deg,rgba(255,255,255,.2) 30%,rgba(255,255,255,.7) 50%,rgba(255,255,255,.2) 70%) 0 0/200% 100%;animation:shim 1.3s linear infinite}
 @keyframes shim{to{background-position:-200% 0}}
 .rows{display:flex;flex-direction:column;gap:12px;margin-top:12px}
-.tr{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:22px;cursor:pointer;transition:transform .3s cubic-bezier(.34,1.56,.64,1);animation:rise .5s both}
+.tr{display:flex;align-items:center;gap:10px;padding:12px 8px 12px 12px;border-radius:22px;cursor:pointer;transition:transform .3s cubic-bezier(.34,1.56,.64,1);animation:rise .5s both}
 @keyframes rise{from{opacity:0;transform:translateY(14px)}}
 .tr:active{transform:scale(.98)}.tr.cur{outline:2px solid var(--p1);outline-offset:-2px}
-.tr .im{width:58px;height:58px;border-radius:16px;flex:none;background:linear-gradient(135deg,var(--p2),var(--p1)) center/cover}
+.tr .im{width:52px;height:52px;border-radius:16px;flex:none;background:linear-gradient(135deg,var(--p2),var(--p1)) center/cover}
 .tr .i{flex:1;min-width:0}
 .tr b,.tr .a{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tr .a{font-size:.82rem;color:var(--mut);font-weight:700}
 .bd{display:inline-block;margin-top:3px;font:700 .68rem Nunito;padding:2px 9px;border-radius:99px;background:color-mix(in srgb,var(--p1) 14%,transparent);color:var(--p1)}
 .bd.full{background:rgba(60,180,120,.16);color:#2a9a63}
 .d{font-size:.78rem;color:var(--mut);font-weight:700}
-.hb{border:0;background:none;font-size:1.25rem;padding:8px;color:var(--p1);border-radius:50%}
+.hb{border:0;background:none;font-size:1.2rem;padding:6px;min-width:34px;color:var(--p1);border-radius:50%}
 .empty{text-align:center;color:var(--mut);font-weight:700;padding:44px 12px;line-height:1.7}
 .empty i{display:block;font-style:normal;font-size:3rem;margin-bottom:6px}
 /* bar kecil */
@@ -209,22 +218,22 @@ const DZ=p=>jf('/api/music?'+p);
 const artistSearch=async q=>((await DZ('kind=sartist&q='+encodeURIComponent(q))).data||[]).filter(a=>a.name).map(mapAr);
 const artistChart=async()=>((await DZ('kind=artists')).data||[]).filter(a=>a.name).map(mapAr);
 let _ac=null;
-const appleRaw=()=>_ac||(_ac=(async()=>{const f=await jf('https://rss.applemarketingtools.com/api/v2/id/music/most-played/25/songs.json');const ids=((f.feed&&f.feed.results)||[]).map(x=>x.id).join(',');return ((await jf(`https://itunes.apple.com/lookup?id=${ids}&country=ID`)).results||[])})().catch(e=>{_ac=null;throw e}));
+const appleRaw=()=>_ac||(_ac=(async()=>{let ids='';try{const f=await jf('https://rss.applemarketingtools.com/api/v2/id/music/most-played/50/songs.json');ids=((f.feed&&f.feed.results)||[]).map(x=>x.id).join(',')}catch{}if(!ids){const f=await jf('https://itunes.apple.com/id/rss/topsongs/limit=50/json');ids=((f.feed&&f.feed.entry)||[]).map(e=>e.id&&e.id.attributes&&e.id.attributes['im:id']).filter(Boolean).join(',')}return ((await jf(`https://itunes.apple.com/lookup?id=${ids}&country=ID`)).results||[])})().catch(e=>{_ac=null;throw e}));
 const mapD=t=>({id:t.id,src:'deezer',title:t.title,artist:(t.artist&&t.artist.name)||'',dur:30,art:(t.album&&(t.album.cover_big||t.album.cover_medium))||'',url:t.preview,full:false,album:(t.album&&t.album.title)||''});
 const SRC={
   ytm:{name:'YouTube',
     search:async q=>((await DZ('kind=search&q='+encodeURIComponent(q))).data||[]).filter(x=>x.title).map(x=>mapY(x)),
     homes:[
       {k:'ytar',kind:'artist',title:'🎤 Artis populer',sub:'ketuk untuk lihat lagunya',f:artistChart},
-      {k:'ytid',title:'🇮🇩 Top Indonesia',sub:'lagu utuh',f:async()=>(await appleRaw()).filter(x=>x.trackName).map(mapAY)},
-      {k:'ytwd',title:'🌍 Chart Dunia',sub:'lagu utuh',f:async()=>((await DZ('kind=chart')).data||[]).filter(x=>x.title).map(x=>mapY(x))}
+      {k:'ytid',rank:1,title:'🇮🇩 Top Indonesia',sub:'lagu utuh',f:async()=>(await appleRaw()).filter(x=>x.trackName).map(mapAY)},
+      {k:'ytwd',rank:1,title:'🌍 Chart Dunia',sub:'lagu utuh',f:async()=>((await DZ('kind=chart')).data||[]).filter(x=>x.title).map(x=>mapY(x))}
     ]},
   audius:{name:'Audius',
-    search:async q=>(await aj(`/tracks/search?query=${encodeURIComponent(q)}&limit=25`)).filter(t=>t.id).map(mapA),
-    home:async()=>(await aj('/tracks/trending?time=week&limit=25')).filter(t=>t.id).map(mapA),title:'🔥 Trending di Audius',sub:'lagu utuh'},
+    search:async q=>(await aj(`/tracks/search?query=${encodeURIComponent(q)}&limit=40`)).filter(t=>t.id).map(mapA),
+    home:async()=>(await aj('/tracks/trending?time=week&limit=50')).filter(t=>t.id).map(mapA),title:'🔥 Trending di Audius',sub:'lagu utuh'},
   apple:{name:'Apple Music',
-    search:async q=>((await jf(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&media=music&entity=song&limit=25&country=ID`)).results||[]).filter(x=>x.previewUrl).map(mapI),
-    home:async()=>{const f=await jf('https://rss.applemarketingtools.com/api/v2/id/music/most-played/25/songs.json');const ids=((f.feed&&f.feed.results)||[]).map(x=>x.id).join(',');return ((await jf(`https://itunes.apple.com/lookup?id=${ids}&country=ID`)).results||[]).filter(x=>x.previewUrl).map(mapI)},title:'🇮🇩 Top Indonesia',sub:'cuplikan 30 dtk'},
+    search:async q=>((await jf(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&media=music&entity=song&limit=40&country=ID`)).results||[]).filter(x=>x.previewUrl).map(mapI),
+    home:async()=>(await appleRaw()).filter(x=>x.previewUrl).map(mapI),title:'🇮🇩 Top Indonesia',sub:'cuplikan 30 dtk'},
   deezer:{name:'Deezer',
     search:async q=>((await jf(`/api/music?q=${encodeURIComponent(q)}`)).data||[]).filter(x=>x.preview).map(mapD),
     home:async()=>((await jf('/api/music?kind=chart')).data||[]).filter(x=>x.preview).map(mapD),title:'🌍 Chart Dunia',sub:'cuplikan 30 dtk'},
@@ -240,7 +249,7 @@ async function resolve(t){
   t.url='https://archive.org/download/'+encodeURIComponent(t.id)+'/'+f.name.split('/').map(encodeURIComponent).join('/');
   if(f.length)t.dur=Math.round(parseFloat(f.length))||t.dur;
 }
-const SECS=[];Object.keys(SRC).forEach(s=>{const o=SRC[s];(o.homes||(o.home?[{k:s,title:o.title,sub:o.sub,f:o.home}]:[])).forEach(h=>SECS.push({...h,s}))});
+const SECS=[];Object.keys(SRC).forEach(s=>{const o=SRC[s];(o.homes||(o.home?[{k:s,rank:1,title:o.title,sub:o.sub,f:o.home}]:[])).forEach(h=>SECS.push({...h,s}))});
 const nk=t=>(t.artist+'|'+t.title).toLowerCase().replace(/[^a-z0-9]/g,'');
 const merge=arrs=>{const o=[],m=Math.max(0,...arrs.map(a=>a.length));for(let i=0;i<m;i++)arrs.forEach(a=>a[i]&&o.push(a[i]));return o};
 
@@ -264,15 +273,16 @@ const hr=new Date().getHours();$('#greet').textContent=(hr<11?'Selamat pagi':hr<
 const CH=[['ytm','YouTube'],['all','Semua'],['audius','Audius'],['apple','Apple Music'],['deezer','Deezer'],['archive','Archive']];
 $('#chips').innerHTML=CH.map(([k,n])=>`<button class="c2 glass ${k===srcF?'on':''}" data-s="${k}">${n}</button>`).join('');
 const badge=t=>`<span class="bd ${t.full?'full':''}">${SRC[t.src].name}${t.full?' · utuh':' · 30 dtk'}</span>`;
-function row(t,i,l){return `<div class="tr glass ${same(cur(),t)?'cur':''}" data-l="${l}" data-i="${i}" tabindex="0" style="animation-delay:${Math.min(i,10)*35}ms"><div class="im" style="${bg(t.art)}"></div><div class="i"><b>${esc(t.title)}</b><span class="a">${esc(t.artist)}</span>${badge(t)}</div><div class="d">${t.dur?fmt(t.dur):''}</div><button class="hb" data-f aria-label="Favorit">${isFav(t)?'❤':'♡'}</button><button class="hb" data-m aria-label="Menu lagu">⋯</button></div>`}
-const rows=(a,l,empty)=>{lists[l]=a;return a.length?`<div class="rows">${a.map((t,i)=>row(t,i,l)).join('')}</div>`:`<div class="empty"><i>🎧</i>${empty}</div>`};
+function row(t,i,l,rk){return `<div class="tr glass ${same(cur(),t)?'cur':''}" data-l="${l}" data-i="${i}" tabindex="0" style="animation-delay:${Math.min(i,10)*35}ms">${rk?`<span class="rn ${i<3?'t':''}">${i+1}</span>`:''}<div class="im" style="${bg(t.art)}"></div><div class="i"><b>${esc(t.title)}</b><span class="a">${esc(t.artist)}</span>${badge(t)}</div><div class="d">${t.dur?fmt(t.dur):''}</div><button class="hb" data-f aria-label="Favorit">${isFav(t)?'❤':'♡'}</button><button class="hb" data-m aria-label="Menu lagu">⋯</button></div>`}
+const rows=(a,l,empty,rk)=>{lists[l]=a;return a.length?`<div class="rows">${a.map((t,i)=>row(t,i,l,rk)).join('')}</div>`:`<div class="empty"><i>🎧</i>${empty}</div>`};
 const arCard=(a,i,l)=>`<div class="ar" data-al="${l}" data-ai="${i}" tabindex="0"><div class="im" style="${bg(a.img)}"></div><b>${esc(a.name)}</b></div>`;
 function artistView(){
   const a=art.a,f=a.fans?new Intl.NumberFormat('id-ID').format(a.fans)+' penggemar':'';
   return `<div style="margin-top:14px"><button class="btn o" data-back>← Kembali</button></div><div class="ah"><div class="im" style="${bg(a.img)}"></div><div><h2 class="f">${esc(a.name)}</h2><span class="d">${f}</span></div></div>`+
     (art.tracks===undefined?'<div class="empty"><i>⏳</i>Memuat lagu...</div>':art.tracks.length?'<button class="btn p" data-playall>▶ Putar semua</button>'+rows(art.tracks,'art',''):'<div class="empty"><i>🎧</i>Lagu artis ini tidak bisa dimuat.</div>');
 }
-const card=(t,i,l)=>`<div class="cd" data-l="${l}" data-i="${i}" tabindex="0"><div class="im" style="${bg(t.art)}"></div><b>${esc(t.title)}</b><span>${esc(t.artist)}</span></div>`;
+let see=null;
+const card=(t,i,l,rk)=>`<div class="cd" data-l="${l}" data-i="${i}" tabindex="0"><div class="im" style="${bg(t.art)}">${rk?`<i class="rk ${i<3?'t':''}">${i+1}</i>`:''}</div><b>${esc(t.title)}</b><span>${esc(t.artist)}</span></div>`;
 function view(){
   $('#seg').style.setProperty('--i',['home','fav','pl'].indexOf(tab));
   document.querySelectorAll('#seg button').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));
@@ -286,11 +296,14 @@ function view(){
   else if(qtxt){
     if(results===null)h='<div class="empty"><i>🔎</i>Mencari di semua sumber...</div>';
     else{lists.ra=resArt;h=(resArt.length?`<section class="sec"><h2>🎤 Artis</h2><div class="car">${resArt.map((a,i)=>arCard(a,i,'ra')).join('')}</div></section>`:'')+`<div class="d" style="margin-top:8px">${results.length} hasil untuk "${esc(qtxt)}"</div>`+rows(results,'res','Tidak ada hasil. Coba kata kunci lain atau sumber lain.')}
+  }else if(see&&SECS.some(x=>x.k===see)){
+    const x=SECS.find(z=>z.k===see),a=HOME[x.k]||[],ar=x.kind==='artist';lists['h'+x.k]=a;
+    h=`<div style="margin-top:14px"><button class="btn o" data-back>← Kembali</button></div><h2 class="f" style="margin:16px 0 4px">${x.title}</h2><div class="d">${a.length} ${ar?'artis':'lagu'} · ${x.sub}</div>`+(ar?`<div class="agrid">${a.map((t,i)=>arCard(t,i,'h'+x.k)).join('')}</div>`:`<button class="btn p" style="margin-top:12px" data-playsec="${x.k}">▶ Putar semua</button>`+rows(a,'h'+x.k,'Tidak tersedia saat ini.',x.rank));
   }else{
     const ss=SECS.filter(x=>srcF==='all'||srcF===x.s);
-    h=ss.map(x=>{const a=HOME[x.k];lists['h'+x.k]=a||[];
-      const body=a===undefined?'<div class="sk"></div>'.repeat(4):a.length?a.map((t,i)=>x.kind==='artist'?arCard(t,i,'h'+x.k):card(t,i,'h'+x.k)).join(''):'<div class="d">Tidak tersedia saat ini.</div>';
-      return `<section class="sec"><h2>${x.title}<small>${x.sub}</small></h2><div class="car">${body}</div></section>`}).join('')||'<div class="empty"><i>⌨️</i>Ketik judul atau nama artis di kolom pencarian untuk mencari di Internet Archive.</div>';
+    h=ss.map(x=>{const a=HOME[x.k];lists['h'+x.k]=a||[];const ar=x.kind==='artist',L=20;
+      const body=a===undefined?'<div class="sk"></div>'.repeat(4):a.length?a.slice(0,L).map((t,i)=>ar?arCard(t,i,'h'+x.k):card(t,i,'h'+x.k,x.rank)).join('')+(a.length>L?`<button class="mc ${ar?'ar2':''}" data-see="${x.k}">Lihat semua<b>${a.length}</b></button>`:''):`<div class="d">Tidak tersedia saat ini. <button class="sl" data-retry="${x.k}">Coba lagi</button></div>`;
+      return `<section class="sec"><h2><span>${x.title}</span><span class="sa">${a&&a.length>6&&x.sub.length>14?'':`<small>${x.sub}</small>`}${a&&a.length>6?`<button class="sl" data-see="${x.k}">Lihat semua ›</button>`:''}</span></h2><div class="car">${body}</div></section>`}).join('')||'<div class="empty"><i>⌨️</i>Ketik judul atau nama artis di kolom pencarian untuk mencari di Internet Archive.</div>';
   }
   m.innerHTML=h;
 }
@@ -301,7 +314,7 @@ async function loadHome(){
   }));
 }
 async function search(){
-  const q=$('#q').value.trim();qtxt=q;$('#qx').hidden=!q;tab='home';art=null;const my=++stok;
+  const q=$('#q').value.trim();qtxt=q;$('#qx').hidden=!q;tab='home';art=null;see=null;const my=++stok;
   if(!q){results=null;resArt=[];view();return}
   results=null;view();
   const ks=srcF==='all'?Object.keys(SRC):[srcF];
@@ -322,8 +335,12 @@ let dt;$('#q').oninput=()=>{clearTimeout(dt);dt=setTimeout(search,450);$('#qx').
 $('#q').onkeydown=e=>{if(e.key==='Enter'){clearTimeout(dt);search()}};
 $('#qx').onclick=()=>{$('#q').value='';search()};
 $('#chips').onclick=e=>{const b=e.target.closest('[data-s]');if(!b)return;srcF=b.dataset.s;art=null;document.querySelectorAll('#chips .c2').forEach(x=>x.classList.toggle('on',x===b));qtxt?search():view()};
-$('#seg').onclick=e=>{const b=e.target.closest('[data-t]');if(!b)return;tab=b.dataset.t;plOpen=null;art=null;view()};
+$('#seg').onclick=e=>{const b=e.target.closest('[data-t]');if(!b)return;tab=b.dataset.t;plOpen=null;art=null;see=null;view()};
+async function retry(k){const x=SECS.find(z=>z.k===k);if(!x)return;HOME[k]=undefined;if(k==='ytid')_ac=null;view();try{HOME[k]=await tmo(x.f())}catch{HOME[k]=[]}view()}
 $('#main').onclick=e=>{
+  const rt=e.target.closest('[data-retry]');if(rt)return retry(rt.dataset.retry);
+  const sb=e.target.closest('[data-see]');if(sb){see=sb.dataset.see;view();return scrollTo({top:0})}
+  const ps=e.target.closest('[data-playsec]');if(ps){const a=HOME[ps.dataset.playsec]||[];if(a.length){ctx=ctxOf('h'+ps.dataset.playsec);play(0,a)}return}
   const ar=e.target.closest('[data-al]');if(ar)return openArtist(lists[ar.dataset.al][+ar.dataset.ai]);
   if(e.target.closest('[data-playall]')){if(art&&art.tracks&&art.tracks.length){ctx=art.a.name;play(0,art.tracks)}return}
   const el=e.target.closest('[data-l]');
@@ -331,7 +348,7 @@ $('#main').onclick=e=>{
     if(e.target.closest('[data-f]'))return toggleFav(t);
     if(e.target.closest('[data-m]'))return openMenu(t);
     ctx=ctxOf(el.dataset.l);return play(+el.dataset.i,lists[el.dataset.l])}
-  if(e.target.closest('[data-back]')){plOpen=null;art=null;return view()}
+  if(e.target.closest('[data-back]')){if(art&&see)art=null;else{plOpen=null;art=null;see=null}return view()}
   if(e.target.closest('[data-newpl]')){const n=(prompt('Nama playlist baru:')||'').trim();if(n){pls.push({id:Date.now(),name:n,tracks:[]});savePl();view()}return}
   const d=e.target.closest('[data-dp]');if(d){if(confirm('Hapus playlist ini?')){pls.splice(+d.dataset.dp,1);savePl();view()}return}
   const p=e.target.closest('[data-p]');if(p){plOpen=+p.dataset.p;view()}
@@ -655,7 +672,7 @@ function ytImport(d){
   savePl();toast(n?'Diimpor '+n+' lagu ke "'+d.name+'" 🎶':'Semua lagu sudah ada di "'+d.name+'"');
   tab='pl';plOpen=pls.indexOf(p);art=null;view();
 }
-addEventListener('message',e=>{if(e.origin!==location.origin||!e.data)return;const c=e.data.cmd;if(c==='toggle')tog();else if(c==='next')next();else if(c==='prev')prev();else if(c==='closeNp')closeNp();else if(c==='ytImport')ytImport(e.data.data)});
+addEventListener('message',e=>{if(e.origin!==location.origin||!e.data)return;const c=e.data.cmd;if(c==='toggle')tog();else if(c==='next')next();else if(c==='prev')prev();else if(c==='stop'){want=false;E.pause()}else if(c==='closeNp')closeNp();else if(c==='ytImport')ytImport(e.data.data)});
 view();loadHome();
 addEventListener('pointerdown',()=>ytReady().catch(()=>{}),{once:true});
 </script></body></html>
