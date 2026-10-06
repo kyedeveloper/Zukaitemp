@@ -7,13 +7,13 @@ module.exports = async (req, res) => {
     const kind = String(req.query.kind || '');
     const id = String(req.query.id || '');
     let url;
-    if (kind === 'chart') url = 'https://api.deezer.com/chart/0/tracks?limit=30';
-    else if (kind === 'artists') url = 'https://api.deezer.com/chart/0/artists?limit=20';
+    if (kind === 'chart') url = 'https://api.deezer.com/chart/0/tracks?limit=100';
+    else if (kind === 'artists') url = 'https://api.deezer.com/chart/0/artists?limit=50';
     else if (kind === 'sartist') url = 'https://api.deezer.com/search/artist?limit=12&q=' + encodeURIComponent(q);
     else if (kind === 'top') {
       if (!/^\d{1,12}$/.test(id)) return res.status(400).json({ error: 'id tidak valid' });
       url = 'https://api.deezer.com/artist/' + id + '/top?limit=50';
-    } else url = 'https://api.deezer.com/search?limit=30&q=' + encodeURIComponent(q);
+    } else url = 'https://api.deezer.com/search?limit=50&q=' + encodeURIComponent(q);
     const r = await fetch(url, { headers: { 'user-agent': UA }, signal: AbortSignal.timeout(7000) });
     const j = await r.json();
     if (j && j.error) res.setHeader('cache-control', 'no-store');
