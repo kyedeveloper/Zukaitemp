@@ -89,6 +89,8 @@ input+input,input+.f2,.f2+input{margin-top:0}
 .cx{position:absolute;right:-6px;top:-8px;width:26px;height:26px;border:0;border-radius:50%;background:#fff;box-shadow:0 4px 10px rgba(0,0,0,.25);font-size:.75rem}
 .cform{position:sticky;bottom:calc(var(--navh) + 10px);z-index:5;display:flex;gap:8px;align-items:center;padding:8px;border-radius:26px;margin-top:14px}
 .cform input{flex:1;min-width:0;border:0!important;background:transparent!important;box-shadow:none!important;font:600 .95rem Nunito;padding:0 10px;min-height:44px}
+.cform:focus-within{box-shadow:0 0 0 4px color-mix(in srgb,var(--p1) 18%,transparent)}
+#ci,#ci:focus{border:0!important;box-shadow:none!important;background:transparent!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;border-radius:0!important}
 .cform .btn{min-height:44px;padding:0 20px}
 .lk{color:var(--p1);text-decoration:underline;cursor:pointer}
 </style>
@@ -125,7 +127,7 @@ function ask(o){return new Promise(res=>{
 /* ---- bagian halaman ---- */
 const S={
   home:{t:'Menu',r:rHome},akun:{t:'Akun & YouTube',r:rAkun,up:'home'},pengumuman:{t:'Pengumuman',r:rAnn,up:'home'},request:{t:'Request',r:rReq,up:'home'},
-  pengaturan:{t:'Pengaturan',r:rSet,up:'home'},chat:{t:'Chat global',r:rChat,up:'home'},tampilan:{t:'Tampilan',r:rLook,up:'pengaturan'},penyimpanan:{t:'Penyimpanan & cache',r:rStore,up:'pengaturan'},log:{t:'Log',r:rLog,up:'pengaturan'}
+  pengaturan:{t:'Pengaturan',r:rSet,up:'home'},tentang:{t:'Tentang',r:rAbout,up:'home'},chat:{t:'Chat global',r:rChat,up:'home'},tampilan:{t:'Tampilan',r:rLook,up:'pengaturan'},penyimpanan:{t:'Penyimpanan & cache',r:rStore,up:'pengaturan'},log:{t:'Log',r:rLog,up:'pengaturan'}
 };
 let cur='home';
 function nav(id){
@@ -145,7 +147,7 @@ $('#back').onclick=()=>{const u=S[cur].up;if(u)nav(u);else parent.postMessage({b
 function rHome(){
   const a=ZT.acct();
   pg.innerHTML=`<section class="hero"><div class="av2">${avatar(a)}</div><div class="ht"><b>${a?esc(a.name):'Selamat datang 👋'}</b><span>${a?esc(a.email):'Masuk dengan Google untuk fitur akun'}</span>${a&&isOwner()?'<em>👑 Owner</em>':''}</div><button class="hb" data-a="${a?'nav:akun':'login'}">${a?'Kelola':'Masuk'}</button></section>
-  <div class="tiles2">${[['pengumuman','📣','Pengumuman','Kabar dari owner'],['request','💬','Request','Kirim ke owner'],['tampilan','🎨','Tampilan','Warna & animasi'],['penyimpanan','💾','Penyimpanan','Cache & data'],['log','📜','Log','Catatan aplikasi'],['chat','💬','Chat global','Ngobrol bareng'],['akun','▶️','YouTube','Impor playlist'],['pengaturan','⚙️','Pengaturan','Semua opsi']].map(t=>`<button class="tile2 glass" data-a="nav:${t[0]}"><span class="em">${t[1]}</span>${t[2]}<small>${t[3]}</small></button>`).join('')}</div>
+  <div class="tiles2">${[['pengumuman','📣','Pengumuman','Kabar dari owner'],['request','💬','Request','Kirim ke owner'],['tampilan','🎨','Tampilan','Warna & animasi'],['penyimpanan','💾','Penyimpanan','Cache & data'],['log','📜','Log','Catatan aplikasi'],['chat','💬','Chat global','Ngobrol bareng'],['akun','▶️','YouTube','Impor playlist'],['tentang','ℹ️','Tentang','Versi & developer']].map(t=>`<button class="tile2 glass" data-a="nav:${t[0]}"><span class="em">${t[1]}</span>${t[2]}<small>${t[3]}</small></button>`).join('')}</div>
   <p class="foot">ID perangkat: ${esc(ZT.dev())}</p>`;
 }
 /* ---- pengaturan ---- */
@@ -164,10 +166,39 @@ function rLook(keep){
   <div class="card"><h3>🔤 Ukuran teks</h3>${seg('fs',[['s','Kecil'],['m','Normal'],['l','Besar']])}</div>
   <div class="card">${tg('glass','🪟','Efek kaca','Blur transparan di kartu dan menu')}${tg('swipe','👆','Geser pindah tab','Geser kiri/kanan untuk ganti tab, dari tepi kiri untuk buka menu')}</div>`;
 }
+/* ---- tentang ---- */
+function rAbout(){
+  const P=ZT.APP,d=P.dev,sa=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+  const links=(d.links||[]).filter(l=>/^(https?:|mailto:)/.test(l.url)).map(l=>`<a class="sm" href="${esc(l.url)}" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center">${esc(l.label)}</a>`).join('');
+  pg.innerHTML=`<section class="hero" style="flex-direction:column;text-align:center;gap:8px"><div class="av2" style="width:84px;height:84px;border-radius:28px;font-size:2.4rem;background:rgba(255,255,255,.25)">💌</div><div class="ht" style="flex:none"><b style="font-size:1.5rem">${esc(P.name)}</b><span style="margin-top:4px"><em style="margin:0">v${esc(P.version)} · build ${esc(P.build)}</em></span></div></section>
+  <div class="card"><h3>👨‍💻 Developer</h3><div style="display:flex;gap:12px;align-items:center;margin-bottom:10px"><div class="av2" style="width:52px;height:52px;background:linear-gradient(135deg,var(--p1),var(--g2));color:#fff;border:0">${esc((d.name||'Z')[0].toUpperCase())}</div><div><b style="font:600 1.05rem Fredoka">${esc(d.name)}</b><p class="d">${esc(d.role)}</p></div></div><p class="d" style="color:var(--ink)">${esc(d.bio)}</p>${links?`<div class="cps" style="margin:12px 0 0">${links}</div>`:''}</div>
+  <div class="card"><h3>📦 Versi &amp; perangkat</h3>${[['Versi',P.version],['Build',P.build],['Mode',sa?'Aplikasi terpasang':'Browser'],['Layar',innerWidth+' × '+innerHeight]].map(r=>`<div class="row"><span class="tx">${r[0]}</span><b>${esc(r[1])}</b></div>`).join('')}
+    <div class="cps" style="margin:12px 0 0"><button data-a="upd">🔄 Cek pembaruan</button><button data-a="bug">📋 Salin info untuk laporan</button><button data-a="share">↗️ Bagikan</button></div></div>
+  <div class="card"><h3>📝 Changelog</h3>${P.changelog.map((c,i)=>`<details ${i?'':'open'} style="margin-bottom:8px"><summary style="cursor:pointer;font:600 .96rem Fredoka;padding:6px 0">v${esc(c.v)} <span class="chp" style="margin-left:6px">${esc(c.d)}</span></summary><ul style="padding-left:20px;margin:4px 0 6px">${c.n.map(x=>`<li class="d" style="color:var(--ink);margin-bottom:3px">${x}</li>`).join('')}</ul></details>`).join('')}</div>
+  <div class="card"><h3>✨ Fitur</h3><div class="cps" style="margin:0">${P.features.map(f=>`<span class="chp">${f}</span>`).join('')}</div></div>
+  <div class="card"><h3>🧩 Dibuat dengan bantuan</h3><div class="cps" style="margin:0">${P.credits.map(f=>`<span class="chp">${esc(f)}</span>`).join('')}</div><p class="d" style="margin-top:10px">Data anime dari AniList. Episode diputar dari kanal YouTube resmi lewat pemutar YouTube.</p></div>
+  <div class="card"><button class="row" data-a="nav:request"><span class="em">💬</span><span class="tx">Kirim saran atau laporan<small>Langsung ke developer</small></span><span class="ch">›</span></button><a class="row" href="/privacy.html" target="_blank" rel="noopener" style="text-decoration:none"><span class="em">🔒</span><span class="tx">Kebijakan Privasi</span><span class="ch">›</span></a><a class="row" href="/terms.html" target="_blank" rel="noopener" style="text-decoration:none"><span class="em">📄</span><span class="tx">Ketentuan Layanan</span><span class="ch">›</span></a></div>
+  <p class="foot">Dibuat dengan 💗 oleh ${esc(d.name)}</p>`;
+}
+A.upd=async()=>{
+  ZT.toast('Memeriksa pembaruan…');
+  try{const r=await navigator.serviceWorker.getRegistration();if(!r)return ZT.toast('Belum ada pembaruan yang bisa diperiksa');await r.update();await new Promise(x=>setTimeout(x,1500));
+    if(r.installing||r.waiting){ZT.toast('Pembaruan ditemukan, memuat ulang…');setTimeout(()=>top.location.reload(),900)}else ZT.toast('Kamu sudah memakai versi terbaru ✓')}
+  catch{ZT.toast('Tidak bisa memeriksa saat ini')}
+};
+A.bug=async()=>{
+  const lg=rd('zt_log',[]).slice(-8).map(x=>`${new Date(x.t).toISOString().slice(11,19)} [${x.l}] ${x.m}`).join('\n');
+  const t=`ZukaiTemp v${ZT.APP.version} (${ZT.APP.build})\n${navigator.userAgent}\nLayar ${innerWidth}x${innerHeight}, tema ${ZT.prefs().theme}/${ZT.prefs().acc}\n\nLog terakhir:\n${lg||'(kosong)'}`;
+  try{await navigator.clipboard.writeText(t);ZT.toast('Info disalin. Tempel di laporanmu 📋')}catch{ZT.toast('Tidak bisa menyalin')}
+};
+A.share=async()=>{
+  const d={title:'ZukaiTemp',text:'Email sementara, musik, anime, dan tools gratis',url:location.origin};
+  try{if(navigator.share){await navigator.share(d);return}await navigator.clipboard.writeText(d.url);ZT.toast('Tautan disalin')}catch{}
+};
 /* ---- penyimpanan & cache ---- */
 function lsGroups(){
-  const g={musik:0,email:0,pengaturan:0,log:0,lain:0};
-  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i),n=(k.length+(localStorage.getItem(k)||'').length)*2;g[/^zm_/.test(k)?'musik':/^pm_/.test(k)?'email':k==='zt_log'?'log':/^zt_/.test(k)?'pengaturan':'lain']+=n}
+  const g={musik:0,anime:0,email:0,pengaturan:0,log:0,lain:0};
+  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i),n=(k.length+(localStorage.getItem(k)||'').length)*2;g[/^zm_/.test(k)?'musik':/^za_/.test(k)?'anime':/^pm_/.test(k)?'email':k==='zt_log'?'log':/^zt_/.test(k)?'pengaturan':'lain']+=n}
   return g;
 }
 async function rStore(){
@@ -181,10 +212,11 @@ async function rStore(){
   <div class="card"><h3>🧱 Rincian</h3>
     <div class="row"><span class="em">🧩</span><span class="tx">Cache aplikasi<small>${ck.length} cache · halaman &amp; aset untuk mode offline</small></span><b>${fmtB(d.caches)}</b></div>
     <div class="row"><span class="em">🧠</span><span class="tx">Data &amp; model AI (IndexedDB)<small>Model Tools yang diunduh sekali</small></span><b>${fmtB(d.indexedDB)}</b></div>
-    <div class="row"><span class="em">🗂️</span><span class="tx">Data aplikasi<small>Musik ${fmtB(g.musik)} · Email ${fmtB(g.email)} · Pengaturan ${fmtB(g.pengaturan)} · Log ${fmtB(g.log)}${g.lain?' · Lain '+fmtB(g.lain):''}</small></span><b>${fmtB(lsT)}</b></div></div>
+    <div class="row"><span class="em">🗂️</span><span class="tx">Data aplikasi<small>Musik ${fmtB(g.musik)} · Anime ${fmtB(g.anime)} · Email ${fmtB(g.email)} · Pengaturan ${fmtB(g.pengaturan)} · Log ${fmtB(g.log)}${g.lain?' · Lain '+fmtB(g.lain):''}</small></span><b>${fmtB(lsT)}</b></div></div>
   <div class="card"><h3>🧹 Bersihkan</h3>
     <button class="row" data-a="clr:cache"><span class="em">🧩</span><span class="tx">Bersihkan cache aplikasi<small>Aman. Halaman diunduh ulang saat dibuka berikutnya.</small></span><span class="ch">›</span></button>
     <button class="row" data-a="clr:musik"><span class="em">🎵</span><span class="tx">Bersihkan cache musik<small>Menghapus hasil pencocokan video. Favorit dan playlist tetap aman.</small></span><span class="ch">›</span></button>
+    <button class="row" data-a="clr:anime"><span class="em">📺</span><span class="tx">Bersihkan cache anime<small>Menghapus katalog dan jadwal yang tersimpan. Favorit dan riwayat tontonan tetap aman.</small></span><span class="ch">›</span></button>
     <button class="row" data-a="clr:log"><span class="em">📜</span><span class="tx">Hapus log<small>${(rd('zt_log',[])).length} catatan</small></span><span class="ch">›</span></button>
     <button class="row" data-a="clr:look"><span class="em">🎨</span><span class="tx">Reset tampilan<small>Kembali ke warna dan animasi bawaan</small></span><span class="ch">›</span></button>
     <button class="row" data-a="persist"><span class="em">🔒</span><span class="tx">Penyimpanan permanen<small>${persisted?'Aktif: browser tidak akan menghapus data otomatis':'Minta browser agar tidak menghapus data saat ruang menipis'}</small></span><span class="ch">${persisted?'✓':'›'}</span></button></div>
@@ -195,6 +227,7 @@ A.persist=async()=>{try{const ok=await navigator.storage.persist();ZT.toast(ok?'
 A.clr=async k=>{
   if(k==='cache'){const ks=await caches.keys();await Promise.all(ks.map(x=>caches.delete(x)));ZT.log('info','Cache aplikasi dibersihkan ('+ks.length+')','storage');ZT.toast('Cache aplikasi dibersihkan')}
   else if(k==='musik'){Object.keys(localStorage).filter(x=>/^zm_/.test(x)&&x!=='zm_fav'&&x!=='zm_pl').forEach(x=>localStorage.removeItem(x));ZT.log('info','Cache musik dibersihkan','storage');ZT.toast('Cache musik dibersihkan')}
+  else if(k==='anime'){Object.keys(localStorage).filter(x=>x.startsWith('za_c:')).forEach(x=>localStorage.removeItem(x));ZT.log('info','Cache anime dibersihkan','storage');ZT.toast('Cache anime dibersihkan')}
   else if(k==='log'){localStorage.removeItem('zt_log');ZT.toast('Log dihapus')}
   else if(k==='look'){localStorage.removeItem('zt_prefs');ZT.set({});ZT.toast('Tampilan di-reset')}
   else if(k==='all'){

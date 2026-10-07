@@ -46,6 +46,18 @@ function note(m){var n=Date.now();if(fails[m]&&n-fails[m]<60000)return;fails[m]=
 /* ---- API publik ---- */
 var cfgP=null;
 var ZT=window.ZT={log:log,prefs:prefs,ACC:ACC,
+  /* Edit di sini: tampil di halaman Tentang, layar pembuka, dan tombol Developer di tab Email */
+  APP:{name:'ZukaiTemp',version:'2.0.0',build:'7 Okt 2026',
+    dev:{name:'ZukaiDeveloper',role:'Pembuat ZukaiTemp',bio:'ZukaiTemp dibuat supaya kamu bisa menerima email verifikasi tanpa membuka alamat email utama.',
+      links:[{label:'TikTok',url:'https://tiktok.com/@feyzzie1'},{label:'GitHub',url:'https://github.com/kyedeveloper'},{label:'WhatsApp',url:'https://wa.me/ZukaiStore'}]},
+    features:['📧 Email sementara','🎵 Pemutar musik','📺 Anime','⬇️ Downloader','🛠 Tools gambar','💬 Chat global'],
+    credits:['AniList (data anime)','YouTube (pemutar dan kanal resmi)','Audius','Deezer','Apple Music (pratinjau)','Internet Archive','LRCLIB (lirik)','Vercel','Upstash'],
+    changelog:[
+      {v:'2.0.0',d:'7 Okt 2026',n:['Tab Anime baru: katalog, genre, jadwal, dan nonton lewat kanal YouTube resmi','Layar pembuka baru dengan animasi dan tips','Halaman Tentang: info developer, versi, dan changelog']},
+      {v:'1.9.0',d:'6 Okt 2026',n:['Chat global','Mini player bisa ditutup','Tab Musik: lebih banyak lagu, peringkat, dan tombol Lihat semua','Kebijakan Privasi dan Ketentuan Layanan']},
+      {v:'1.8.0',d:'5 Okt 2026',n:['Login Google dan impor playlist YouTube','Pengumuman global dari owner dan request ke owner','Pengaturan: tampilan, penyimpanan &amp; cache, log']},
+      {v:'1.7.0',d:'4 Okt 2026',n:['Revamp total: warna aksen, mode gelap, animasi baru','Menu samping dan geser antar tab','Pemutar musik penuh, info lagu, kecepatan putar, timer tidur']}
+    ]},
   set:function(o){var s=rd('zt_prefs',{});for(var k in o)s[k]=o[k];wr('zt_prefs',s);apply()},
   esc:function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})},
   dev:function(){var d=rd('zt_dev',null);if(!d){d='d'+Math.random().toString(36).slice(2,12)+Date.now().toString(36);wr('zt_dev',d)}return d},
@@ -56,23 +68,24 @@ var ZT=window.ZT={log:log,prefs:prefs,ACC:ACC,
   config:function(force){if(!cfgP||force){var t=ZT.token();cfgP=fetch('/api/config',{cache:'no-store',headers:t?{authorization:'Bearer '+t}:{}}).then(function(r){return r.json()}).catch(function(){return{googleClientId:'',db:false,me:null}})}return cfgP},
   onacct:function(){},
   login:function(){if(!TOP){parent.postMessage({zt:'login'},O);return}login()},
+  linkYT:function(){if(!TOP){parent.postMessage({zt:'ytlink'},O);return}login(true)},
   logout:function(){if(!TOP){parent.postMessage({zt:'logout'},O);return}logout()}
 };
 /* ---- akun Google (dijalankan di jendela utama saja, supaya popup login stabil) ---- */
-var SCOPE='openid email profile https://www.googleapis.com/auth/youtube.readonly',gsi=null;
+var BASE='openid email profile',YTS='https://www.googleapis.com/auth/youtube.readonly',gsi=null;
 function loadGsi(){return gsi||(gsi=new Promise(function(res,rej){var s=document.createElement('script');s.src='https://accounts.google.com/gsi/client';s.async=true;s.onload=res;s.onerror=function(){gsi=null;rej(new Error('Gagal memuat Google'))};document.head.appendChild(s)}))}
-function login(){
+function login(yt){
   ZT.config(true).then(function(c){
     if(!c.googleClientId){ZT.toast('Login Google belum diatur di server');log('warn','GOOGLE_CLIENT_ID belum diisi di Vercel','akun');return}
     return loadGsi().then(function(){
       var a=rd('zt_acct',null);
-      var tc=google.accounts.oauth2.initTokenClient({client_id:c.googleClientId,scope:SCOPE,hint:a&&a.email||undefined,
+      var tc=google.accounts.oauth2.initTokenClient({client_id:c.googleClientId,scope:yt?YTS:BASE,include_granted_scopes:true,hint:a&&a.email||undefined,
         callback:function(r){
           if(r.error){log('warn','Login ditolak: '+r.error,'akun');ZT.toast('Login dibatalkan');return}
           fetch('https://www.googleapis.com/oauth2/v3/userinfo',{headers:{authorization:'Bearer '+r.access_token}}).then(function(x){return x.json()}).then(function(u){
             wr('zt_acct',{email:u.email,name:u.name||u.email,picture:u.picture||'',sub:u.sub,token:r.access_token,exp:Date.now()+(+r.expires_in||3600)*1000,yt:String(r.scope||'').indexOf('youtube.readonly')>-1});
             log('info','Masuk sebagai '+u.email,'akun');
-            return ZT.config(true).then(function(cf){wr('zt_role',cf.me&&cf.me.owner?'owner':'user');ZT.onacct();ZT.toast('Terhubung ke Google ✓')});
+            return ZT.config(true).then(function(cf){wr('zt_role',cf.me&&cf.me.owner?'owner':'user');ZT.onacct();ZT.toast(yt?'YouTube terhubung ✓':'Terhubung ke Google ✓')});
           }).catch(function(e){log('error','Gagal membaca profil Google: '+e.message,'akun');ZT.toast('Gagal membaca profil Google')});
         },
         error_callback:function(e){log('warn','Popup login: '+((e&&e.type)||e),'akun');ZT.toast('Login dibatalkan atau popup diblokir')}});
@@ -85,7 +98,7 @@ function logout(){
   try{if(a&&a.token&&window.google&&google.accounts&&google.accounts.oauth2)google.accounts.oauth2.revoke(a.token,function(){})}catch(e){}
   localStorage.removeItem('zt_acct');localStorage.removeItem('zt_role');cfgP=null;log('info','Keluar dari akun','akun');ZT.onacct();
 }
-if(TOP)addEventListener('message',function(e){if(e.origin!==O||!e.data)return;if(e.data.zt==='login')login();else if(e.data.zt==='logout')logout()});
+if(TOP)addEventListener('message',function(e){if(e.origin!==O||!e.data)return;if(e.data.zt==='login')login();else if(e.data.zt==='ytlink')login(true);else if(e.data.zt==='logout')logout()});
 /* ---- geser untuk pindah tab (halaman di dalam iframe mengirim pesan ke jendela utama) ---- */
 if(!TOP){
   var sx=0,sy=0,st=0,sel=null;

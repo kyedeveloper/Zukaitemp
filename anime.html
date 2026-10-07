@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<script src="/core.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Anime · ZukaiTemp</title>
+<meta name="theme-color" content="#ff4d94">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/base.css">
+<style>
+.x-top h1{font-size:2rem}.x-top p{color:var(--mut);font-weight:700;font-size:.88rem;margin-bottom:14px}
+.x-search{display:flex;align-items:center;gap:8px;padding:4px 8px 4px 16px;border-radius:99px;margin-bottom:12px}
+.x-search input{flex:1;min-width:0;border:0!important;background:transparent!important;box-shadow:none!important;font:600 .98rem Nunito;min-height:46px;padding:0 4px}
+.x-search:focus-within{box-shadow:0 0 0 4px color-mix(in srgb,var(--p1) 18%,transparent)}
+#q,#q:focus{border:0!important;box-shadow:none!important;background:transparent!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;border-radius:0!important}
+.x-search button{border:0;background:none;color:var(--mut);width:36px;height:36px;font-size:1rem}
+.x-seg{display:flex;gap:4px;padding:4px;border-radius:20px;margin-bottom:16px}
+.x-seg button{flex:1;min-height:42px;border:0;border-radius:16px;background:transparent;color:var(--mut);font:600 .88rem Fredoka;transition:all .3s}
+.x-seg button.on{background:linear-gradient(135deg,var(--p1),color-mix(in srgb,var(--p1) 55%,var(--g2)));color:#fff;box-shadow:0 8px 16px -8px var(--p1)}
+/* hero */
+.x-hero{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;border-radius:28px;margin-bottom:10px;box-shadow:var(--sh)}
+.x-hero::-webkit-scrollbar{display:none}
+.x-slide{flex:none;width:100%;scroll-snap-align:center;position:relative;min-height:236px;padding:20px 18px;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;color:#fff;background:#222 center/cover;cursor:pointer}
+.x-slide::before{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(10,6,20,.92),rgba(10,6,20,.45) 55%,rgba(10,6,20,.15))}
+.x-slide>*{position:relative}
+.x-slide h2{font:600 1.35rem/1.15 Fredoka;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.x-slide p{font-size:.82rem;font-weight:600;opacity:.88;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.x-meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.x-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:99px;font:700 .72rem Nunito;background:rgba(255,255,255,.2);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.x-acts{display:flex;gap:8px;margin-top:4px}
+.x-btn{border:0;border-radius:99px;min-height:42px;padding:0 20px;font:600 .9rem Fredoka;color:#fff;background:linear-gradient(135deg,var(--p1),var(--g2));box-shadow:0 10px 20px -10px var(--p1)}
+.x-btn.o{background:rgba(255,255,255,.2);box-shadow:none;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.x-dots{display:flex;justify-content:center;gap:6px;margin-bottom:18px}
+.x-dots i{width:7px;height:7px;border-radius:99px;background:color-mix(in srgb,var(--p1) 25%,transparent);transition:all .35s}.x-dots i.on{width:22px;background:var(--p1)}
+/* genre */
+.x-gen{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -18px 20px;padding:0 18px}
+.x-gen::-webkit-scrollbar{display:none}
+.x-gen button{flex:none;border:0;min-height:38px;padding:0 16px;border-radius:99px;background:var(--w);color:var(--ink);font:600 .84rem Fredoka;box-shadow:var(--sh)}
+/* seksi + kartu */
+.x-sec{margin-bottom:24px}
+.x-sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.x-sh h2{font-size:1.2rem}.x-sh button{border:0;background:none;color:var(--p1);font:700 .82rem Nunito}
+.x-car{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;margin:0 -18px;padding:2px 18px 8px}
+.x-car::-webkit-scrollbar{display:none}
+.x-card{flex:none;width:128px;border:0;background:none;text-align:left;color:var(--ink);scroll-snap-align:start;transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.x-card:active{transform:scale(.94)}
+.x-poster{position:relative;aspect-ratio:2/3;border-radius:20px;background:color-mix(in srgb,var(--p1) 14%,var(--w)) center/cover;box-shadow:0 14px 26px -16px var(--p1);overflow:hidden}
+.x-sc{position:absolute;left:8px;top:8px;font:700 .72rem Nunito;font-style:normal;color:#fff;padding:2px 8px;border-radius:99px;background:rgba(0,0,0,.5);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.x-ep{position:absolute;right:0;bottom:0;font:700 .7rem Nunito;color:#fff;padding:4px 10px;border-radius:14px 0 0 0;background:linear-gradient(135deg,var(--p1),var(--g2))}
+.x-card b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:8px;font:600 .86rem/1.25 Fredoka}
+.x-card span{display:block;margin-top:2px;font:700 .72rem Nunito;color:var(--mut)}
+.x-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:18px 12px}
+.x-grid .x-card{width:auto}
+.x-back{border:0;border-radius:99px;min-height:40px;padding:0 18px;font:600 .88rem Fredoka;color:var(--p1);background:color-mix(in srgb,var(--p1) 12%,transparent);margin-bottom:14px}
+.x-more{display:block;margin:18px auto;min-height:44px;padding:0 24px}
+.x-err{padding:20px;border-radius:24px;text-align:center;color:var(--mut);font-weight:700}
+.x-err b{display:block;font:600 1rem Fredoka;color:var(--ink);margin-bottom:6px}
+/* jadwal */
+.x-days{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -18px 14px;padding:0 18px}
+.x-days::-webkit-scrollbar{display:none}
+.x-days button{flex:none;width:56px;min-height:64px;border:0;border-radius:20px;background:var(--w);color:var(--mut);font:600 .78rem Fredoka;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-shadow:var(--sh)}
+.x-days button b{font-size:1.2rem;color:var(--ink)}
+.x-days button.on{background:linear-gradient(135deg,var(--p1),var(--g2));color:#fff}.x-days button.on b{color:#fff}
+.x-days button.td::after{content:"";width:5px;height:5px;border-radius:50%;background:var(--p1)}.x-days button.on.td::after{background:#fff}
+.x-row{display:flex;align-items:center;gap:12px;width:100%;border:0;text-align:left;color:var(--ink);padding:10px 12px;border-radius:22px;margin-bottom:10px}
+.x-row .tm{flex:none;width:50px;text-align:center;font:600 1rem Fredoka;color:var(--p1)}
+.x-row .ph{flex:none;width:46px;height:64px;border-radius:12px;background:var(--p3) center/cover}
+.x-row .tx{flex:1;min-width:0}.x-row .tx b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font:600 .92rem/1.25 Fredoka}
+.x-row .tx span{display:block;font:700 .74rem Nunito;color:var(--mut);margin-top:3px}
+.x-chip{padding:3px 10px;border-radius:99px;font:700 .7rem Nunito;white-space:nowrap;background:color-mix(in srgb,var(--p1) 14%,transparent);color:var(--p1)}.x-chip.ok{background:rgba(16,185,129,.15);color:#0f9a63}
+.x-tg{display:flex;align-items:center;gap:8px;margin:0 0 12px;font:700 .8rem Nunito;color:var(--mut)}
+/* detail */
+#det{position:fixed;inset:0;z-index:40;overflow-y:auto;background:var(--p4);transform:translateY(105%);transition:transform .6s cubic-bezier(.22,1,.36,1);padding-bottom:calc(var(--sb) + 30px)}
+#det.on{transform:none}
+.d-top{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top) + 10px) 14px 10px;background:color-mix(in srgb,var(--p4) 80%,transparent);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+.d-top button{flex:none;width:44px;height:44px;border:0;border-radius:15px;color:var(--ink);font-size:1.15rem}
+.d-top b{flex:1;min-width:0;font:600 1rem Fredoka;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.d-top button.on{color:#ff3b5c}
+.d-in{padding:0 16px}
+.d-pl{position:relative;aspect-ratio:16/9;border-radius:24px;overflow:hidden;background:#000;box-shadow:0 24px 44px -24px var(--p1)}
+.d-pl iframe,.d-pl #ytp{position:absolute;inset:0;width:100%;height:100%;border:0}
+.d-ph{position:absolute;inset:0;background:#111 center/cover;display:grid;place-items:center}
+.d-ph::before{content:"";position:absolute;inset:0;background:rgba(10,6,20,.45)}
+.d-big{position:relative;width:76px;height:76px;border:0;border-radius:50%;font-size:1.9rem;color:#fff;background:linear-gradient(135deg,var(--p1),var(--g2));box-shadow:0 14px 30px -8px var(--p1);animation:ztPls 2s ease-in-out infinite}
+@keyframes ztPls{50%{transform:scale(1.08)}}
+.d-perr{position:absolute;inset:0;z-index:2;display:grid;place-content:center;gap:10px;text-align:center;padding:18px;background:rgba(10,6,20,.88);color:#fff;font-weight:700;font-size:.88rem}
+.d-perr a{color:#fff;font:600 .9rem Fredoka;background:linear-gradient(135deg,var(--p1),var(--g2));padding:10px 18px;border-radius:99px;text-decoration:none}
+.d-now{margin:10px 2px 0;font:700 .8rem Nunito;color:var(--mut)}
+.d-h{margin:16px 2px 8px}.d-h h1{font:600 1.35rem/1.2 Fredoka}.d-h p{color:var(--mut);font-weight:700;font-size:.82rem;margin-top:3px}
+.d-chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.d-chips span{padding:4px 12px;border-radius:99px;font:700 .74rem Nunito;background:color-mix(in srgb,var(--p1) 12%,transparent);color:var(--p1)}
+.d-chips span.s{background:linear-gradient(135deg,var(--p1),var(--g2));color:#fff}
+.d-box{padding:14px;border-radius:22px;margin:14px 0}
+.d-box h3{font:600 1rem Fredoka;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.d-box h3 button{border:0;background:none;color:var(--p1);font:700 .78rem Nunito}
+.d-box p,.d-box li{font-weight:600;font-size:.88rem;line-height:1.6;color:var(--ink)}
+.d-box p.dm{color:var(--mut);font-size:.8rem}
+.d-syn{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}.d-syn.all{-webkit-line-clamp:unset}
+.d-eps{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:8px;max-height:230px;overflow-y:auto;padding:2px}
+.d-eps button{min-height:44px;border:0;border-radius:14px;font:600 .9rem Fredoka;background:color-mix(in srgb,var(--p1) 10%,var(--w));color:var(--ink)}
+.d-eps button.on{background:linear-gradient(135deg,var(--p1),var(--g2));color:#fff}.d-eps button.w{color:var(--p1);box-shadow:inset 0 0 0 2px var(--p1)}
+.d-info{display:grid;grid-template-columns:1fr 1fr;gap:10px}.d-info div{padding:10px 12px;border-radius:16px;background:var(--p4)}.d-info small{display:block;font:700 .68rem Nunito;color:var(--mut)}.d-info b{display:block;font:600 .9rem Fredoka;margin-top:2px}
+.d-alt{display:flex;flex-direction:column;gap:8px;margin-top:10px}.d-alt button{border:0;text-align:left;border-radius:14px;padding:10px 12px;font:600 .82rem Nunito;background:var(--p4);color:var(--ink)}
+.d-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.d-links a,.d-links button{border:0;text-decoration:none;border-radius:99px;min-height:38px;padding:0 16px;display:inline-flex;align-items:center;font:600 .82rem Fredoka;background:color-mix(in srgb,var(--p1) 12%,transparent);color:var(--p1)}
+.empty{text-align:center;padding:30px 10px;color:var(--mut);font-weight:700}.empty i{display:block;font-style:normal;font-size:2.4rem;margin-bottom:8px}
+</style>
+<link rel="stylesheet" href="/glass.css">
+<link rel="stylesheet" href="/theme.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="x-top hd"><h1>Anime</h1><p>Katalog lengkap, nonton lewat kanal YouTube resmi</p></header>
+  <div class="x-search glass"><span aria-hidden="true">🔍</span><input id="q" type="search" placeholder="Cari judul anime…" autocomplete="off" enterkeyhint="search"><button id="qx" hidden aria-label="Hapus">✕</button></div>
+  <nav class="x-seg glass" id="seg"><button data-t="home" class="on">Jelajah</button><button data-t="jadwal">Jadwal</button><button data-t="daftar">Daftarku</button></nav>
+  <main id="pg"></main>
+</div>
+<section id="det" data-noswipe aria-label="Detail anime"></section>
+<script>
+const $=s=>document.querySelector(s),esc=ZT.esc,O=location.origin;
+const rd=(k,d)=>{try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch{return d}},wr=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
+/* ---------- AniList + cache ---------- */
+const CP='za_c:',hs=s=>{let h=5381;for(let i=0;i<s.length;i++)h=(h*33^s.charCodeAt(i))>>>0;return h.toString(36)};
+const cget=k=>{const v=rd(CP+k,null);return v&&v.e>Date.now()?v.d:null};
+function cset(k,d,ttl){const put=()=>localStorage.setItem(CP+k,JSON.stringify({e:Date.now()+ttl,d}));try{put()}catch{Object.keys(localStorage).filter(x=>x.startsWith(CP)).slice(0,25).forEach(x=>localStorage.removeItem(x));try{put()}catch{}}}
+async function gql(q,v,ttl=20*60e3){
+  const k=hs(q+JSON.stringify(v||{})),c=cget(k);if(c)return c;
+  const r=await fetch('https://graphql.anilist.co',{method:'POST',headers:{'content-type':'application/json',accept:'application/json'},body:JSON.stringify({query:q,variables:v||{}})});
+  if(r.status===429)throw new Error('AniList sedang membatasi permintaan. Tunggu semenit lalu coba lagi.');
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok||j.errors)throw new Error((j.errors&&j.errors[0]&&j.errors[0].message)||'AniList bermasalah ('+r.status+')');
+  cset(k,j.data,ttl);return j.data;
+}
+const CARD='id title{romaji english} coverImage{large color} averageScore episodes format status genres nextAiringEpisode{episode airingAt}';
+const LIST=`query($page:Int,$per:Int,$sort:[MediaSort],$status:MediaStatus,$genre:String,$search:String,$format:MediaFormat,$pop:Int){Page(page:$page,perPage:$per){pageInfo{hasNextPage}media(type:ANIME,isAdult:false,genre_not_in:["Hentai"],sort:$sort,status:$status,genre:$genre,search:$search,format:$format,popularity_greater:$pop){${CARD}}}}`;
+const list=(v,ttl)=>gql(LIST,Object.assign({page:1,per:20},v),ttl).then(d=>d.Page);
+const HERO=`query{Page(page:1,perPage:8){media(type:ANIME,isAdult:false,sort:TRENDING_DESC,status:RELEASING){id title{romaji english} bannerImage coverImage{extraLarge large color} description(asHtml:false) genres averageScore format episodes}}}`;
+const DET=`query($id:Int){Media(id:$id,type:ANIME){${CARD} bannerImage description(asHtml:false) synonyms title{native} duration source isAdult season seasonYear studios(isMain:true){nodes{name}} startDate{year month day} trailer{id site} recommendations(perPage:12,sort:RATING_DESC){nodes{mediaRecommendation{${CARD} isAdult}}}}}`;
+const SCH=`query($from:Int,$to:Int,$page:Int){Page(page:$page,perPage:50){pageInfo{hasNextPage}airingSchedules(airingAt_greater:$from,airingAt_lesser:$to,sort:TIME){airingAt episode media{id title{romaji english} coverImage{large} format isAdult popularity countryOfOrigin}}}}`;
+const SECS=[
+  {k:'new',t:'🆕 Baru rilis',v:{sort:['START_DATE_DESC'],status:'RELEASING',pop:5000}},
+  {k:'trend',t:'🔥 Lagi trending',v:{sort:['TRENDING_DESC']}},
+  {k:'top',t:'⭐ Top rated',v:{sort:['SCORE_DESC'],pop:40000,format:'TV'}},
+  {k:'pop',t:'💖 Terpopuler',v:{sort:['POPULARITY_DESC']}},
+  {k:'movie',t:'🎬 Film anime',v:{sort:['POPULARITY_DESC'],format:'MOVIE'}}
+];
+const GENRES=[['Action','Aksi'],['Adventure','Petualangan'],['Comedy','Komedi'],['Drama','Drama'],['Fantasy','Fantasi'],['Romance','Romantis'],['Sci-Fi','Sci-Fi'],['Slice of Life','Slice of Life'],['Supernatural','Supranatural'],['Sports','Olahraga'],['Mystery','Misteri'],['Horror','Horor'],['Psychological','Psikologis'],['Music','Musik'],['Mecha','Mecha'],['Mahou Shoujo','Mahou Shoujo'],['Thriller','Thriller']];
+const FMT={TV:'TV',MOVIE:'Film',OVA:'OVA',ONA:'ONA',SPECIAL:'Spesial',TV_SHORT:'TV Pendek',MUSIC:'Musik'},STAT={FINISHED:'Tamat',RELEASING:'Sedang tayang',NOT_YET_RELEASED:'Belum tayang',CANCELLED:'Dibatalkan',HIATUS:'Hiatus'};
+const name=m=>m.title.english||m.title.romaji;
+const plain=t=>String(t||'').replace(/<br\s*\/?>/gi,' ').replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
+const bgu=u=>u?`background-image:url('${esc(u)}')`:'';
+const card=m=>`<button class="x-card" data-open="${m.id}"><div class="x-poster" style="${bgu(m.coverImage&&m.coverImage.large)}">${m.averageScore?`<i class="x-sc">★ ${(m.averageScore/10).toFixed(1)}</i>`:''}${m.nextAiringEpisode&&m.nextAiringEpisode.episode>1?`<i class="x-ep">Ep ${m.nextAiringEpisode.episode-1}</i>`:m.format==='MOVIE'?'<i class="x-ep">Film</i>':''}</div><b>${esc(name(m))}</b><span>${FMT[m.format]||''}${m.episodes?' · '+m.episodes+' eps':''}</span></button>`;
+const fail=(e,fn)=>`<div class="x-err glass"><b>Gagal memuat</b>${esc(e.message||e)}<br><button class="x-btn" style="margin-top:12px" data-retry="${fn}">Coba lagi</button></div>`;
+/* ---------- tampilan utama ---------- */
+let tab='home',LV=null,dsub='fav',heroT=0;
+const pg=$('#pg');
+function setTab(t){tab=t;LV=null;document.querySelectorAll('#seg button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));render()}
+function render(){clearInterval(heroT);if(LV)return rListing();if(tab==='jadwal')return rJadwal();if(tab==='daftar')return rDaftar();rHome()}
+async function rHome(){
+  const lastSeen=Object.values(rd('za_hist',{})).sort((a,b)=>b.ts-a.ts).slice(0,10);
+  pg.innerHTML=`<div class="sk" style="height:236px;border-radius:28px;margin-bottom:24px"></div><div class="x-gen">${GENRES.map(g=>`<button data-g="${esc(g[0])}">${g[1]}</button>`).join('')}</div>`
+   +(lastSeen.length?`<section class="x-sec"><div class="x-sh"><h2 class="f">▶️ Lanjut menonton</h2></div><div class="x-car">${lastSeen.map(h=>`<button class="x-card" data-open="${h.id}"><div class="x-poster" style="${bgu(h.cover)}"><i class="x-ep">${esc(h.ep||'')}</i></div><b>${esc(h.title)}</b><span>${h.pt>10?'lanjut '+clk(h.pt):'mulai lagi'}</span></button>`).join('')}</div></section>`:'')
+   +SECS.map(s=>`<section class="x-sec" id="s-${s.k}"><div class="x-sh"><h2 class="f">${s.t}</h2><button data-all="${s.k}">Lihat semua ›</button></div><div class="x-car">${'<div class="sk" style="flex:none;width:128px;height:210px;border-radius:20px"></div>'.repeat(4)}</div></section>`).join('');
+  gql(HERO).then(d=>{const hs=d.Page.media.filter(m=>m.bannerImage||m.coverImage.extraLarge).slice(0,6);if(tab!=='home'||LV||!hs.length)return;
+    const el=document.createElement('div');el.innerHTML=`<div class="x-hero" id="hero">${hs.map(m=>`<div class="x-slide" data-open="${m.id}" style="${bgu(m.bannerImage||m.coverImage.extraLarge)}"><div class="x-meta">${m.averageScore?`<span class="x-pill">★ ${(m.averageScore/10).toFixed(1)}</span>`:''}<span class="x-pill">${FMT[m.format]||'Anime'}</span>${(m.genres||[]).slice(0,2).map(g=>`<span class="x-pill">${esc(g)}</span>`).join('')}</div><h2>${esc(name(m))}</h2><p>${esc(plain(m.description).slice(0,160))}</p><div class="x-acts"><button class="x-btn" data-open="${m.id}">▶ Tonton</button></div></div>`).join('')}</div><div class="x-dots" id="dots">${hs.map((_,i)=>`<i class="${i?'':'on'}"></i>`).join('')}</div>`;
+    const sk=pg.firstElementChild;sk.replaceWith(...el.childNodes);
+    const h=$('#hero');if(!h)return;
+    h.addEventListener('scroll',()=>{const i=Math.round(h.scrollLeft/h.clientWidth);document.querySelectorAll('#dots i').forEach((d,j)=>d.classList.toggle('on',i===j))},{passive:true});
+    let hold=0;h.addEventListener('touchstart',()=>hold=Date.now()+8000,{passive:true});
+    heroT=setInterval(()=>{if(document.hidden||Date.now()<hold||$('#det').classList.contains('on'))return;const n=(Math.round(h.scrollLeft/h.clientWidth)+1)%hs.length;h.scrollTo({left:n*h.clientWidth,behavior:'smooth'})},5500);
+  }).catch(()=>{});
+  SECS.forEach(s=>list(s.v).then(p=>{const car=$('#s-'+s.k+' .x-car');if(car&&tab==='home'&&!LV)car.innerHTML=p.media.map(card).join('')}).catch(e=>{const car=$('#s-'+s.k+' .x-car');if(car)car.innerHTML=`<div class="x-err glass" style="width:100%"><b>Gagal memuat</b>${esc(e.message)}<br><button class="x-btn" style="margin-top:10px" data-retry="home">Coba lagi</button></div>`}));
+}
+/* daftar / pencarian / genre (grid + muat lebih banyak) */
+function openList(o){LV=Object.assign({page:1,items:[],more:true,busy:false},o);window.scrollTo({top:0});rListing()}
+function rListing(){
+  pg.innerHTML=`<button class="x-back" data-lback>← Kembali</button><h2 class="f" style="margin:0 0 14px;font-size:1.3rem">${esc(LV.title)}</h2><div class="x-grid" id="lg"></div><div id="ls"></div>`;
+  paintList();if(!LV.items.length)loadMore();
+}
+function paintList(){const g=$('#lg');if(!g)return;g.innerHTML=LV.items.map(card).join('');$('#ls').innerHTML=LV.err?fail(LV.err,'more'):LV.busy&&!LV.items.length?`<div class="x-grid">${'<div class="sk" style="aspect-ratio:2/3;border-radius:20px"></div>'.repeat(6)}</div>`:LV.more?'<button class="x-btn x-more" data-more="1">Muat lebih banyak</button>':LV.items.length?'<p class="empty">Sudah sampai ujung 🎉</p>':'<div class="empty"><i>🔍</i>Tidak ada hasil.</div>'}
+async function loadMore(){
+  if(!LV||LV.busy)return;LV.busy=true;LV.err=null;paintList();const me=LV;
+  try{const p=await list(Object.assign({},LV.v,{page:LV.page,per:24}));if(me!==LV)return;me.items=me.items.concat(p.media.filter(m=>!me.items.some(x=>x.id===m.id)));me.more=p.pageInfo.hasNextPage;me.page++}
+  catch(e){me.err=e}
+  me.busy=false;if(me===LV)paintList();
+}
+let qT=0;
+$('#q').addEventListener('input',e=>{const v=e.target.value.trim();$('#qx').hidden=!v;clearTimeout(qT);qT=setTimeout(()=>{if(v.length>1)openList({title:'Hasil “'+v+'”',v:{search:v,sort:['SEARCH_MATCH']}});else if(!v&&LV&&LV.v.search){LV=null;render()}},450)});
+$('#qx').onclick=()=>{$('#q').value='';$('#qx').hidden=true;if(LV&&LV.v.search){LV=null;render()}};
+/* ---------- jadwal ---------- */
+let schDay=-1,schPop=true,SCHED=null;
+const hm=t=>new Date(t*1000).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',hour12:false}).replace('.',':');
+const clk=s=>{s=Math.floor(s);const h=Math.floor(s/3600),m=Math.floor(s%3600/60),c=s%60;return(h?h+':'+String(m).padStart(2,'0'):m)+':'+String(c).padStart(2,'0')};
+async function rJadwal(){
+  const mon=new Date();mon.setHours(0,0,0,0);mon.setDate(mon.getDate()-(mon.getDay()+6)%7);
+  const from=Math.floor(mon/1000)-1,to=from+7*86400+1,td=(new Date().getDay()+6)%7;if(schDay<0)schDay=td;
+  const days=['Sen','Sel','Rab','Kam','Jum','Sab','Min'];
+  const shell=()=>`<div class="x-days">${days.map((d,i)=>{const dt=new Date(mon);dt.setDate(dt.getDate()+i);return`<button data-day="${i}" class="${i===schDay?'on':''} ${i===td?'td':''}">${d}<b>${dt.getDate()}</b></button>`}).join('')}</div><label class="x-tg"><input type="checkbox" id="spop" ${schPop?'checked':''} style="width:18px;min-height:18px"> Hanya yang populer</label><div id="sl"></div>`;
+  pg.innerHTML=shell();$('#sl').innerHTML='<div class="sk" style="height:84px;margin-bottom:10px"></div>'.repeat(4);
+  try{
+    if(!SCHED||SCHED.from!==from){let items=[];for(let p=1;p<=8;p++){const d=await gql(SCH,{from,to,page:p},30*60e3);items=items.concat(d.Page.airingSchedules);if(!d.Page.pageInfo.hasNextPage)break}SCHED={from,items}}
+    if(tab!=='jadwal'||LV)return;paintSched();
+  }catch(e){if(tab==='jadwal')$('#sl').innerHTML=fail(e,'jadwal')}
+}
+function paintSched(){
+  const el=$('#sl');if(!el)return;const now=Date.now()/1000;
+  const it=SCHED.items.filter(x=>!x.media.isAdult&&x.media.countryOfOrigin==='JP'&&(!schPop||x.media.popularity>2500)&&(new Date(x.airingAt*1000).getDay()+6)%7===schDay).sort((a,b)=>a.airingAt-b.airingAt);
+  el.innerHTML=it.length?it.map(x=>{const m=x.media,d=x.airingAt-now;return`<button class="x-row glass" data-open="${m.id}"><div class="tm">${hm(x.airingAt)}</div><div class="ph" style="${bgu(m.coverImage.large)}"></div><div class="tx"><b>${esc(name(m))}</b><span>Episode ${x.episode} · ${FMT[m.format]||''}</span></div><span class="x-chip ${d<0?'ok':''}">${d<0?'Sudah tayang':d<3600?Math.max(1,Math.round(d/60))+' mnt lagi':Math.floor(d/3600)+' jam lagi'}</span></button>`}).join(''):'<div class="empty"><i>🌙</i>Belum ada jadwal untuk hari ini.</div>';
+}
+/* ---------- daftarku ---------- */
+function rDaftar(){
+  const fav=rd('za_fav',[]),hist=Object.values(rd('za_hist',{})).sort((a,b)=>b.ts-a.ts);
+  const mini=(h,sub)=>`<button class="x-row glass" data-open="${h.id}"><div class="ph" style="${bgu(h.cover)}"></div><div class="tx"><b>${esc(h.title)}</b><span>${esc(sub)}</span></div></button>`;
+  pg.innerHTML=`<div class="x-seg glass" style="margin-bottom:14px"><button data-ds="fav" class="${dsub==='fav'?'on':''}">❤ Favorit ${fav.length}</button><button data-ds="hist" class="${dsub==='hist'?'on':''}">🕘 Riwayat ${hist.length}</button></div>`
+   +(dsub==='fav'?(fav.length?fav.map(f=>mini(f,'Ketuk untuk membuka')).join(''):'<div class="empty"><i>💝</i>Belum ada favorit.<br>Ketuk ❤ di halaman detail anime.</div>')
+     :(hist.length?hist.map(h=>mini(h,(h.ep||'')+(h.pt>10?' · lanjut '+clk(h.pt):''))).join('')+'<button class="x-back" style="margin-top:6px" data-clrh>🗑 Hapus riwayat</button>':'<div class="empty"><i>📺</i>Belum ada riwayat tontonan.</div>'));
+}
+/* ---------- detail + pemutar ---------- */
+let D=null,EPS=[],CAND=[],YTP=null,YTR=null,CUR={idx:-1,vid:''},saveT=0;
+const isFav=id=>rd('za_fav',[]).some(f=>f.id===id);
+function toggleFav(){
+  if(!D)return;let f=rd('za_fav',[]);
+  if(isFav(D.id)){f=f.filter(x=>x.id!==D.id);ZT.toast('Dihapus dari favorit')}else{f.unshift({id:D.id,title:name(D),cover:D.coverImage.large,ts:Date.now()});ZT.toast('Ditambahkan ke favorit ❤')}
+  wr('za_fav',f);const b=$('#dfav');if(b)b.classList.toggle('on',isFav(D.id));
+}
+async function openDetail(id){
+  const el=$('#det');el.classList.add('on');el.scrollTop=0;history.replaceState(null,'','#anime');
+  el.innerHTML=`<div class="d-top"><button class="glass" data-dclose aria-label="Tutup">‹</button><b>Memuat…</b></div><div class="d-in"><div class="sk" style="aspect-ratio:16/9;border-radius:24px"></div><div class="sk" style="height:90px;margin-top:16px"></div></div>`;
+  try{
+    const m=(await gql(DET,{id},60*60e3)).Media;if(!m||m.isAdult){ZT.toast('Anime ini tidak tersedia');return closeDetail()}
+    D=m;EPS=[];CAND=[];CUR={idx:-1,vid:''};paintDetail();loadEps();
+  }catch(e){el.innerHTML=`<div class="d-top"><button class="glass" data-dclose aria-label="Tutup">‹</button><b>Detail</b></div><div class="d-in">${fail(e,'det:'+id)}</div>`}
+}
+function closeDetail(){killPlayer();$('#det').classList.remove('on');D=null;if(tab==='daftar')rDaftar()}
+function paintDetail(){
+  const m=D,tr=m.trailer&&m.trailer.site&&m.trailer.site.toLowerCase()==='youtube'?m.trailer.id:'',st=((m.studios||{}).nodes||[]).map(s=>s.name).join(', '),sd=m.startDate&&m.startDate.year?[m.startDate.day,m.startDate.month,m.startDate.year].filter(Boolean).join('/'):'—';
+  const recs=((m.recommendations||{}).nodes||[]).map(n=>n.mediaRecommendation).filter(r=>r&&!r.isAdult);
+  const nx=m.nextAiringEpisode?`Episode ${m.nextAiringEpisode.episode} tayang ${new Date(m.nextAiringEpisode.airingAt*1000).toLocaleString('id-ID',{weekday:'long',hour:'2-digit',minute:'2-digit'})}`:'';
+  $('#det').innerHTML=`<div class="d-top"><button class="glass" data-dclose aria-label="Tutup">‹</button><b>${esc(name(m))}</b><button class="glass ${isFav(m.id)?'on':''}" id="dfav" data-dfav aria-label="Favorit">❤</button></div>
+  <div class="d-in"><div class="d-pl" id="pl"><div id="ytp"></div><div class="d-ph" id="plph" style="${bgu(m.bannerImage||m.coverImage.large)}"><button class="d-big" id="plgo" aria-label="Putar">▶</button></div></div>
+  <div class="d-now" id="now">${tr?'Trailer tersedia di bawah.':''}</div>
+  <div class="d-h"><h1>${esc(name(m))}</h1>${m.title.romaji&&m.title.romaji!==name(m)?`<p>${esc(m.title.romaji)}</p>`:''}</div>
+  <div class="d-chips">${m.averageScore?`<span class="s">★ ${(m.averageScore/10).toFixed(1)}</span>`:''}<span>${STAT[m.status]||''}</span><span>${FMT[m.format]||''}</span>${m.episodes?`<span>${m.episodes} episode</span>`:''}${(m.genres||[]).slice(0,4).map(g=>`<span>${esc(g)}</span>`).join('')}</div>
+  ${nx?`<p class="d-now">⏰ ${esc(nx)}</p>`:''}
+  <div class="d-box glass" id="epbox"><h3>📺 Episode</h3><div class="sk" style="height:56px"></div></div>
+  <div class="d-box glass"><h3>Sinopsis <button data-syn>Selengkapnya</button></h3><p class="d-syn" id="syn">${esc(plain(m.description)||'Belum ada sinopsis.')}</p><p class="dm" style="margin-top:6px">Sinopsis dari AniList (bahasa Inggris).</p></div>
+  <div class="d-box glass"><h3>Info</h3><div class="d-info"><div><small>Studio</small><b>${esc(st||'—')}</b></div><div><small>Mulai tayang</small><b>${sd}</b></div><div><small>Durasi</small><b>${m.duration?m.duration+' mnt/eps':'—'}</b></div><div><small>Sumber</small><b>${esc(String(m.source||'—').replace(/_/g,' ').toLowerCase())}</b></div></div></div>
+  ${tr?`<div class="d-links"><button data-trailer="${esc(tr)}">▶ Putar trailer</button></div>`:''}
+  ${recs.length?`<section class="x-sec" style="margin-top:20px"><div class="x-sh"><h2 class="f">Mirip dengan ini</h2></div><div class="x-car">${recs.map(card).join('')}</div></section>`:''}</div>`;
+}
+const q2=s=>encodeURIComponent(s);
+async function loadEps(){
+  const m=D,my=m.id,box=()=>D&&D.id===my?$('#epbox'):null;
+  const titles=[m.title.english,m.title.romaji,m.title.native].concat((m.synonyms||[]).slice(0,3)).filter(Boolean);
+  try{
+    const ck='ep'+my,c=cget(ck);let j=c;
+    if(!j){const r=await fetch('/api/anime?t='+q2(titles.join('|')));j=await r.json();if(j.ok)cset(ck,j,60*60e3)}
+    if(!box())return;
+    if(j.reason==='no_key')return paintEps(null,'Server belum punya kunci YouTube (YT_API_KEY).');
+    if(j.reason==='no_channel')return paintEps(null,'Kanal YouTube resmi belum bisa ditemukan. Periksa variabel ANIME_CHANNELS di server.');
+    if(!j.ok)return paintEps(null,'Pencarian episode sedang bermasalah.');
+    CAND=j.cands||[];EPS=j.eps||[];paintEps(CAND[0]||null);
+  }catch{if(box())paintEps(null,'Pencarian episode gagal. Cek koneksi lalu coba lagi.')}
+}
+function paintEps(src,msg){
+  const b=$('#epbox');if(!b||!D)return;const h=rd('za_hist',{})[D.id];
+  if(!EPS.length){
+    const t=name(D);
+    b.innerHTML=`<h3>📺 Episode</h3><p>${esc(msg||'Belum ada episode di kanal resmi yang kami pantau.')}</p><p class="dm" style="margin-top:6px">Tidak semua judul tayang gratis di YouTube. Kamu bisa menontonnya di platform resmi:</p><div class="d-links"><button data-msearch>🔎 Cari di kanal resmi</button><a target="_blank" rel="noopener" href="https://www.crunchyroll.com/search?q=${q2(t)}">Crunchyroll</a><a target="_blank" rel="noopener" href="https://www.bilibili.tv/id/search-result?keyword=${q2(t)}">Bstation</a></div><div id="msr"></div>`;
+    return;
+  }
+  const nums=EPS.every(e=>e.n!=null)?EPS.map(e=>e.n):EPS.map((_,i)=>i+1);
+  b.innerHTML=`<h3>📺 Episode <span class="d-chips" style="margin:0"><span>${EPS.length}</span></span></h3>${src?`<p class="dm">Sumber resmi: ${esc(src.ch)} · ${esc(src.title)}</p>`:''}<div class="d-eps" id="eps">${EPS.map((e,i)=>`<button data-ep="${i}" title="${esc(e.t)}" class="${i===CUR.idx?'on':h&&h.vid===e.v?'w':''}">${nums[i]}</button>`).join('')}</div>${CAND.length>1?`<div class="d-links"><button data-alt>Bukan playlist ini?</button></div><div class="d-alt" id="alt" hidden>${CAND.map(c=>`<button data-pl="${esc(c.id)}">${esc(c.ch)} · ${esc(c.title)} (${c.count} video)</button>`).join('')}</div>`:''}`;
+  const go=$('#plgo');if(go&&h&&h.idx!=null&&EPS[h.idx]&&EPS[h.idx].v===h.vid)$('#now').textContent='Terakhir ditonton: '+(h.ep||'')+(h.pt>10?' · lanjut '+clk(h.pt):'');
+}
+const epLabel=i=>'Ep '+(EPS[i]&&EPS[i].n!=null?EPS[i].n:i+1);
+function ytReady(){return YTR||(YTR=new Promise(res=>{if(window.YT&&YT.Player)return res();window.onYouTubeIframeAPIReady=res;const s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';s.onerror=()=>res();document.head.appendChild(s);setTimeout(res,9000)}))}
+async function playVid(vid,o={}){
+  await ytReady();if(!(window.YT&&YT.Player))return ZT.toast('Pemutar YouTube gagal dimuat');
+  if(!D)return;const ph=$('#plph');if(ph)ph.hidden=true;const pe=$('#perr');if(pe)pe.remove();
+  CUR={idx:o.idx==null?-1:o.idx,vid};
+  if(YTP&&YTP.loadVideoById)YTP.loadVideoById({videoId:vid,startSeconds:o.start||0});
+  else YTP=new YT.Player('ytp',{videoId:vid,playerVars:{rel:0,playsinline:1,modestbranding:1,autoplay:1,start:Math.floor(o.start||0)},events:{onReady:e=>e.target.playVideo(),onStateChange:onSt,onError:onErr}});
+  parent.postMessage({animePlay:1},O);
+  const t=o.idx!=null&&o.idx>=0?epLabel(o.idx):'Trailer';$('#now').textContent='Memutar: '+t+(EPS[o.idx]?' · '+EPS[o.idx].t:'');
+  document.querySelectorAll('#eps button').forEach(b=>b.classList.toggle('on',+b.dataset.ep===CUR.idx));
+  if(CUR.idx>=0)saveProg(true);
+}
+function saveProg(first){
+  if(!D||CUR.idx<0)return;let t=0;try{t=YTP&&YTP.getCurrentTime?YTP.getCurrentTime():0}catch{}
+  const h=rd('za_hist',{});h[D.id]={id:D.id,title:name(D),cover:D.coverImage.large,ep:epLabel(CUR.idx),idx:CUR.idx,vid:CUR.vid,pt:first?0:t,ts:Date.now()};
+  const ks=Object.keys(h);if(ks.length>40){ks.sort((a,b)=>h[a].ts-h[b].ts).slice(0,ks.length-40).forEach(k=>delete h[k])}wr('za_hist',h);
+}
+function onSt(e){
+  clearInterval(saveT);
+  if(e.data===1)saveT=setInterval(()=>saveProg(false),6000);
+  else if(e.data===2)saveProg(false);
+  else if(e.data===0&&CUR.idx>=0&&CUR.idx<EPS.length-1)playEp(CUR.idx+1);
+}
+function onErr(e){
+  const pl=$('#pl');if(!pl||!CUR.vid)return;const x=document.createElement('div');x.id='perr';x.className='d-perr';
+  x.innerHTML=`<div>${e.data===101||e.data===150?'Pemilik video melarang pemutaran di luar YouTube.':'Video ini tidak bisa diputar.'}</div><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=${esc(CUR.vid)}">Buka di YouTube</a>`;pl.appendChild(x);
+}
+function playEp(i,fromHist){
+  const e=EPS[i];if(!e)return;const h=rd('za_hist',{})[D.id];
+  playVid(e.v,{idx:i,start:fromHist&&h&&h.vid===e.v?h.pt:0});
+}
+function killPlayer(){clearInterval(saveT);try{YTP&&YTP.destroy&&YTP.destroy()}catch{}YTP=null;CUR={idx:-1,vid:''}}
+async function pickPlaylist(id){
+  const b=$('#epbox');b.querySelector('.d-eps')&&(b.querySelector('.d-eps').innerHTML='<div class="sk" style="height:48px;grid-column:1/-1"></div>');
+  try{const j=await (await fetch('/api/anime?pl='+q2(id))).json();EPS=j.eps||[];CUR.idx=-1;paintEps(CAND.find(c=>c.id===id))}catch{ZT.toast('Gagal memuat playlist')}
+}
+async function manualSearch(){
+  const box=$('#msr');if(!box)return;box.innerHTML='<div class="sk" style="height:48px;margin-top:10px"></div>';
+  try{const j=await (await fetch('/api/anime?s='+q2(name(D)))).json();const v=j.eps||[];
+    if(!v.length){box.innerHTML='<p class="dm" style="margin-top:10px">Tidak ada video yang cocok di kanal resmi.</p>';return}
+    EPS=v;CAND=[];paintEps({ch:'hasil pencarian kanal resmi',title:name(D)})}
+  catch{box.innerHTML='<p class="dm" style="margin-top:10px">Pencarian gagal.</p>'}
+}
+/* ---------- klik ---------- */
+document.addEventListener('click',e=>{
+  const t=e.target,c=s=>t.closest(s);let x;
+  if(x=c('[data-open]'))return openDetail(+x.dataset.open);
+  if(c('[data-dclose]'))return closeDetail();
+  if(c('[data-dfav]'))return toggleFav();
+  if(x=c('[data-g]')){const g=GENRES.find(z=>z[0]===x.dataset.g);return openList({title:'Genre: '+(g?g[1]:x.dataset.g),v:{genre:x.dataset.g,sort:['POPULARITY_DESC']}})}
+  if(x=c('[data-all]')){const s=SECS.find(z=>z.k===x.dataset.all);return openList({title:s.t.replace(/^\S+\s/,''),v:s.v})}
+  if(c('[data-lback]')){LV=null;return render()}
+  if(c('[data-more]'))return loadMore();
+  if(x=c('[data-retry]')){const k=x.dataset.retry;if(k.startsWith('det:'))return openDetail(+k.slice(4));if(k==='more'){LV.err=null;return loadMore()}if(k==='jadwal')return rJadwal();return render()}
+  if(x=c('[data-day]')){schDay=+x.dataset.day;document.querySelectorAll('[data-day]').forEach(b=>b.classList.toggle('on',+b.dataset.day===schDay));return paintSched()}
+  if(x=c('[data-ds]')){dsub=x.dataset.ds;return rDaftar()}
+  if(c('[data-clrh]')){wr('za_hist',{});return rDaftar()}
+  if(c('#plgo')){const h=rd('za_hist',{})[D.id];if(EPS.length){const i=h&&EPS[h.idx]&&EPS[h.idx].v===h.vid?h.idx:0;return playEp(i,true)}const tr=D.trailer&&D.trailer.site&&D.trailer.site.toLowerCase()==='youtube'?D.trailer.id:'';return tr?playVid(tr):ZT.toast('Belum ada episode atau trailer')}
+  if(x=c('[data-ep]'))return playEp(+x.dataset.ep);
+  if(x=c('[data-trailer]')){$('#det').scrollTo({top:0,behavior:'smooth'});return playVid(x.dataset.trailer)}
+  if(c('[data-syn]')){const s=$('#syn');s.classList.toggle('all');t.closest('[data-syn]').textContent=s.classList.contains('all')?'Ringkas':'Selengkapnya';return}
+  if(c('[data-alt]'))return($('#alt').hidden=!$('#alt').hidden);
+  if(x=c('[data-pl]'))return pickPlaylist(x.dataset.pl);
+  if(c('[data-msearch]'))return manualSearch();
+  if(x=c('#seg [data-t]'))return setTab(x.dataset.t);
+});
+document.addEventListener('change',e=>{if(e.target.id==='spop'){schPop=e.target.checked;paintSched()}});
+addEventListener('message',e=>{if(e.origin===O&&e.data&&e.data.active===false){try{YTP&&YTP.pauseVideo&&YTP.pauseVideo()}catch{}}});
+render();
+</script>
+</body>
+</html>

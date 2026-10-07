@@ -287,17 +287,8 @@ details[open]>summary{margin-bottom:18px}
 <div class="toast" id="toast"></div>
 
 <script>
-/* ====== Isi bagian ini dengan data kamu (muncul di tombol Developer) ====== */
-const DEV={
-  name:'ZukaiDeveloper',
-  role:'Pembuat ZukaiTemp',
-  bio:'ZukaiTemp dibuat supaya kamu bisa menerima email verifikasi tanpa membuka alamat email utama.',
-  links:[
-    {label:'TikTok',url:'https://tiktok.com/@feyzzie1'},
-    {label:'GitHub',url:'https://github.com/kyedeveloper'},
-    {label:'WhatsApp',url:'https://wa.me/ZukaiStore'}
-  ]
-};
+/* Data developer ada di core.js (ZT.APP.dev), satu sumber untuk semua halaman */
+const DEV=ZT.APP.dev;
 const API='https://api.mail.tm',$=s=>document.querySelector(s);
 const ch='abcdefghijklmnopqrstuvwxyz0123456789',rnd=n=>Array.from({length:n},()=>ch[Math.random()*ch.length|0]).join('');
 const words=['pinky','sakura','boba','candy','peach','cloud','melon','bunny','kiwi','mochi','berry','glow'];
