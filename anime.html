@@ -379,7 +379,11 @@ function onSt(e){
   clearInterval(saveT);
   if(e.data===1)saveT=setInterval(()=>saveProg(false),6000);
   else if(e.data===2)saveProg(false);
-  else if(e.data===0&&CUR.idx>=0&&CUR.idx<EPS.length-1)activeSrc==='animeindo'?playAnimeIndoEp(CUR.idx+1):playEp(CUR.idx+1); const function onErr(e){ pl="$('#pl');if(!pl||!CUR.vid)return;const" x="document.createElement('div');x.id='perr';x.className='d-perr';" x.innerHTML="`<div" }>${e.data===101||e.data===150?'Pemilik video melarang pemutaran di luar YouTube.':'Video ini tidak bisa diputar.'}</div><a target="_blank" rel="noopener" href="[https://www.youtube.com/watch?v=$](https://www.youtube.com/watch?v=$){esc(CUR.vid)}">Buka di YouTube</a>`;pl.appendChild(x);
+  else if(e.data===0&&CUR.idx>=0&&CUR.idx<EPS.length-1)activeSrc==='animeindo'?playAnimeIndoEp(CUR.idx+1):playEp(CUR.idx+1);
+}
+function onErr(e){
+  const pl=$('#pl');if(!pl||!CUR.vid)return;const x=document.createElement('div');x.id='perr';x.className='d-perr';
+  x.innerHTML=`<div>${e.data===101||e.data===150?'Pemilik video melarang pemutaran di luar YouTube.':'Video ini tidak bisa diputar.'}</div><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=${esc(CUR.vid)}">Buka di YouTube</a>`;pl.appendChild(x);
 }
 function playEp(i,fromHist){
   const e=EPS[i];if(!e)return;const h=rd('za_hist',{})[D.id];
