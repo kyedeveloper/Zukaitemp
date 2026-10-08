@@ -343,7 +343,7 @@ document.addEventListener('click',e=>{
 document.addEventListener('change',e=>{if(e.target.id==='spop'){schPop=e.target.checked;paintSched()}});
 addEventListener('message',e=>{if(e.origin===O&&e.data&&e.data.active===false){try{YTP&&YTP.pauseVideo&&YTP.pauseVideo()}catch{}}});
 let srcs=['yt','gg'], sIdx=0, src=srcs[0];
-const oLoad=loadEps, oKill=killPlayer, oPe=paintEps, oErr=onErr, API='https://api-consumet.vercel.app/anime/gogoanime/';
+const oLoad=loadEps, oKill=killPlayer, oPe=paintEps, oErr=onErr;
 const fixUI=()=>{
 if(!$('#b-yt')) $('#epbox')?.insertAdjacentHTML('afterbegin',`<div style="display:flex;gap:6px;margin-bottom:10px"><button id="b-yt" data-s="yt" class="x-btn" style="flex:1">YouTube</button><button id="b-gg" data-s="gg" class="x-btn o" style="flex:1">Global (Web)</button></div>`);
 if($('#b-yt')){$('#b-yt').className=src==='yt'?'x-btn':'x-btn o'; $('#b-gg').className=src==='gg'?'x-btn':'x-btn o';}
@@ -355,9 +355,8 @@ loadEps=async()=>{
 if(src==='yt')return oLoad();
 $('#epbox').innerHTML='<h3>Episode</h3><div class="sk" style="height:56px"></div>';fixUI();
 try{
-let r=await fetch(API+q2(D.title.romaji||D.title.english)), res=await r.json(), id=res.results?.[0]?.id;
-if(!id)throw 1;
-let r2=await fetch(API+'info/'+id), info=await r2.json(), ep=info.episodes||[];
+let r=await fetch('/api/anime?source=global&s='+q2(D.title.romaji||D.title.english));
+let ep=(await r.json())?.data?.episodes||[];
 if(!ep.length)throw 1;
 EPS=ep.map(e=>({n:e.number,t:'Ep '+e.number,s:e.id}));
 paintEps({ch:'Global (Gogo)',title:'Auto-Fallback Aktif'});
@@ -366,8 +365,9 @@ paintEps({ch:'Global (Gogo)',title:'Auto-Fallback Aktif'});
 window.playGG=async(i)=>{
 $('#plph').hidden=true;CUR={idx:i,vid:''};$('#now').textContent='Memuat...';
 try{
-let r=await fetch(API+'watch/'+EPS[i].s), d=await r.json();
-let u=d.sources?.find(x=>x.quality==='default'||x.quality==='720p')?.url||d.sources?.[0]?.url;
+let r=await fetch('/api/anime?source=global&ep_id='+q2(EPS[i].s));
+let d=(await r.json())?.data||{};
+let u=d.sources?.find(x=>x.quality==='default'||x.quality==='720p'||x.quality==='auto')?.url||d.sources?.[0]?.url;
 if(!u)throw 1;
 if(!$('#ai-if'))$('#pl').appendChild(Object.assign(document.createElement('iframe'),{id:'ai-if',style:'position:absolute;inset:0;width:100%;height:100%;border:0',allowFullscreen:true}));
 $('#ai-if').src=u;$('#now').textContent='Ep '+EPS[i].n;
