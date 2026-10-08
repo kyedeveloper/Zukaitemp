@@ -342,66 +342,43 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('change',e=>{if(e.target.id==='spop'){schPop=e.target.checked;paintSched()}});
 addEventListener('message',e=>{if(e.origin===O&&e.data&&e.data.active===false){try{YTP&&YTP.pauseVideo&&YTP.pauseVideo()}catch{}}});
-let src='yt';
-const oPaint=paintDetail,oLoad=loadEps,oKill=killPlayer,oPe=paintEps;
+let srcs=['yt','gg'], sIdx=0, src=srcs[0];
+const oLoad=loadEps, oKill=killPlayer, oPe=paintEps, oErr=onErr, API='https://api-consumet.vercel.app/anime/gogoanime/';
 const fixUI=()=>{
-if(!$('#b-yt'))$('#epbox')?.insertAdjacentHTML('afterbegin',`<div style="display:flex;gap:6px;margin-bottom:10px"><button id="b-yt" data-s="yt" class="x-btn" style="flex:1">YouTube</button><button id="b-ai" data-s="ai" class="x-btn o" style="flex:1">AnimeIndo</button></div>`);
-$('#b-yt').className=src==='yt'?'x-btn':'x-btn o';$('#b-ai').className=src==='ai'?'x-btn':'x-btn o';
+if(!$('#b-yt')) $('#epbox')?.insertAdjacentHTML('afterbegin',`<div style="display:flex;gap:6px;margin-bottom:10px"><button id="b-yt" data-s="yt" class="x-btn" style="flex:1">YouTube</button><button id="b-gg" data-s="gg" class="x-btn o" style="flex:1">Global (Web)</button></div>`);
+if($('#b-yt')){$('#b-yt').className=src==='yt'?'x-btn':'x-btn o'; $('#b-gg').className=src==='gg'?'x-btn':'x-btn o';}
 };
-paintDetail=()=>{oPaint();fixUI();};
-paintEps=(a,b)=>{oPe(a,b);fixUI();};
+paintEps=(a,b)=>{oPe(a,b);fixUI();};killPlayer=()=>{oKill();$('#ai-if')?.remove();};
+const autoSw=()=>{sIdx=(sIdx+1)%2;src=srcs[sIdx];ZT.toast('Ganti sumber otomatis...');killPlayer();if($('#plph'))$('#plph').hidden=false;loadEps();};
+onErr=e=>{oErr(e);setTimeout(autoSw,1500);};
 loadEps=async()=>{
-let srcs=['yt','ai'], sIdx=0, src=srcs[sIdx];
-const oLoad=loadEps, oKill=killPlayer, oPe=paintEps, oErr=onErr;
-
-const fixUI=()=>{
-  if(!$('#b-yt')) $('#epbox')?.insertAdjacentHTML('afterbegin',`<div style="display:flex;gap:6px;margin-bottom:10px"><button id="b-yt" data-s="yt" class="x-btn" style="flex:1">YouTube</button><button id="b-ai" data-s="ai" class="x-btn o" style="flex:1">AnimeIndo</button></div>`);
-  if($('#b-yt')){$('#b-yt').className=src==='yt'?'x-btn':'x-btn o'; $('#b-ai').className=src==='ai'?'x-btn':'x-btn o';}
+if(src==='yt')return oLoad();
+$('#epbox').innerHTML='<h3>Episode</h3><div class="sk" style="height:56px"></div>';fixUI();
+try{
+let r=await fetch(API+q2(D.title.romaji||D.title.english)), res=await r.json(), id=res.results?.[0]?.id;
+if(!id)throw 1;
+let r2=await fetch(API+'info/'+id), info=await r2.json(), ep=info.episodes||[];
+if(!ep.length)throw 1;
+EPS=ep.map(e=>({n:e.number,t:'Ep '+e.number,s:e.id}));
+paintEps({ch:'Global (Gogo)',title:'Auto-Fallback Aktif'});
+}catch{autoSw();}
 };
-paintEps=(a,b)=>{oPe(a,b);fixUI();};
-killPlayer=()=>{oKill();$('#ai-if')?.remove();};
-
-const autoSw=()=>{
-  sIdx=(sIdx+1)%2; src=srcs[sIdx]; ZT.toast('Error. Otomatis ganti sumber...');
-  killPlayer(); if($('#plph'))$('#plph').hidden=false; loadEps();
+window.playGG=async(i)=>{
+$('#plph').hidden=true;CUR={idx:i,vid:''};$('#now').textContent='Memuat...';
+try{
+let r=await fetch(API+'watch/'+EPS[i].s), d=await r.json();
+let u=d.sources?.find(x=>x.quality==='default'||x.quality==='720p')?.url||d.sources?.[0]?.url;
+if(!u)throw 1;
+if(!$('#ai-if'))$('#pl').appendChild(Object.assign(document.createElement('iframe'),{id:'ai-if',style:'position:absolute;inset:0;width:100%;height:100%;border:0',allowFullscreen:true}));
+$('#ai-if').src=u;$('#now').textContent='Ep '+EPS[i].n;
+document.querySelectorAll('#eps button').forEach(b=>b.classList.toggle('on',+b.dataset.ep===i));
+}catch{ZT.toast('Gagal putar');autoSw();}
 };
-
-onErr=(e)=>{ oErr(e); setTimeout(autoSw, 1500); };
-
-loadEps=async()=>{
-  if(src==='yt') return oLoad();
-  $('#epbox').innerHTML='<h3>Episode</h3><div class="sk" style="height:56px"></div>'; fixUI();
-  try{
-    let r=await fetch('/api/anime?source=animeindo&s='+q2(D.title.romaji||D.title.english));
-    let l=(await r.json()); let s=l.data?.data?.[0]?.slug || l.data?.[0]?.slug || l[0]?.slug;
-    if(!s) throw 1;
-    let r2=await fetch('/api/anime?source=animeindo&slug='+q2(s));
-    let d=(await r2.json()); d=d.data?.data||d.data||d;
-    let ep=d.episode_lists||d.episodes||[];
-    if(!ep.length) throw 1;
-    EPS=ep.map((e,i)=>({n:i+1,t:e.title,s:e.slug||e.endpoint}));
-    paintEps({ch:'AnimeIndo',title:'Auto-Fallback Aktif'});
-  }catch{ autoSw(); }
-};
-
-window.playAI=async(i)=>{
-  $('#plph').hidden=true; CUR={idx:i,vid:''}; $('#now').textContent='Memuat AnimeIndo...';
-  try{
-    let r=await fetch('/api/anime?source=animeindo&ep_slug='+q2(EPS[i].s));
-    let d=(await r.json()); d=d.data?.data||d.data||d;
-    let u=d.stream_url||d.servers?.[0]?.url||d.video_source;
-    if(!u) throw 1;
-    if(!$('#ai-if')) $('#pl').appendChild(Object.assign(document.createElement('iframe'),{id:'ai-if',style:'position:absolute;inset:0;width:100%;height:100%;border:0'}));
-    $('#ai-if').src=u; $('#now').textContent='Ep '+EPS[i].n;
-    document.querySelectorAll('#eps button').forEach(b=>b.classList.toggle('on',+b.dataset.ep===i));
-  }catch{ autoSw(); }
-};
-
 document.addEventListener('click',e=>{
-  let x=e.target.closest('[data-s]');
-  if(x){src=x.dataset.s; sIdx=srcs.indexOf(src); killPlayer(); if($('#plph'))$('#plph').hidden=false; loadEps();}
-  let ep=e.target.closest('[data-ep]'), go=e.target.closest('#plgo');
-  if((ep||go)&&src==='ai'){ e.stopPropagation(); playAI(ep?+ep.dataset.ep:0); }
+let x=e.target.closest('[data-s]');
+if(x){src=x.dataset.s;sIdx=srcs.indexOf(src);killPlayer();if($('#plph'))$('#plph').hidden=false;loadEps();}
+let ep=e.target.closest('[data-ep]'),go=e.target.closest('#plgo');
+if((ep||go)&&src==='gg'){e.stopPropagation();playGG(ep?+ep.dataset.ep:0);}
 },true);
 render();
 </script>
