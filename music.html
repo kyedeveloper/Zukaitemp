@@ -221,7 +221,7 @@ let _ac=null;
 const appleRaw=()=>_ac||(_ac=(async()=>{let ids='';try{const f=await jf('https://rss.applemarketingtools.com/api/v2/id/music/most-played/50/songs.json');ids=((f.feed&&f.feed.results)||[]).map(x=>x.id).join(',')}catch{}if(!ids){const f=await jf('https://itunes.apple.com/id/rss/topsongs/limit=50/json');ids=((f.feed&&f.feed.entry)||[]).map(e=>e.id&&e.id.attributes&&e.id.attributes['im:id']).filter(Boolean).join(',')}return ((await jf(`https://itunes.apple.com/lookup?id=${ids}&country=ID`)).results||[])})().catch(e=>{_ac=null;throw e}));
 const mapD=t=>({id:t.id,src:'deezer',title:t.title,artist:(t.artist&&t.artist.name)||'',dur:30,art:(t.album&&(t.album.cover_big||t.album.cover_medium))||'',url:t.preview,full:false,album:(t.album&&t.album.title)||''});
 const SRC={
-    ytm:{name:'YouTube',
+  ytm:{name:'YouTube',
     search: async q => {
       const res = await jf('/api/ytm?q=' + encodeURIComponent(q));
       return (res || []).map(x => ({
@@ -236,7 +236,12 @@ const SRC={
         album: (x.album && x.album.name) || ''
       }));
     },
-    // ... biarkan kode 'homes' di bawahnya tetap sama
+    homes:[
+      {k:'ytar',kind:'artist',title:'🎤 Artis populer',sub:'ketuk untuk lihat lagunya',f:artistChart},
+      {k:'ytid',rank:1,title:'🇮🇩 Top Indonesia',sub:'lagu utuh',f:async()=>(await appleRaw()).filter(x=>x.trackName).map(mapAY)},
+      {k:'ytwd',rank:1,title:'🌍 Chart Dunia',sub:'lagu utuh',f:async()=>((await DZ('kind=chart')).data||[]).filter(x=>x.title).map(x=>mapY(x))}
+    ]},
+  audius:{name:'Audius',
     search:async q=>(await aj(`/tracks/search?query=${encodeURIComponent(q)}&limit=40`)).filter(t=>t.id).map(mapA),
     home:async()=>(await aj('/tracks/trending?time=week&limit=50')).filter(t=>t.id).map(mapA),title:'🔥 Trending di Audius',sub:'lagu utuh'},
   apple:{name:'Apple Music',
