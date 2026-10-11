@@ -257,34 +257,12 @@ const SRC={
 async function resolve(t){
   if(t.url) return;
   
-  // Ekstrak audio mentah untuk lagu YouTube
+  // Arahkan stream audio ke server Vercel milik Zukai sendiri
   if(t.src === 'ytm' && t.full) {
-    toast('Mencari raw audio...');
-    // Siapkan beberapa server alternatif jika salah satunya mati
-    const apis = [
-      'https://pipedapi.kavin.rocks',
-      'https://pipedapi.tokhmi.xyz',
-      'https://pipedapi.smnz.de'
-    ];
-    
-    for (let api of apis) {
-      try {
-        const j = await jf(api + '/streams/' + encodeURIComponent(t.id));
-        // Pilih format mp4/m4a karena paling stabil untuk diputar tag <audio> di Chrome
-        const stream = (j.audioStreams || []).find(s => s.mimeType.includes('mp4')) || (j.audioStreams || [])[0];
-        if(stream) {
-          t.url = stream.url;
-          t.src = 'audius'; // Paksa player web kamu pakai tag <audio> biasa, bukan IFrame
-          toast('Raw audio ketemu! Aman di latar belakang 🎧');
-          return; // Berhenti mencari jika sudah berhasil
-        }
-      } catch(e) {
-        console.log('Gagal ambil dari server', api);
-      }
-    }
-    
-    // Jika semua server gagal, kembali pakai IFrame YouTube
-    toast('Server raw sibuk, kembali pakai IFrame YT');
+    toast('Menyiapkan stream dari server...');
+    // Arahkan tag <audio> untuk memutar lagu langsung dari endpoint /api/play buatanmu
+    t.url = '/api/play?id=' + encodeURIComponent(t.id);
+    t.src = 'audius'; // Tipu frontend agar tetap menggunakan tag <audio> untuk latar belakang
     return;
   }
   
