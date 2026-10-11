@@ -260,8 +260,6 @@ async function resolve(t){
   // Ambil raw audio menggunakan proxy Invidious
   if(t.src === 'ytm' && t.full) {
     toast('Menghubungkan ke server audio...');
-    
-    // Kumpulan server Invidious publik yang stabil
     const apis = [
       'https://inv.tux.pizza',
       'https://invidious.projectsegfau.lt',
@@ -270,21 +268,18 @@ async function resolve(t){
     
     for (let api of apis) {
       try {
-        // Tarik data lagu
-        const res = await fetch(`${api}/api/v1/videos/${encodeURIComponent(t.id)}`);
-        if (!res.ok) continue; // Coba server lain kalau gagal
+        const res = await fetch(api + '/api/v1/videos/' + encodeURIComponent(t.id));
+        if (!res.ok) continue;
         
         const j = await res.json();
-        // Cari format audio m4a/mp4 karena paling ringan dan kompatibel dengan <audio> Chrome
         const audios = j.adaptiveFormats || [];
         const stream = audios.find(s => s.type.includes('audio/mp4'));
         
         if (stream && stream.itag) {
-          // Bikin URL proxy Invidious dengan parameter local=true untuk melewati blokir IP YouTube
-          t.url = `${api}/latest_version?id=${t.id}&itag=${stream.itag}&local=true`;
-          t.src = 'audius'; // Tipu frontend agar tetap memutar pakai <audio> biasa di latar belakang
+          t.url = api + '/latest_version?id=' + t.id + '&itag=' + stream.itag + '&local=true';
+          t.src = 'audius'; 
           toast('Audio terhubung! Aman di latar belakang 🎧');
-          return; // Sukses, hentikan pencarian
+          return;
         }
       } catch(e) {
         console.log('Gagal menghubungkan ke', api);
@@ -298,7 +293,7 @@ async function resolve(t){
   // Logika bawaan untuk Internet Archive
   if(t.src === 'archive'){
     const m = await jf('https://archive.org/metadata/'+encodeURIComponent(t.id));
-    const fs = m.files||[], f = fs.find(x=>/\.mp3$/i.test(x.name)&&!/_64kb/i.test(x.name))\vert{}\vert{}fs.find(x=>/\.(mp3\vert{}ogg\vert{}m4a)$/i.test(x.name));
+    const fs = m.files||[], f = fs.find(x=>/\.mp3$/i.test(x.name)&&!/_64kb/i.test(x.name))||fs.find(x=>/\.(mp3|ogg|m4a)$/i.test(x.name));
     if(!f) throw new Error('tidak ada file audio di item ini');
     t.url = 'https://archive.org/download/'+encodeURIComponent(t.id)+'/'+f.name.split('/').map(encodeURIComponent).join('/');
     if(f.length) t.dur = Math.round(parseFloat(f.length))||t.dur;
