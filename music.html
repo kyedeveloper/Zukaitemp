@@ -242,12 +242,29 @@ const SRC={
     home:null}
 };
 async function resolve(t){
-  if(t.url||t.src!=='archive')return;
-  const m=await jf('https://archive.org/metadata/'+encodeURIComponent(t.id));
-  const fs=m.files||[],f=fs.find(x=>/\.mp3$/i.test(x.name)&&!/_64kb/i.test(x.name))||fs.find(x=>/\.(mp3|ogg|m4a)$/i.test(x.name));
-  if(!f)throw new Error('tidak ada file audio di item ini');
-  t.url='https://archive.org/download/'+encodeURIComponent(t.id)+'/'+f.name.split('/').map(encodeURIComponent).join('/');
-  if(f.length)t.dur=Math.round(parseFloat(f.length))||t.dur;
+  if(t.url) return;
+  
+  // Trik untuk sumber YouTube: Ekstrak audio mentah agar bisa di latar belakang
+  if(t.src === 'ytm' && t.full) {
+    try {
+      const j = await jf('https://pipedapi.kavin.rocks/streams/' + encodeURIComponent(t.id));
+      const stream = (j.audioStreams || []).find(s => s.mimeType.includes('mp4')) || (j.audioStreams || [])[0];
+      if(stream) {
+        t.url = stream.url;
+        t.src = 'audius'; // Tipu frontend agar memutar pakai <audio> biasa, bukan IFrame YT
+      }
+    } catch(e) {}
+    return;
+  }
+  
+  // Logika bawaan untuk Internet Archive
+  if(t.src === 'archive'){
+    const m = await jf('https://archive.org/metadata/'+encodeURIComponent(t.id));
+    const fs = m.files||[], f = fs.find(x=>/\.mp3$/i.test(x.name)&&!/_64kb/i.test(x.name))||fs.find(x=>/\.(mp3|ogg|m4a)$/i.test(x.name));
+    if(!f) throw new Error('tidak ada file audio di item ini');
+    t.url = 'https://archive.org/download/'+encodeURIComponent(t.id)+'/'+f.name.split('/').map(encodeURIComponent).join('/');
+    if(f.length) t.dur = Math.round(parseFloat(f.length))||t.dur;
+  }
 }
 const SECS=[];Object.keys(SRC).forEach(s=>{const o=SRC[s];(o.homes||(o.home?[{k:s,rank:1,title:o.title,sub:o.sub,f:o.home}]:[])).forEach(h=>SECS.push({...h,s}))});
 const nk=t=>(t.artist+'|'+t.title).toLowerCase().replace(/[^a-z0-9]/g,'');
