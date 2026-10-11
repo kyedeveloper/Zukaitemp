@@ -18,7 +18,6 @@
 .x-seg{display:flex;gap:4px;padding:4px;border-radius:20px;margin-bottom:16px}
 .x-seg button{flex:1;min-height:42px;border:0;border-radius:16px;background:transparent;color:var(--mut);font:600 .88rem Fredoka;transition:all .3s}
 .x-seg button.on{background:linear-gradient(135deg,var(--p1),color-mix(in srgb,var(--p1) 55%,var(--g2)));color:#fff;box-shadow:0 8px 16px -8px var(--p1)}
-/* hero */
 .x-hero{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;border-radius:28px;margin-bottom:10px;box-shadow:var(--sh)}
 .x-hero::-webkit-scrollbar{display:none}
 .x-slide{flex:none;width:100%;scroll-snap-align:center;position:relative;min-height:236px;padding:20px 18px;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;color:#fff;background:#222 center/cover;cursor:pointer}
@@ -33,11 +32,9 @@
 .x-btn.o{background:rgba(255,255,255,.2);box-shadow:none;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .x-dots{display:flex;justify-content:center;gap:6px;margin-bottom:18px}
 .x-dots i{width:7px;height:7px;border-radius:99px;background:color-mix(in srgb,var(--p1) 25%,transparent);transition:all .35s}.x-dots i.on{width:22px;background:var(--p1)}
-/* genre */
 .x-gen{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -18px 20px;padding:0 18px}
 .x-gen::-webkit-scrollbar{display:none}
 .x-gen button{flex:none;border:0;min-height:38px;padding:0 16px;border-radius:99px;background:var(--w);color:var(--ink);font:600 .84rem Fredoka;box-shadow:var(--sh)}
-/* seksi + kartu */
 .x-sec{margin-bottom:24px}
 .x-sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .x-sh h2{font-size:1.2rem}.x-sh button{border:0;background:none;color:var(--p1);font:700 .82rem Nunito}
@@ -56,7 +53,6 @@
 .x-more{display:block;margin:18px auto;min-height:44px;padding:0 24px}
 .x-err{padding:20px;border-radius:24px;text-align:center;color:var(--mut);font-weight:700}
 .x-err b{display:block;font:600 1rem Fredoka;color:var(--ink);margin-bottom:6px}
-/* jadwal */
 .x-days{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -18px 14px;padding:0 18px}
 .x-days::-webkit-scrollbar{display:none}
 .x-days button{flex:none;width:56px;min-height:64px;border:0;border-radius:20px;background:var(--w);color:var(--mut);font:600 .78rem Fredoka;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-shadow:var(--sh)}
@@ -70,7 +66,6 @@
 .x-row .tx span{display:block;font:700 .74rem Nunito;color:var(--mut);margin-top:3px}
 .x-chip{padding:3px 10px;border-radius:99px;font:700 .7rem Nunito;white-space:nowrap;background:color-mix(in srgb,var(--p1) 14%,transparent);color:var(--p1)}.x-chip.ok{background:rgba(16,185,129,.15);color:#0f9a63}
 .x-tg{display:flex;align-items:center;gap:8px;margin:0 0 12px;font:700 .8rem Nunito;color:var(--mut)}
-/* detail */
 #det{position:fixed;inset:0;z-index:40;overflow-y:auto;background:var(--p4);transform:translateY(105%);transition:transform .6s cubic-bezier(.22,1,.36,1);padding-bottom:calc(var(--sb) + 30px)}
 #det.on{transform:none}
 .d-top{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top) + 10px) 14px 10px;background:color-mix(in srgb,var(--p4) 80%,transparent);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
@@ -171,7 +166,6 @@ async function rHome(){
   }).catch(()=>{});
   SECS.forEach(s=>list(s.v).then(p=>{const car=$('#s-'+s.k+' .x-car');if(car&&tab==='home'&&!LV)car.innerHTML=p.media.map(card).join('')}).catch(e=>{const car=$('#s-'+s.k+' .x-car');if(car)car.innerHTML=`<div class="x-err glass" style="width:100%"><b>Gagal memuat</b>${esc(e.message)}<br><button class="x-btn" style="margin-top:10px" data-retry="home">Coba lagi</button></div>`}));
 }
-/* daftar / pencarian / genre (grid + muat lebih banyak) */
 function openList(o){LV=Object.assign({page:1,items:[],more:true,busy:false},o);window.scrollTo({top:0});rListing()}
 function rListing(){
   pg.innerHTML=`<button class="x-back" data-lback>← Kembali</button><h2 class="f" style="margin:0 0 14px;font-size:1.3rem">${esc(LV.title)}</h2><div class="x-grid" id="lg"></div><div id="ls"></div>`;
@@ -215,7 +209,7 @@ function rDaftar(){
    +(dsub==='fav'?(fav.length?fav.map(f=>mini(f,'Ketuk untuk membuka')).join(''):'<div class="empty"><i>💝</i>Belum ada favorit.<br>Ketuk ❤ di halaman detail anime.</div>')
      :(hist.length?hist.map(h=>mini(h,(h.ep||'')+(h.pt>10?' · lanjut '+clk(h.pt):''))).join('')+'<button class="x-back" style="margin-top:6px" data-clrh>🗑 Hapus riwayat</button>':'<div class="empty"><i>📺</i>Belum ada riwayat tontonan.</div>'));
 }
-/* ---------- detail + pemutar ---------- */
+/* ---------- detail + pemutar (YouTube) ---------- */
 let D=null,EPS=[],CAND=[],YTP=null,YTR=null,CUR={idx:-1,vid:''},saveT=0;
 const isFav=id=>rd('za_fav',[]).some(f=>f.id===id);
 function toggleFav(){
@@ -225,6 +219,9 @@ function toggleFav(){
 }
 async function openDetail(id){
   const el=$('#det');el.classList.add('on');el.scrollTop=0;history.replaceState(null,'','#anime');
+  // Simpan progres & matikan player yang sedang jalan supaya iframe lama tidak "zombie"
+  try{saveProg(false)}catch{}
+  killPlayer();
   el.innerHTML=`<div class="d-top"><button class="glass" data-dclose aria-label="Tutup">‹</button><b>Memuat…</b></div><div class="d-in"><div class="sk" style="aspect-ratio:16/9;border-radius:24px"></div><div class="sk" style="height:90px;margin-top:16px"></div></div>`;
   try{
     const m=(await gql(DET,{id},60*60e3)).Media;if(!m||m.isAdult){ZT.toast('Anime ini tidak tersedia');return closeDetail()}
@@ -277,10 +274,17 @@ const epLabel=i=>'Ep '+(EPS[i]&&EPS[i].n!=null?EPS[i].n:i+1);
 function ytReady(){return YTR||(YTR=new Promise(res=>{if(window.YT&&YT.Player)return res();window.onYouTubeIframeAPIReady=res;const s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';s.onerror=()=>res();document.head.appendChild(s);setTimeout(res,9000)}))}
 async function playVid(vid,o={}){
   await ytReady();if(!(window.YT&&YT.Player))return ZT.toast('Pemutar YouTube gagal dimuat');
-  if(!D)return;const ph=$('#plph');if(ph)ph.hidden=true;const pe=$('#perr');if(pe)pe.remove();
+  if(!D)return;
+  const ph=$('#plph');if(ph)ph.hidden=true;const pe=$('#perr');if(pe)pe.remove();
   CUR={idx:o.idx==null?-1:o.idx,vid};
-  if(YTP&&YTP.loadVideoById)YTP.loadVideoById({videoId:vid,startSeconds:o.start||0});
-  else YTP=new YT.Player('ytp',{videoId:vid,playerVars:{rel:0,playsinline:1,modestbranding:1,autoplay:1,start:Math.floor(o.start||0)},events:{onReady:e=>e.target.playVideo(),onStateChange:onSt,onError:onErr}});
+  try{
+    if(YTP&&YTP.loadVideoById)YTP.loadVideoById({videoId:vid,startSeconds:o.start||0});
+    else{
+      const host=$('#ytp');
+      if(!host)return ZT.toast('Elemen pemutar tidak ditemukan');
+      YTP=new YT.Player('ytp',{videoId:vid,playerVars:{rel:0,playsinline:1,modestbranding:1,autoplay:1,start:Math.floor(o.start||0)},events:{onReady:e=>e.target.playVideo(),onStateChange:onSt,onError:onErr}});
+    }
+  }catch{ZT.toast('Gagal memulai pemutar');return}
   parent.postMessage({animePlay:1},O);
   const t=o.idx!=null&&o.idx>=0?epLabel(o.idx):'Trailer';$('#now').textContent='Memutar: '+t+(EPS[o.idx]?' · '+EPS[o.idx].t:'');
   document.querySelectorAll('#eps button').forEach(b=>b.classList.toggle('on',+b.dataset.ep===CUR.idx));
@@ -342,44 +346,6 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('change',e=>{if(e.target.id==='spop'){schPop=e.target.checked;paintSched()}});
 addEventListener('message',e=>{if(e.origin===O&&e.data&&e.data.active===false){try{YTP&&YTP.pauseVideo&&YTP.pauseVideo()}catch{}}});
-let srcs=['yt','gg'], sIdx=0, src=srcs[0];
-const oLoad=loadEps, oKill=killPlayer, oPe=paintEps, oErr=onErr;
-const fixUI=()=>{
-if(!$('#b-yt')) $('#epbox')?.insertAdjacentHTML('afterbegin',`<div style="display:flex;gap:6px;margin-bottom:10px"><button id="b-yt" data-s="yt" class="x-btn" style="flex:1">YouTube</button><button id="b-gg" data-s="gg" class="x-btn o" style="flex:1">Global (Web)</button></div>`);
-if($('#b-yt')){$('#b-yt').className=src==='yt'?'x-btn':'x-btn o'; $('#b-gg').className=src==='gg'?'x-btn':'x-btn o';}
-};
-paintEps=(a,b)=>{oPe(a,b);fixUI();};killPlayer=()=>{oKill();$('#ai-if')?.remove();};
-const autoSw=()=>{sIdx=(sIdx+1)%2;src=srcs[sIdx];ZT.toast('Ganti sumber otomatis...');killPlayer();if($('#plph'))$('#plph').hidden=false;loadEps();};
-onErr=e=>{oErr(e);setTimeout(autoSw,1500);};
-loadEps=async()=>{
-if(src==='yt')return oLoad();
-$('#epbox').innerHTML='<h3>Episode</h3><div class="sk" style="height:56px"></div>';fixUI();
-try{
-let r=await fetch('/api/anime?source=global&s='+q2(D.title.romaji||D.title.english));
-let ep=(await r.json())?.data?.episodes||[];
-if(!ep.length)throw 1;
-EPS=ep.map(e=>({n:e.number,t:'Ep '+e.number,s:e.id}));
-paintEps({ch:'Global (Gogo)',title:'Auto-Fallback Aktif'});
-}catch{autoSw();}
-};
-window.playGG=async(i)=>{
-$('#plph').hidden=true;CUR={idx:i,vid:''};$('#now').textContent='Memuat...';
-try{
-let r=await fetch('/api/anime?source=global&ep_id='+q2(EPS[i].s));
-let d=(await r.json())?.data||{};
-let u=d.sources?.find(x=>x.quality==='default'||x.quality==='720p'||x.quality==='auto')?.url||d.sources?.[0]?.url;
-if(!u)throw 1;
-if(!$('#ai-if'))$('#pl').appendChild(Object.assign(document.createElement('iframe'),{id:'ai-if',style:'position:absolute;inset:0;width:100%;height:100%;border:0',allowFullscreen:true}));
-$('#ai-if').src=u;$('#now').textContent='Ep '+EPS[i].n;
-document.querySelectorAll('#eps button').forEach(b=>b.classList.toggle('on',+b.dataset.ep===i));
-}catch{ZT.toast('Gagal putar');autoSw();}
-};
-document.addEventListener('click',e=>{
-let x=e.target.closest('[data-s]');
-if(x){src=x.dataset.s;sIdx=srcs.indexOf(src);killPlayer();if($('#plph'))$('#plph').hidden=false;loadEps();}
-let ep=e.target.closest('[data-ep]'),go=e.target.closest('#plgo');
-if((ep||go)&&src==='gg'){e.stopPropagation();playGG(ep?+ep.dataset.ep:0);}
-},true);
 render();
 </script>
 </body>
