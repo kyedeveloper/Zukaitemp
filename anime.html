@@ -112,8 +112,15 @@
 </div>
 <section id="det" data-noswipe aria-label="Detail anime"></section>
 <script>
-// Fallback kalau core.js telat/gagal load
-const ZT = window.ZT || { esc: s => String(s ?? ''), toast: m => alert(m), log: () => {} };
+// --- DEBUG: tampilkan error langsung di halaman ---
+window.addEventListener('error', e => {
+  const d = document.createElement('div');
+  d.style.cssText = 'position:fixed;left:10px;right:10px;bottom:80px;z-index:9999;background:#c00;color:#fff;padding:12px;border-radius:12px;font:600 12px monospace;white-space:pre-wrap;max-height:40vh;overflow:auto';
+  d.textContent = '❌ ' + (e.message || 'error') + '\n@ ' + (e.filename || '') + ':' + e.lineno;
+  document.body.appendChild(d);
+});
+// Fallback ZT
+const ZT = window.ZT || { esc: s => String(s ?? ''), toast: m => alert(m) };
 const $=s=>document.querySelector(s),esc=ZT.esc,O=location.origin;
 // Ganti dengan URL panel Pterodactyl kamu (tanpa trailing slash)
 const ANIME_API = 'https://woii-lahh-cikk.keyganteng.my.id';
