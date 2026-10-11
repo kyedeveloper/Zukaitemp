@@ -112,9 +112,11 @@
 </div>
 <section id="det" data-noswipe aria-label="Detail anime"></section>
 <script>
+// Fallback kalau core.js telat/gagal load
+const ZT = window.ZT || { esc: s => String(s ?? ''), toast: m => alert(m), log: () => {} };
 const $=s=>document.querySelector(s),esc=ZT.esc,O=location.origin;
 // Ganti dengan URL panel Pterodactyl kamu (tanpa trailing slash)
-const ANIME_API = 'https://woii-lahh-cikk.keyganteng.my.id/';
+const ANIME_API = 'https://woii-lahh-cikk.keyganteng.my.id';
 const rd=(k,d)=>{try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch{return d}},wr=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
 /* ---------- AniList + cache ---------- */
 const CP='za_c:',hs=s=>{let h=5381;for(let i=0;i<s.length;i++)h=(h*33^s.charCodeAt(i))>>>0;return h.toString(36)};
