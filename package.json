@@ -1,8 +1,11 @@
 {
-  "name": "zukai-music",
-  "version": "1.0.0",
+  "name": "zukaitemp",
+  "version": "1.1.0",
+  "main": "server.js",
   "dependencies": {
-    "ytmusic-api": "^5.2.2",
-    "@distube/ytdl-core": "latest"
+    "axios": "^1.6.8",
+    "cheerio": "^1.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
   }
 }
