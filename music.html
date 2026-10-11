@@ -237,7 +237,6 @@ const SRC={
       }));
     },
     // ... biarkan kode 'homes' di bawahnya tetap sama
-  audius:{name:'Audius',
     search:async q=>(await aj(`/tracks/search?query=${encodeURIComponent(q)}&limit=40`)).filter(t=>t.id).map(mapA),
     home:async()=>(await aj('/tracks/trending?time=week&limit=50')).filter(t=>t.id).map(mapA),title:'🔥 Trending di Audius',sub:'lagu utuh'},
   apple:{name:'Apple Music',
