@@ -257,16 +257,34 @@ const SRC={
 async function resolve(t){
   if(t.url) return;
   
-  // Trik untuk sumber YouTube: Ekstrak audio mentah agar bisa di latar belakang
+  // Ekstrak audio mentah untuk lagu YouTube
   if(t.src === 'ytm' && t.full) {
-    try {
-      const j = await jf('https://pipedapi.kavin.rocks/streams/' + encodeURIComponent(t.id));
-      const stream = (j.audioStreams || []).find(s => s.mimeType.includes('mp4')) || (j.audioStreams || [])[0];
-      if(stream) {
-        t.url = stream.url;
-        t.src = 'audius'; // Tipu frontend agar memutar pakai <audio> biasa, bukan IFrame YT
+    toast('Mencari raw audio...');
+    // Siapkan beberapa server alternatif jika salah satunya mati
+    const apis = [
+      'https://pipedapi.kavin.rocks',
+      'https://pipedapi.tokhmi.xyz',
+      'https://pipedapi.smnz.de'
+    ];
+    
+    for (let api of apis) {
+      try {
+        const j = await jf(api + '/streams/' + encodeURIComponent(t.id));
+        // Pilih format mp4/m4a karena paling stabil untuk diputar tag <audio> di Chrome
+        const stream = (j.audioStreams || []).find(s => s.mimeType.includes('mp4')) || (j.audioStreams || [])[0];
+        if(stream) {
+          t.url = stream.url;
+          t.src = 'audius'; // Paksa player web kamu pakai tag <audio> biasa, bukan IFrame
+          toast('Raw audio ketemu! Aman di latar belakang 🎧');
+          return; // Berhenti mencari jika sudah berhasil
+        }
+      } catch(e) {
+        console.log('Gagal ambil dari server', api);
       }
-    } catch(e) {}
+    }
+    
+    // Jika semua server gagal, kembali pakai IFrame YouTube
+    toast('Server raw sibuk, kembali pakai IFrame YT');
     return;
   }
   
