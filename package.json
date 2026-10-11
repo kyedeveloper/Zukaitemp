@@ -2,6 +2,7 @@
   "name": "zukai-music",
   "version": "1.0.0",
   "dependencies": {
-    "ytmusic-api": "^5.2.2"
+    "ytmusic-api": "^5.2.2",
+    "@distube/ytdl-core": "latest"
   }
 }
