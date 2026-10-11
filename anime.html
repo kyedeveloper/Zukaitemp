@@ -112,14 +112,14 @@
 </div>
 <section id="det" data-noswipe aria-label="Detail anime"></section>
 <script>
-// --- DEBUG: tampilkan error langsung di halaman ---
+// --- DEBUG: tampilkan error langsung di halaman (sementara) ---
 window.addEventListener('error', e => {
   const d = document.createElement('div');
   d.style.cssText = 'position:fixed;left:10px;right:10px;bottom:80px;z-index:9999;background:#c00;color:#fff;padding:12px;border-radius:12px;font:600 12px monospace;white-space:pre-wrap;max-height:40vh;overflow:auto';
   d.textContent = '❌ ' + (e.message || 'error') + '\n@ ' + (e.filename || '') + ':' + e.lineno;
   document.body.appendChild(d);
 });
-// Fallback ZT
+// Fallback ZT kalau core.js telat/gagal
 const ZT = window.ZT || { esc: s => String(s ?? ''), toast: m => alert(m) };
 const $=s=>document.querySelector(s),esc=ZT.esc,O=location.origin;
 // Ganti dengan URL panel Pterodactyl kamu (tanpa trailing slash)
@@ -220,7 +220,7 @@ function rDaftar(){
    +(dsub==='fav'?(fav.length?fav.map(f=>mini(f,'Ketuk untuk membuka')).join(''):'<div class="empty"><i>💝</i>Belum ada favorit.<br>Ketuk ❤ di halaman detail anime.</div>')
      :(hist.length?hist.map(h=>mini(h,(h.ep||'')+(h.pt>10?' · lanjut '+clk(h.pt):''))).join('')+'<button class="x-back" style="margin-top:6px" data-clrh>🗑 Hapus riwayat</button>':'<div class="empty"><i>📺</i>Belum ada riwayat tontonan.</div>'));
 }
-/* ---------- detail + pemutar (YouTube) ---------- */
+/* ---------- detail + pemutar (Anoboy) ---------- */
 let D=null,EPS=[],CAND=[],YTP=null,YTR=null,CUR={idx:-1,vid:''},saveT=0;
 const isFav=id=>rd('za_fav',[]).some(f=>f.id===id);
 function toggleFav(){
@@ -230,7 +230,6 @@ function toggleFav(){
 }
 async function openDetail(id){
   const el=$('#det');el.classList.add('on');el.scrollTop=0;history.replaceState(null,'','#anime');
-  // Simpan progres & matikan player yang sedang jalan supaya iframe lama tidak "zombie"
   try{saveProg(false)}catch{}
   killPlayer();
   el.innerHTML=`<div class="d-top"><button class="glass" data-dclose aria-label="Tutup">‹</button><b>Memuat…</b></div><div class="d-in"><div class="sk" style="aspect-ratio:16/9;border-radius:24px"></div><div class="sk" style="height:90px;margin-top:16px"></div></div>`;
@@ -258,159 +257,92 @@ function paintDetail(){
 }
 const q2=s=>encodeURIComponent(s);
 async function loadEps(){
-  const m = D, my = m.id;
-  const box = () => D && D.id === my ? $('#epbox') : null;
-  const title = m.title.romaji || m.title.english || m.title.native || name(m);
-
-  try {
-    // 1) Cari anime di Anoboy
-    const r1 = await fetch(`${ANIME_API}/anime/search?q=${encodeURIComponent(title)}`);
-    const j1 = await r1.json();
-    if (!j1.ok || !j1.data?.length) {
-      return paintEps(null, 'Anime ini tidak ditemukan di Anoboy.');
-    }
-    const anime = j1.data[0];
-
-    // 2) Ambil daftar episode
-    const r2 = await fetch(`${ANIME_API}/anime/episodes?slug=${encodeURIComponent(anime.slug)}`);
-    const j2 = await r2.json();
-    if (!j2.ok || !j2.data?.length) {
-      return paintEps(null, 'Episode tidak ditemukan di halaman Anoboy.');
-    }
-
-    // 3) Simpan ke EPS
-    EPS = j2.data.map((ep, i) => ({
-      n: ep.num != null ? ep.num : i + 1,
-      t: ep.title,
-      v: ep.url,           // URL halaman episode
-      isAnoboy: true,
-    }));
-    CAND = [];
-    paintEps({ ch: 'Anoboy', title: anime.title });
-  } catch(e) {
-    if (box()) paintEps(null, 'Gagal memuat dari Anoboy: ' + e.message);
-  }
+  const m=D,my=m.id,box=()=>D&&D.id===my?$('#epbox'):null;
+  const title=m.title.romaji||m.title.english||m.title.native||name(m);
+  try{
+    const r1=await fetch(`${ANIME_API}/anime/search?q=${encodeURIComponent(title)}`);
+    const j1=await r1.json();
+    if(!j1.ok||!j1.data?.length)return paintEps(null,'Anime ini tidak ditemukan di Anoboy.');
+    const anime=j1.data[0];
+    const r2=await fetch(`${ANIME_API}/anime/episodes?slug=${encodeURIComponent(anime.slug)}`);
+    const j2=await r2.json();
+    if(!box())return;
+    if(!j2.ok||!j2.data?.length)return paintEps(null,'Episode tidak ditemukan di halaman Anoboy.');
+    EPS=j2.data.map((ep,i)=>({n:ep.num!=null?ep.num:i+1,t:ep.title,v:ep.url,isAnoboy:true}));
+    CAND=[];
+    paintEps({ch:'Anoboy',title:anime.title});
+  }catch(e){if(box())paintEps(null,'Gagal memuat dari Anoboy: '+e.message)}
+}
 function paintEps(src,msg){
   const b=$('#epbox');if(!b||!D)return;const h=rd('za_hist',{})[D.id];
   if(!EPS.length){
-    const t=name(D);
-    b.innerHTML=`<h3>📺 Episode</h3><p>${esc(msg||'Belum ada episode di kanal resmi yang kami pantau.')}</p><p class="dm" style="margin-top:6px">Tidak semua judul tayang gratis di YouTube. Kamu bisa menontonnya di platform resmi:</p><div class="d-links"><button data-msearch>🔎 Cari di kanal resmi</button><a target="_blank" rel="noopener" href="https://www.crunchyroll.com/search?q=${q2(t)}">Crunchyroll</a><a target="_blank" rel="noopener" href="https://www.bilibili.tv/id/search-result?keyword=${q2(t)}">Bstation</a></div><div id="msr"></div>`;
+    b.innerHTML=`<h3>📺 Episode</h3><p>${esc(msg||'Belum ada episode di Anoboy.')}</p><div class="d-links"><button data-msearch>🔎 Cari manual</button><a target="_blank" rel="noopener" href="https://www.crunchyroll.com/search?q=${q2(name(D))}">Crunchyroll</a><a target="_blank" rel="noopener" href="https://www.bilibili.tv/id/search-result?keyword=${q2(name(D))}">Bstation</a></div><div id="msr"></div>`;
     return;
   }
   const nums=EPS.every(e=>e.n!=null)?EPS.map(e=>e.n):EPS.map((_,i)=>i+1);
-  b.innerHTML=`<h3>📺 Episode <span class="d-chips" style="margin:0"><span>${EPS.length}</span></span></h3>${src?`<p class="dm">Sumber resmi: ${esc(src.ch)} · ${esc(src.title)}</p>`:''}<div class="d-eps" id="eps">${EPS.map((e,i)=>`<button data-ep="${i}" title="${esc(e.t)}" class="${i===CUR.idx?'on':h&&h.vid===e.v?'w':''}">${nums[i]}</button>`).join('')}</div>${CAND.length>1?`<div class="d-links"><button data-alt>Bukan playlist ini?</button></div><div class="d-alt" id="alt" hidden>${CAND.map(c=>`<button data-pl="${esc(c.id)}">${esc(c.ch)} · ${esc(c.title)} (${c.count} video)</button>`).join('')}</div>`:''}`;
-  const go=$('#plgo');if(go&&h&&h.idx!=null&&EPS[h.idx]&&EPS[h.idx].v===h.vid)$('#now').textContent='Terakhir ditonton: '+(h.ep||'')+(h.pt>10?' · lanjut '+clk(h.pt):'');
+  b.innerHTML=`<h3>📺 Episode <span class="d-chips" style="margin:0"><span>${EPS.length}</span></span></h3>${src?`<p class="dm">Sumber resmi: ${esc(src.ch)} · ${esc(src.title)}</p>`:''}<div class="d-eps" id="eps">${EPS.map((e,i)=>`<button data-ep="${i}" title="${esc(e.t)}" class="${i===CUR.idx?'on':h&&h.vid===e.v?'w':''}">${nums[i]}</button>`).join('')}</div>`;
+  const go=$('#plgo');if(go&&h&&h.idx!=null&&EPS[h.idx]&&EPS[h.idx].v===h.vid)$('#now').textContent='Terakhir ditonton: '+(h.ep||'');
 }
 const epLabel=i=>'Ep '+(EPS[i]&&EPS[i].n!=null?EPS[i].n:i+1);
 function ytReady(){return YTR||(YTR=new Promise(res=>{if(window.YT&&YT.Player)return res();window.onYouTubeIframeAPIReady=res;const s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';s.onerror=()=>res();document.head.appendChild(s);setTimeout(res,9000)}))}
 async function playVid(vid,o={}){
   await ytReady();if(!(window.YT&&YT.Player))return ZT.toast('Pemutar YouTube gagal dimuat');
-  if(!D)return;
-  const ph=$('#plph');if(ph)ph.hidden=true;const pe=$('#perr');if(pe)pe.remove();
+  if(!D)return;const ph=$('#plph');if(ph)ph.hidden=true;const pe=$('#perr');if(pe)pe.remove();
   CUR={idx:o.idx==null?-1:o.idx,vid};
-  try{
-    if(YTP&&YTP.loadVideoById)YTP.loadVideoById({videoId:vid,startSeconds:o.start||0});
-    else{
-      const host=$('#ytp');
-      if(!host)return ZT.toast('Elemen pemutar tidak ditemukan');
-      YTP=new YT.Player('ytp',{videoId:vid,playerVars:{rel:0,playsinline:1,modestbranding:1,autoplay:1,start:Math.floor(o.start||0)},events:{onReady:e=>e.target.playVideo(),onStateChange:onSt,onError:onErr}});
-    }
-  }catch{ZT.toast('Gagal memulai pemutar');return}
+  if(YTP&&YTP.loadVideoById)YTP.loadVideoById({videoId:vid,startSeconds:o.start||0});
+  else YTP=new YT.Player('ytp',{videoId:vid,playerVars:{rel:0,playsinline:1,modestbranding:1,autoplay:1,start:Math.floor(o.start||0)},events:{onReady:e=>e.target.playVideo(),onStateChange:onSt,onError:onErr}});
   parent.postMessage({animePlay:1},O);
   const t=o.idx!=null&&o.idx>=0?epLabel(o.idx):'Trailer';$('#now').textContent='Memutar: '+t+(EPS[o.idx]?' · '+EPS[o.idx].t:'');
   document.querySelectorAll('#eps button').forEach(b=>b.classList.toggle('on',+b.dataset.ep===CUR.idx));
   if(CUR.idx>=0)saveProg(true);
+}
+async function playEp(i,fromHist){
+  const e=EPS[i];if(!e)return;
+  if(e.isAnoboy){
+    $('#plph').hidden=true;const pe=$('#perr');if(pe)pe.remove();
+    CUR={idx:i,vid:e.v};
+    if(YTP){try{YTP.destroy()}catch{}YTP=null}
+    $('#now').textContent='Memuat episode...';
+    try{
+      const r=await fetch(`${ANIME_API}/anime/watch?url=${encodeURIComponent(e.v)}`);
+      const j=await r.json();
+      if(!j.ok)throw new Error(j.error||'gagal ambil embed');
+      const pl=$('#pl');const old=pl.querySelector('#anoboy-if');if(old)old.remove();
+      const fr=document.createElement('iframe');
+      fr.id='anoboy-if';fr.src=j.data.embed;fr.allowFullscreen=true;
+      fr.setAttribute('allow','autoplay; fullscreen; encrypted-media; picture-in-picture');
+      fr.setAttribute('referrerpolicy','no-referrer');
+      fr.style.cssText='position:absolute;inset:0;width:100%;height:100%;border:0';
+      pl.appendChild(fr);
+      $('#now').textContent='Memutar: '+(e.t||('Episode '+(i+1)));
+      document.querySelectorAll('#eps button').forEach(b=>b.classList.toggle('on',+b.dataset.ep===i));
+      saveProgAnoboy(i);
+    }catch(err){ZT.toast('Gagal memuat video: '+err.message);$('#now').textContent='Gagal memuat video.'}
+    return;
+  }
+  playVid(e.v,{idx:i,start:fromHist?h&&h.vid===e.v?h.pt:0:0});
+}
+function saveProgAnoboy(i){
+  if(!D||i<0)return;const e=EPS[i];const h=rd('za_hist',{});
+  h[D.id]={id:D.id,title:name(D),cover:D.coverImage.large,ep:'Ep '+(e.n||i+1),idx:i,vid:e.v,pt:0,ts:Date.now()};
+  const ks=Object.keys(h);if(ks.length>40){ks.sort((a,b)=>h[a].ts-h[b].ts).slice(0,ks.length-40).forEach(k=>delete h[k])}wr('za_hist',h);
 }
 function saveProg(first){
   if(!D||CUR.idx<0)return;let t=0;try{t=YTP&&YTP.getCurrentTime?YTP.getCurrentTime():0}catch{}
   const h=rd('za_hist',{});h[D.id]={id:D.id,title:name(D),cover:D.coverImage.large,ep:epLabel(CUR.idx),idx:CUR.idx,vid:CUR.vid,pt:first?0:t,ts:Date.now()};
   const ks=Object.keys(h);if(ks.length>40){ks.sort((a,b)=>h[a].ts-h[b].ts).slice(0,ks.length-40).forEach(k=>delete h[k])}wr('za_hist',h);
 }
-function onSt(e){
-  clearInterval(saveT);
-  if(e.data===1)saveT=setInterval(()=>saveProg(false),6000);
-  else if(e.data===2)saveProg(false);
-  else if(e.data===0&&CUR.idx>=0&&CUR.idx<EPS.length-1)playEp(CUR.idx+1);
-}
-function onErr(e){
-  const pl=$('#pl');if(!pl||!CUR.vid)return;const x=document.createElement('div');x.id='perr';x.className='d-perr';
-  x.innerHTML=`<div>${e.data===101||e.data===150?'Pemilik video melarang pemutaran di luar YouTube.':'Video ini tidak bisa diputar.'}</div><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=${esc(CUR.vid)}">Buka di YouTube</a>`;pl.appendChild(x);
-}
-async function playEp(i){
-  const e = EPS[i];
-  if (!e) return;
-
-  // Kalau episode dari Anoboy → pakai iframe
-  if (e.isAnoboy) {
-    $('#plph').hidden = true;
-    const pe = $('#perr'); if (pe) pe.remove();
-    CUR = { idx: i, vid: e.v };
-
-    // Matikan player YouTube lama kalau ada
-    if (YTP) { try { YTP.destroy(); } catch{} YTP = null; }
-
-    $('#now').textContent = 'Memuat episode...';
-    try {
-      const r = await fetch(`${ANIME_API}/anime/watch?url=${encodeURIComponent(e.v)}`);
-      const j = await r.json();
-      if (!j.ok) throw new Error(j.error || 'gagal ambil embed');
-
-      const pl = $('#pl');
-      const old = pl.querySelector('#anoboy-if'); if (old) old.remove();
-      const fr = document.createElement('iframe');
-      fr.id = 'anoboy-if';
-      fr.src = j.data.embed;
-      fr.allowFullscreen = true;
-      fr.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture');
-      fr.setAttribute('referrerpolicy', 'no-referrer');
-      fr.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0';
-      pl.appendChild(fr);
-
-      $('#now').textContent = 'Memutar: ' + (e.t || ('Episode ' + (i+1)));
-      document.querySelectorAll('#eps button').forEach(b =>
-        b.classList.toggle('on', +b.dataset.ep === i)
-      );
-
-      saveProgAnoboy(i);
-    } catch(err) {
-      ZT.toast('Gagal memuat video: ' + err.message);
-      $('#now').textContent = 'Gagal memuat video.';
-    }
-    return;
-  }
-
-  // Fallback (trailer YouTube)
-  playVid(e.v, { idx: i });
-}
-function saveProgAnoboy(i) {
-  if (!D || i < 0) return;
-  const e = EPS[i];
-  const h = rd('za_hist', {});
-  h[D.id] = {
-    id: D.id, title: name(D), cover: D.coverImage.large,
-    ep: 'Ep ' + (e.n || i + 1), idx: i, vid: e.v, pt: 0, ts: Date.now(),
-  };
-  const ks = Object.keys(h);
-  if (ks.length > 40) {
-    ks.sort((a, b) => h[a].ts - h[b].ts).slice(0, ks.length - 40).forEach(k => delete h[k]);
-  }
-  wr('za_hist', h);
-}
-
-function killPlayer() {
-  clearInterval(saveT);
-  try { YTP && YTP.destroy && YTP.destroy(); } catch {}
-  YTP = null;
-  const old = document.getElementById('anoboy-if');
-  if (old) old.remove();
-  CUR = { idx: -1, vid: '' };
-}
+function onSt(e){clearInterval(saveT);if(e.data===1)saveT=setInterval(()=>saveProg(false),6000);else if(e.data===2)saveProg(false);else if(e.data===0&&CUR.idx>=0&&CUR.idx<EPS.length-1)playEp(CUR.idx+1)}
+function onErr(e){const pl=$('#pl');if(!pl||!CUR.vid)return;const x=document.createElement('div');x.id='perr';x.className='d-perr';x.innerHTML=`<div>${e.data===101||e.data===150?'Pemilik video melarang pemutaran di luar YouTube.':'Video ini tidak bisa diputar.'}</div><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=${esc(CUR.vid)}">Buka di YouTube</a>`;pl.appendChild(x)}
+function killPlayer(){clearInterval(saveT);try{YTP&&YTP.destroy&&YTP.destroy()}catch{}YTP=null;const old=document.getElementById('anoboy-if');if(old)old.remove();CUR={idx:-1,vid:''}}
 async function manualSearch(){
-  const box=$('#msr');if(!box)return;box.innerHTML='<div class="sk" style="height:48px;margin-top:10px"></div>';
-  try{const j=await (await fetch('/api/anime?s='+q2(name(D)))).json();const v=j.eps||[];
-    if(!v.length){box.innerHTML='<p class="dm" style="margin-top:10px">Tidak ada video yang cocok di kanal resmi.</p>';return}
-    EPS=v;CAND=[];paintEps({ch:'hasil pencarian kanal resmi',title:name(D)})}
-  catch{box.innerHTML='<p class="dm" style="margin-top:10px">Pencarian gagal.</p>'}
+  const box=$('#msr');if(!box||!D)return;box.innerHTML='<div class="sk" style="height:48px;margin-top:10px"></div>';
+  try{const j=await (await fetch(`${ANIME_API}/anime/search?q=${encodeURIComponent(name(D))}`)).json();const list=j.data||[];
+    if(!list.length){box.innerHTML='<p class="dm" style="margin-top:10px">Tidak ada hasil.</p>';return}
+    const eps=await (await fetch(`${ANIME_API}/anime/episodes?slug=${encodeURIComponent(list[0].slug)}`)).json();
+    if(!eps.ok||!eps.data?.length){box.innerHTML='<p class="dm" style="margin-top:10px">Tidak ada episode.</p>';return}
+    EPS=eps.data.map((ep,i)=>({n:ep.num!=null?ep.num:i+1,t:ep.title,v:ep.url,isAnoboy:true}));CAND=[];paintEps({ch:'Anoboy',title:list[0].title});
+  }catch{box.innerHTML='<p class="dm" style="margin-top:10px">Pencarian gagal.</p>'}
 }
 /* ---------- klik ---------- */
 document.addEventListener('click',e=>{
@@ -426,17 +358,13 @@ document.addEventListener('click',e=>{
   if(x=c('[data-day]')){schDay=+x.dataset.day;document.querySelectorAll('[data-day]').forEach(b=>b.classList.toggle('on',+b.dataset.day===schDay));return paintSched()}
   if(x=c('[data-ds]')){dsub=x.dataset.ds;return rDaftar()}
   if(c('[data-clrh]')){wr('za_hist',{});return rDaftar()}
-  if(c('#plgo')){const h=rd('za_hist',{})[D.id];if(EPS.length){const i=h&&EPS[h.idx]&&EPS[h.idx].v===h.vid?h.idx:0;return playEp(i,true)}const tr=D.trailer&&D.trailer.site&&D.trailer.site.toLowerCase()==='youtube'?D.trailer.id:'';return tr?playVid(tr):ZT.toast('Belum ada episode atau trailer')}
+  if(c('#plgo')){const h=rd('za_hist',{})[D.id];if(EPS.length){const i=h&&h.idx!=null&&EPS[h.idx]&&EPS[h.idx].v===h.vid?h.idx:0;return playEp(i,true)}return ZT.toast('Belum ada episode')}
   if(x=c('[data-ep]'))return playEp(+x.dataset.ep);
-  if(x=c('[data-trailer]')){$('#det').scrollTo({top:0,behavior:'smooth'});return playVid(x.dataset.trailer)}
   if(c('[data-syn]')){const s=$('#syn');s.classList.toggle('all');t.closest('[data-syn]').textContent=s.classList.contains('all')?'Ringkas':'Selengkapnya';return}
-  if(c('[data-alt]'))return($('#alt').hidden=!$('#alt').hidden);
-  if(x=c('[data-pl]'))return pickPlaylist(x.dataset.pl);
   if(c('[data-msearch]'))return manualSearch();
   if(x=c('#seg [data-t]'))return setTab(x.dataset.t);
 });
 document.addEventListener('change',e=>{if(e.target.id==='spop'){schPop=e.target.checked;paintSched()}});
-addEventListener('message',e=>{if(e.origin===O&&e.data&&e.data.active===false){try{YTP&&YTP.pauseVideo&&YTP.pauseVideo()}catch{}}});
 render();
 </script>
 </body>
