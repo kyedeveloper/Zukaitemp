@@ -257,36 +257,32 @@ const SRC={
 async function resolve(t){
   if(t.url) return;
   
-  // Ambil raw audio menggunakan proxy Invidious
+  // Menggunakan API dari bot Telegram Zukai
   if(t.src === 'ytm' && t.full) {
-    toast('Menghubungkan ke server audio...');
-    const apis = [
-      'https://inv.tux.pizza',
-      'https://invidious.projectsegfau.lt',
-      'https://invidious.perennialte.ch'
-    ];
-    
-    for (let api of apis) {
-      try {
-        const res = await fetch(api + '/api/v1/videos/' + encodeURIComponent(t.id));
-        if (!res.ok) continue;
+    toast('Mengambil audio dari server...');
+    try {
+      // Gabungkan nama artis dan judul sebagai kueri pencarian
+      const query = t.artist + ' ' + t.title;
+      const res = await fetch('https://api.ikyyxd.my.id/search/ytplayv2?q=' + encodeURIComponent(query));
+      
+      if (res.ok) {
+        const data = await res.json();
         
-        const j = await res.json();
-        const audios = j.adaptiveFormats || [];
-        const stream = audios.find(s => s.type.includes('audio/mp4'));
-        
-        if (stream && stream.itag) {
-          t.url = api + '/latest_version?id=' + t.id + '&itag=' + stream.itag + '&local=true';
-          t.src = 'audius'; 
-          toast('Audio terhubung! Aman di latar belakang 🎧');
-          return;
+        // Cek apakah datanya sukses dan ada link audionya
+        if (data.status && data.result && data.result.audio && data.result.audio.url) {
+          t.url = data.result.audio.url;
+          t.src = 'audius'; // Tipu player agar masuk mode <audio> latar belakang
+          t.dur = data.result.duration || t.dur; // Sinkronkan durasi yang lebih akurat dari API
+          
+          toast('Audio siap! Aman di latar belakang 🎧');
+          return; // Sukses, hentikan fungsi
         }
-      } catch(e) {
-        console.log('Gagal menghubungkan ke', api);
       }
+    } catch(e) {
+      console.log('Error API Bot:', e);
     }
     
-    toast('Semua server sedang sibuk, gagal memutar.');
+    toast('Gagal memuat lagu dari server API.');
     return;
   }
   
