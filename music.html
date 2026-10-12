@@ -255,18 +255,35 @@ const SRC={
     home:null}
 };
 async function resolve(t){
+async function resolve(t){
   if(t.url) return;
   
-  // Arahkan ke server Pterodactyl Zukai
+  // Menggunakan API dari bot Telegram Zukai
   if(t.src === 'ytm' && t.full) {
-    toast('Menghubungkan ke server Pterodactyl... 🚀');
+    toast('Mengambil audio dari server...');
+    try {
+      // Gabungkan nama artis dan judul sebagai kueri pencarian
+      const query = t.artist + ' ' + t.title;
+      const res = await fetch('https://api.ikyyxd.my.id/search/ytplayv2?q=' + encodeURIComponent(query));
+      
+      if (res.ok) {
+        const data = await res.json();
+        
+        // Cek apakah datanya sukses dan ada link audionya
+        if (data.status && data.result && data.result.audio && data.result.audio.url) {
+          t.url = data.result.audio.url;
+          t.src = 'audius'; // Tipu player agar masuk mode <audio> latar belakang
+          t.dur = data.result.duration || t.dur; // Sinkronkan durasi yang lebih akurat dari API
+          
+          toast('Audio siap! Aman di latar belakang 🎧');
+          return; // Sukses, hentikan fungsi
+        }
+      }
+    } catch(e) {
+      console.log('Error API Bot:', e);
+    }
     
-    const query = t.artist + ' ' + t.title;
-    
-    // GANTI "URL_PANEL_LU" DENGAN DOMAIN/IP+PORT SERVER PTERODACTYL KAMU
-    t.url = 'https://woii-lahh-cikk.keyganteng.my.id//play?q=' + encodeURIComponent(query);
-    
-    t.src = 'audius'; // Tipu frontend agar tetap pakai <audio> di latar belakang
+    toast('Gagal memuat lagu dari server API.');
     return;
   }
   
