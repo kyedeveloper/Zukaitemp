@@ -4,18 +4,20 @@ const axios = require('axios');
 
 const app = express();
 app.use(cors());
-
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36';
 
 const PIPED = [
   'https://pipedapi.kavin.rocks',
   'https://pipedapi.adminforge.de',
   'https://api.piped.yt',
+  'https://pipedapi.reallyaweso.me',
+  'https://pipedapi.leptons.xyz',
 ];
 const INVIDIOUS = [
   'https://inv.tux.pizza',
   'https://invidious.nerdvpn.de',
   'https://iv.melmac.space',
+  'https://invidious.privacyredirect.com',
 ];
 
 app.get('/', async (req, res) => {
@@ -24,9 +26,7 @@ app.get('/', async (req, res) => {
 
   for (const base of PIPED) {
     try {
-      const r = await axios.get(`${base}/streams/${id}`, {
-        timeout: 8000, headers: { 'user-agent': UA },
-      });
+      const r = await axios.get(`${base}/streams/${id}`, { timeout: 8000, headers: { 'user-agent': UA } });
       const streams = (r.data?.audioStreams || [])
         .filter(s => s.mimeType && s.mimeType.includes('audio'))
         .sort((a, b) => (b.bitrate || 0) - (a.bitrate || 0));
@@ -40,9 +40,7 @@ app.get('/', async (req, res) => {
 
   for (const base of INVIDIOUS) {
     try {
-      const r = await axios.get(`${base}/api/v1/videos/${id}`, {
-        timeout: 8000, headers: { 'user-agent': UA },
-      });
+      const r = await axios.get(`${base}/api/v1/videos/${id}`, { timeout: 8000, headers: { 'user-agent': UA } });
       const streams = (r.data?.adaptiveFormats || [])
         .filter(s => s.type && s.type.includes('audio'))
         .sort((a, b) => (b.bitrate || 0) - (a.bitrate || 0));

@@ -10,12 +10,10 @@ const YT = 'https://www.googleapis.com/youtube/v3';
 
 app.get('/', async (req, res) => {
   const id = String(req.query.id || '').trim();
-  if (!/^[\w-]{11}$/.test(id) || !KEY) {
-    return res.json({ views: null, likes: null, date: null });
-  }
+  if (!/^[\w-]{11}$/.test(id) || !KEY) return res.json({ views: null, likes: null, date: null });
   try {
     const r = await axios.get(`${YT}/videos`, {
-      params: { part: 'statistics,snippet,contentDetails', id, key: KEY },
+      params: { part: 'statistics,snippet', id, key: KEY },
       timeout: 10000,
     });
     const v = (r.data.items || [])[0];

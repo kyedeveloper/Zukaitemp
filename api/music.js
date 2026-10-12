@@ -16,7 +16,8 @@ function isoToSec(d) {
 
 function mapVideo(v) {
   const sn = v.snippet || {}, cd = v.contentDetails || {}, st = v.statistics || {};
-  const cover = (sn.thumbnails && (sn.thumbnails.high || sn.thumbnails.medium || sn.thumbnails.default) || {}).url || '';
+  const tn = sn.thumbnails || {};
+  const cover = (tn.maxres && tn.maxres.url) || (tn.high && tn.high.url) || (tn.medium && tn.medium.url) || '';
   return {
     id: v.id,
     title: sn.title || '',
@@ -30,7 +31,7 @@ function mapVideo(v) {
   };
 }
 
-async function detailsByIds(ids) {
+async function details(ids) {
   if (!ids.length) return [];
   try {
     const r = await axios.get(`${YT}/videos`, {
@@ -42,70 +43,68 @@ async function detailsByIds(ids) {
 }
 
 app.get('/', async (req, res) => {
-  const kind = String(req.query.kind || '');
+  const kind = String(req.query.kind || '').trim();
   const q = String(req.query.q || '').trim().slice(0, 100);
+  const id = String(req.query.id || '').trim();
 
-  if (!KEY) return res.json({ data: [], error: 'YT_API_KEY belum diset di Vercel' });
+  if (!KEY) return res.json({ data: [], error: 'YT_API_KEY missing' });
 
   try {
-    // Chart Indonesia
-    if (kind === 'chart' || (!q && !kind)) {
+    // Chart Indonesia (default)
+    if (kind === 'chart' || (!q && !kind && !id)) {
       const r = await axios.get(`${YT}/videos`, {
         params: { part: 'snippet,contentDetails,statistics', chart: 'mostPopular', regionCode: 'ID', videoCategoryId: '10', maxResults: 50, key: KEY },
         timeout: 12000,
       });
       return res.json({ data: (r.data.items || []).map(mapVideo) });
     }
-
-    // Top video dari channel
-    if (kind === 'top' && req.query.id) {
-      const r = await axios.get(`${YT}/search`, {
-        params: { part: 'snippet', channelId: req.query.id, type: 'video', maxResults: 50, key: KEY },
+    // Chart global (US)
+    if (kind === 'chartGlobal') {
+      const r = await axios.get(`${YT}/videos`, {
+        params: { part: 'snippet,contentDetails,statistics', chart: 'mostPopular', regionCode: 'US', videoCategoryId: '10', maxResults: 50, key: KEY },
         timeout: 12000,
       });
-      const ids = (r.data.items || []).map(i => i.id.videoId).filter(Boolean);
-      const details = await detailsByIds(ids);
-      return res.json({ data: details.map(mapVideo) });
+      return res.json({ data: (r.data.items || []).map(mapVideo) });
     }
-
-    // Search artis (channel)
+    // Artis populer (channel unik dari chart)
+    if (kind === 'artists') {
+      const r = await axios.get(`${YT}/videos`, {
+        params: { part: 'snippet', chart: 'mostPopular', regionCode: 'ID', videoCategoryId: '10', maxResults: 50, key: KEY },
+        timeout: 12000,
+      });
+      const seen = new Set(), out = [];
+      (r.data.items || []).forEach(v => {
+        const ch = v.snippet.channelTitle, cid = v.snippet.channelId;
+        const tn = v.snippet.thumbnails || {};
+        if (!ch || seen.has(cid)) return;
+        seen.add(cid);
+        out.push({ id: cid, name: ch, picture_big: (tn.high && tn.high.url) || '', nb_fan: 0 });
+      });
+      return res.json({ data: out });
+    }
+    // Search artis
     if (kind === 'sartist' && q) {
       const r = await axios.get(`${YT}/search`, {
         params: { part: 'snippet', q, type: 'channel', maxResults: 20, key: KEY },
         timeout: 12000,
       });
       return res.json({
-        data: (r.data.items || []).map(i => ({
-          id: i.id.channelId,
-          name: i.snippet.title,
-          picture_big: ((i.snippet.thumbnails || {}).high || (i.snippet.thumbnails || {}).default || {}).url || '',
-          nb_fan: 0,
-        })),
+        data: (r.data.items || []).map(i => {
+          const tn = i.snippet.thumbnails || {};
+          return { id: i.id.channelId, name: i.snippet.title, picture_big: (tn.high && tn.high.url) || '', nb_fan: 0 };
+        }),
       });
     }
-
-    // Chart artis (dari chart lagu, ambil channel unik)
-    if (kind === 'artists') {
-      const r = await axios.get(`${YT}/videos`, {
-        params: { part: 'snippet', chart: 'mostPopular', regionCode: 'ID', videoCategoryId: '10', maxResults: 30, key: KEY },
+    // Top lagu dari channel
+    if (kind === 'top' && id) {
+      const r = await axios.get(`${YT}/search`, {
+        params: { part: 'snippet', channelId: id, type: 'video', maxResults: 50, key: KEY },
         timeout: 12000,
       });
-      const seen = new Set();
-      const arts = [];
-      (r.data.items || []).forEach(v => {
-        const ch = v.snippet.channelTitle;
-        if (!ch || seen.has(ch)) return;
-        seen.add(ch);
-        arts.push({
-          id: v.snippet.channelId,
-          name: ch,
-          picture_big: ((v.snippet.thumbnails || {}).high || {}).url || '',
-          nb_fan: 0,
-        });
-      });
-      return res.json({ data: arts });
+      const ids = (r.data.items || []).map(i => i.id.videoId).filter(Boolean);
+      const det = await details(ids);
+      return res.json({ data: det.map(mapVideo) });
     }
-
     // Search lagu
     if (q) {
       const r = await axios.get(`${YT}/search`, {
@@ -113,10 +112,9 @@ app.get('/', async (req, res) => {
         timeout: 12000,
       });
       const ids = (r.data.items || []).map(i => i.id.videoId).filter(Boolean);
-      const details = await detailsByIds(ids);
-      return res.json({ data: details.map(mapVideo) });
+      const det = await details(ids);
+      return res.json({ data: det.map(mapVideo) });
     }
-
     res.json({ data: [] });
   } catch (e) {
     res.status(200).json({ data: [], error: String(e.message).slice(0, 200) });
