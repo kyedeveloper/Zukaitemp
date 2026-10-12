@@ -1,14 +1,13 @@
-// Ganti semua 'require' menjadi 'import':
-import express from 'express';
-import axios from 'axios';
-import cors from 'cors';
-import cheerio from 'cheerio';
+const express = require('express');
+const axios = require('axios');
+const cors = require('cors');
+const cheerio = require('cheerio');
 
 const app = express();
-// ... sisa kode ...
+app.use(cors());
+
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
 
-// Helper fetch
 const http = (base) => axios.create({
   timeout: 15000,
   headers: {
@@ -19,7 +18,6 @@ const http = (base) => axios.create({
   },
 });
 
-// Cache sederhana
 const cache = new Map();
 function cached(key, ttl, fn) {
   const hit = cache.get(key);
@@ -34,9 +32,7 @@ function cached(key, ttl, fn) {
   });
 }
 
-/* ============================================================
-   PROVIDER 1: ANOBOY
-   ============================================================ */
+/* ===== PROVIDER 1: ANOBOY ===== */
 const ANOBOY = 'https://anoboy.be';
 const anoboyHttp = http(ANOBOY);
 
@@ -100,9 +96,48 @@ async function anoboyWatch(url) {
   return { embed, isBlogger: /blogger\.com\/video\.g/i.test(embed) };
 }
 
-/* ============================================================
-   PROVIDER 2: OTAKUDESU
-   ============================================================ */
+/* ===== PROVIDER 2: ANIMEAPI ===== */
+const ANIMEAPI = 'https://api-anime-rouge.vercel.app';
+const animeApiHttp = axios.create({
+  timeout: 15000,
+  headers: { 'user-agent': UA, 'accept': 'application/json' },
+});
+
+async function animeApiSearch(q) {
+  const r = await animeApiHttp.get(`${ANIMEAPI}/aniwatch/search`, {
+    params: { keyword: q, page: 1 },
+  });
+  return (r.data.animes || []).map(a => ({
+    id: a.id, slug: a.id, title: a.name, url: '',
+    img: a.poster, type: a.type, episodes: a.episodes,
+  }));
+}
+
+async function animeApiEpisodes(slug) {
+  const r = await animeApiHttp.get(`${ANIMEAPI}/aniwatch/episodes/${slug}`);
+  return (r.data.episodes || []).map(e => ({
+    title: 'Episode ' + e.number,
+    url: e.episodeId,
+    num: e.number,
+  }));
+}
+
+async function animeApiWatch(id) {
+  const servers = ['vidstreaming', 'gogocdn', 'streamsb'];
+  let lastErr;
+  for (const server of servers) {
+    try {
+      const r = await animeApiHttp.get(`${ANIMEAPI}/aniwatch/episode-srcs`, {
+        params: { id, category: 'sub', server },
+      });
+      const src = (r.data.sources || [])[0]?.url;
+      if (src) return { embed: src, isBlogger: false };
+    } catch (e) { lastErr = e; }
+  }
+  throw new Error('Semua server AnimeAPI gagal' + (lastErr ? ': ' + lastErr.message : ''));
+}
+
+/* ===== PROVIDER 3: OTAKUDESU ===== */
 const OTAKU = 'https://otakudesu.bid';
 const otakuHttp = http(OTAKU);
 
@@ -152,9 +187,7 @@ async function otakuWatch(url) {
   return { embed, isBlogger: /blogger\.com\/video\.g/i.test(embed) };
 }
 
-/* ============================================================
-   PROVIDER 3: SAMEHADAKU
-   ============================================================ */
+/* ===== PROVIDER 4: SAMEHADAKU ===== */
 const SAME = 'https://samehadaku.site';
 const sameHttp = http(SAME);
 
@@ -204,53 +237,7 @@ async function sameWatch(url) {
   return { embed, isBlogger: /blogger\.com\/video\.g/i.test(embed) };
 }
 
-/* ============================================================
-   PROVIDER 4: ANIMEAPI (API publik, anti-Cloudflare)
-   ============================================================ */
-const ANIMEAPI = 'https://api-anime-rouge.vercel.app';
-const animeApiHttp = axios.create({
-  timeout: 15000,
-  headers: { 'user-agent': UA, 'accept': 'application/json' },
-});
-
-async function animeApiSearch(q) {
-  const r = await animeApiHttp.get(`${ANIMEAPI}/aniwatch/search`, {
-    params: { keyword: q, page: 1 },
-  });
-  return (r.data.animes || []).map(a => ({
-    id: a.id, slug: a.id, title: a.name, url: '',
-    img: a.poster, type: a.type, episodes: a.episodes,
-  }));
-}
-
-async function animeApiEpisodes(slug) {
-  const r = await animeApiHttp.get(`${ANIMEAPI}/aniwatch/episodes/${slug}`);
-  return (r.data.episodes || []).map(e => ({
-    title: 'Episode ' + e.number,
-    url: e.episodeId,
-    num: e.number,
-  }));
-}
-
-async function animeApiWatch(id) {
-  // Coba beberapa server
-  const servers = ['vidstreaming', 'gogocdn', 'streamsb'];
-  let lastErr;
-  for (const server of servers) {
-    try {
-      const r = await animeApiHttp.get(`${ANIMEAPI}/aniwatch/episode-srcs`, {
-        params: { id, category: 'sub', server },
-      });
-      const src = (r.data.sources || [])[0]?.url;
-      if (src) return { embed: src, isBlogger: false };
-    } catch (e) { lastErr = e; }
-  }
-  throw new Error('Semua server AnimeAPI gagal' + (lastErr ? ': ' + lastErr.message : ''));
-}
-
-/* ============================================================
-   REGISTRY + AUTO-FALLBACK
-   ============================================================ */
+/* ===== REGISTRY ===== */
 const PROVIDERS = [
   { name: 'Anoboy',     search: anoboySearch,   episodes: anoboyEpisodes,   watch: anoboyWatch },
   { name: 'AnimeAPI',   search: animeApiSearch, episodes: animeApiEpisodes, watch: animeApiWatch },
@@ -274,62 +261,58 @@ async function tryAll(method, ...args) {
   throw new Error('Semua sumber gagal — ' + errors.join(' | '));
 }
 
-/* ============================================================
-   ROUTES
-   ============================================================ */
-app.get('/anime/search', async (req, res) => {
-  const q = String(req.query.q || '').trim().slice(0, 100);
-  if (!q) return res.status(400).json({ ok: false, error: 'q kosong' });
-  try {
-    const r = await cached('s:' + q, 5 * 60e3, () => tryAll('search', q));
-    res.json({ ok: true, provider: r.provider, data: r.data });
-  } catch (e) {
-    res.status(502).json({ ok: false, error: String(e.message).slice(0, 400) });
+/* ===== ROUTER — semua via ?a= ===== */
+app.get('/', async (req, res) => {
+  const a = String(req.query.a || 'health');
+
+  if (a === 'search') {
+    const q = String(req.query.q || '').trim().slice(0, 100);
+    if (!q) return res.status(400).json({ ok: false, error: 'q kosong' });
+    try {
+      const r = await cached('s:' + q, 5 * 60e3, () => tryAll('search', q));
+      return res.json({ ok: true, provider: r.provider, data: r.data });
+    } catch (e) {
+      return res.status(502).json({ ok: false, error: String(e.message).slice(0, 400) });
+    }
   }
+
+  if (a === 'episodes') {
+    const slug = String(req.query.slug || '').trim().slice(0, 200);
+    const provider = String(req.query.provider || '').trim();
+    if (!slug) return res.status(400).json({ ok: false, error: 'slug kosong' });
+    try {
+      const r = await cached('e:' + provider + ':' + slug, 10 * 60e3, async () => {
+        if (provider) {
+          const p = PROVIDERS.find(x => x.name === provider);
+          if (p) return { provider: p.name, data: await p.episodes(slug) };
+        }
+        return tryAll('episodes', slug);
+      });
+      return res.json({ ok: true, provider: r.provider, data: r.data });
+    } catch (e) {
+      return res.status(502).json({ ok: false, error: String(e.message).slice(0, 400) });
+    }
+  }
+
+  if (a === 'watch') {
+    const url = String(req.query.url || '').trim();
+    const provider = String(req.query.provider || '').trim();
+    if (!url) return res.status(400).json({ ok: false, error: 'url kosong' });
+    try {
+      const r = await cached('w:' + provider + ':' + url, 15 * 60e3, async () => {
+        if (provider) {
+          const p = PROVIDERS.find(x => x.name === provider);
+          if (p) return { provider: p.name, data: await p.watch(url) };
+        }
+        return tryAll('watch', url);
+      });
+      return res.json({ ok: true, provider: r.provider, data: r.data });
+    } catch (e) {
+      return res.status(502).json({ ok: false, error: String(e.message).slice(0, 400) });
+    }
+  }
+
+  return res.json({ ok: true, service: 'Zukai Anime API', providers: PROVIDERS.map(p => p.name) });
 });
 
-app.get('/anime/episodes', async (req, res) => {
-  const slug = String(req.query.slug || '').trim().slice(0, 200);
-  const provider = String(req.query.provider || '').trim();
-  if (!slug) return res.status(400).json({ ok: false, error: 'slug kosong' });
-  try {
-    const r = await cached('e:' + provider + ':' + slug, 10 * 60e3, async () => {
-      if (provider) {
-        const p = PROVIDERS.find(x => x.name === provider);
-        if (p) return { provider: p.name, data: await p.episodes(slug) };
-      }
-      return tryAll('episodes', slug);
-    });
-    res.json({ ok: true, provider: r.provider, data: r.data });
-  } catch (e) {
-    res.status(502).json({ ok: false, error: String(e.message).slice(0, 400) });
-  }
-});
-
-app.get('/anime/watch', async (req, res) => {
-  const url = String(req.query.url || '').trim();
-  const provider = String(req.query.provider || '').trim();
-  if (!url || !url.startsWith('http') && !url.match(/^[a-z0-9-]+$/i)) {
-    // AnimeAPI pakai ID (bukan URL), jadi izinkan juga yang bukan URL
-    if (!url) return res.status(400).json({ ok: false, error: 'url tidak valid' });
-  }
-  try {
-    const r = await cached('w:' + provider + ':' + url, 15 * 60e3, async () => {
-      if (provider) {
-        const p = PROVIDERS.find(x => x.name === provider);
-        if (p) return { provider: p.name, data: await p.watch(url) };
-      }
-      return tryAll('watch', url);
-    });
-    res.json({ ok: true, provider: r.provider, data: r.data });
-  } catch (e) {
-    res.status(502).json({ ok: false, error: String(e.message).slice(0, 400) });
-  }
-});
-
-app.get('/api/anime', (req, res) => {
-  res.json({ ok: true, service: 'Zukai Anime API', providers: PROVIDERS.map(p => p.name) });
-});
-
-// Ganti 'module.exports = app;' menjadi:
-export default app;
+module.exports = app;
