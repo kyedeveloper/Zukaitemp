@@ -254,8 +254,7 @@ const SRC={
     search:async q=>{const j=await jf('https://archive.org/advancedsearch.php?q='+encodeURIComponent(`(${q}) AND mediatype:audio`)+'&fl[]=identifier&fl[]=title&fl[]=creator&rows=20&sort[]=downloads+desc&output=json');return ((j.response&&j.response.docs)||[]).map(d=>({id:d.identifier,src:'archive',title:d.title||d.identifier,artist:[].concat(d.creator||'Internet Archive')[0],dur:0,art:'https://archive.org/services/img/'+d.identifier,url:null,full:true}))},
     home:null}
 };
-async function resolve(t){
-async function resolve(t){
+async fucntion resolve(t){
   if(t.url) return;
   
   // Menggunakan API dari bot Telegram Zukai
