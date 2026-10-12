@@ -179,6 +179,26 @@
 <audio id="au" preload="none" crossorigin="anonymous"></audio>
 
 <script>
+  /* Redirect API lama ke /api/media */
+(function(){
+  const _f = window.fetch.bind(window);
+  const map = {
+    '/api/music': '/api/media?r=music',
+    '/api/yt':    '/api/media?r=yt',
+    '/api/info':  '/api/media?r=info',
+    '/api/audio': '/api/media?r=audio',
+    '/api/anime': '/api/media?r=anime',
+  };
+  window.fetch = function(url, opt){
+    if (typeof url === 'string') {
+      for (const k in map) {
+        if (url.includes(k)) { url = url.replace(k, map[k]); break; }
+      }
+      url = url.replace(/(\?r=\w+)\?/g, '$1&');
+    }
+    return _f(url, opt);
+  };
+})();
 const ZT = window.ZT || { esc: s => String(s ?? ''), toast: m => alert(m) };
 const $=s=>document.querySelector(s),esc=ZT.esc;
 const toast=m=>{try{ZT.toast(m)}catch{console.log(m)}};
@@ -189,10 +209,10 @@ const qurl=u=>String(u||'').replace(/['"()\\\s<>]/g,c=>'%'+c.charCodeAt(0).toStr
 const bgu=a=>a?`background-image:url('${qurl(a)}'),linear-gradient(135deg,var(--p2),var(--p1))`:'';
 const bg=a=>esc(bgu(a));
 const MEDIA='/api/media';
-const MUSIC_API=MEDIA+'?r=music';
-const YT_API=MEDIA+'?r=yt';
-const AUDIO_API=MEDIA+'?r=audio';
-const INFO_API=MEDIA+'?r=info';
+const MUSIC_API='/api/music';
+const YT_API='/api/yt';
+const AUDIO_API='/api/audio';
+const INFO_API='/api/info';
 
 let tab='home', qtxt='', results=null, HOME={}, SECS=[], art=null;
 let queue=[], idx=-1, shuf=false, rep=0;
