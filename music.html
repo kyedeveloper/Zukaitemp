@@ -224,9 +224,9 @@ const SRC={
   ytm:{name:'YouTube',
     search:async q=>((await DZ('kind=search&q='+encodeURIComponent(q))).data||[]).filter(x=>x.title).map(x=>mapY(x)),
     homes:[
-      {k:'ytar',kind:'artist',title:'🎤 Artis populer',sub:'ketuk untuk lihat lagunya',f:artistChart},
-      {k:'ytid',rank:1,title:'🇮🇩 Top Indonesia',sub:'lagu utuh',f:async()=>(await appleRaw()).filter(x=>x.trackName).map(mapAY)},
-      {k:'ytwd',rank:1,title:'🌍 Chart Dunia',sub:'lagu utuh',f:async()=>((await DZ('kind=chart')).data||[]).filter(x=>x.title).map(x=>mapY(x))}
+  {k:'ytar',kind:'artist',title:'🎤 Artis populer',sub:'ketuk untuk lihat lagunya',f:async()=>((await DZ('kind=artists')).data||[]).map(a=>({id:a.id,name:a.name,img:a.picture_big||a.picture_medium||'',fans:a.nb_fan||0}))},
+  {k:'ytid',rank:1,title:'🇮🇩 Top Indonesia',sub:'lagu utuh',f:async()=>((await DZ('kind=chart')).data||[]).filter(x=>x.title).map(x=>mapY(x))},
+  {k:'ytwd',rank:1,title:'🌍 Chart Dunia',sub:'lagu utuh',f:async()=>((await DZ('kind=chartGlobal')).data||[]).filter(x=>x.title).map(x=>mapY(x))}
     ]},
   audius:{name:'Audius',
     search:async q=>(await aj(`/tracks/search?query=${encodeURIComponent(q)}&limit=40`)).filter(t=>t.id).map(mapA),
