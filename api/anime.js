@@ -5,8 +5,7 @@ const cheerio = require('cheerio');
 
 const app = express();
 app.use(cors());
-
-const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
+const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36';
 
 const http = (base) => axios.create({
   timeout: 15000,
@@ -32,7 +31,7 @@ function cached(key, ttl, fn) {
   });
 }
 
-/* ===== PROVIDER 1: ANOBOY ===== */
+/* ===== ANOBOY ===== */
 const ANOBOY = 'https://anoboy.be';
 const anoboyHttp = http(ANOBOY);
 
@@ -79,159 +78,104 @@ async function anoboyWatch(url) {
   const r = await anoboyHttp.get(url);
   const $ = cheerio.load(r.data);
   let embed = $('#pembed iframe').attr('src');
-  if (!embed) {
-    $('iframe').each((_, el) => {
-      const s = $(el).attr('src') || '';
-      if (/blogger\.com\/video\.g/i.test(s)) { embed = s; return false; }
-    });
-  }
-  if (!embed) {
-    $('iframe').each((_, el) => {
-      const s = $(el).attr('src') || '';
-      if (/(embed|player|video)/i.test(s) && !/google|facebook|twitter|disqus/i.test(s)) { embed = s; return false; }
-    });
-  }
+  if (!embed) $('iframe').each((_, el) => { const s = $(el).attr('src') || ''; if (/blogger\.com\/video\.g/i.test(s)) { embed = s; return false; } });
+  if (!embed) $('iframe').each((_, el) => { const s = $(el).attr('src') || ''; if (/(embed|player|video)/i.test(s) && !/google|facebook|twitter|disqus/i.test(s)) { embed = s; return false; } });
   if (!embed) throw new Error('Embed tidak ditemukan');
   if (embed.startsWith('//')) embed = 'https:' + embed;
   return { embed, isBlogger: /blogger\.com\/video\.g/i.test(embed) };
 }
 
-/* ===== PROVIDER 2: ANIMEAPI ===== */
+/* ===== ANIMEAPI ===== */
 const ANIMEAPI = 'https://api-anime-rouge.vercel.app';
-const animeApiHttp = axios.create({
-  timeout: 15000,
-  headers: { 'user-agent': UA, 'accept': 'application/json' },
-});
+const animeApiHttp = axios.create({ timeout: 15000, headers: { 'user-agent': UA, 'accept': 'application/json' } });
 
 async function animeApiSearch(q) {
-  const r = await animeApiHttp.get(`${ANIMEAPI}/aniwatch/search`, {
-    params: { keyword: q, page: 1 },
-  });
-  return (r.data.animes || []).map(a => ({
-    id: a.id, slug: a.id, title: a.name, url: '',
-    img: a.poster, type: a.type, episodes: a.episodes,
-  }));
+  const r = await animeApiHttp.get(`${ANIMEAPI}/aniwatch/search`, { params: { keyword: q, page: 1 } });
+  return (r.data.animes || []).map(a => ({ id: a.id, slug: a.id, title: a.name, url: '' }));
 }
-
 async function animeApiEpisodes(slug) {
   const r = await animeApiHttp.get(`${ANIMEAPI}/aniwatch/episodes/${slug}`);
-  return (r.data.episodes || []).map(e => ({
-    title: 'Episode ' + e.number,
-    url: e.episodeId,
-    num: e.number,
-  }));
+  return (r.data.episodes || []).map(e => ({ title: 'Episode ' + e.number, url: e.episodeId, num: e.number }));
 }
-
 async function animeApiWatch(id) {
-  const servers = ['vidstreaming', 'gogocdn', 'streamsb'];
-  let lastErr;
-  for (const server of servers) {
+  for (const server of ['vidstreaming', 'gogocdn', 'streamsb']) {
     try {
-      const r = await animeApiHttp.get(`${ANIMEAPI}/aniwatch/episode-srcs`, {
-        params: { id, category: 'sub', server },
-      });
+      const r = await animeApiHttp.get(`${ANIMEAPI}/aniwatch/episode-srcs`, { params: { id, category: 'sub', server } });
       const src = (r.data.sources || [])[0]?.url;
       if (src) return { embed: src, isBlogger: false };
-    } catch (e) { lastErr = e; }
+    } catch {}
   }
-  throw new Error('Semua server AnimeAPI gagal' + (lastErr ? ': ' + lastErr.message : ''));
+  throw new Error('AnimeAPI gagal');
 }
 
-/* ===== PROVIDER 3: OTAKUDESU ===== */
+/* ===== OTAKUDESU ===== */
 const OTAKU = 'https://otakudesu.bid';
 const otakuHttp = http(OTAKU);
-
 async function otakuSearch(q) {
   const r = await otakuHttp.get(`${OTAKU}/?s=${encodeURIComponent(q)}&post_type=anime`);
   const $ = cheerio.load(r.data);
   const out = [];
   $('.chivsrc li').each((_, el) => {
-    const a = $(el).find('h2 a');
-    const href = a.attr('href') || '';
-    const title = a.text().trim();
+    const a = $(el).find('h2 a'); const href = a.attr('href') || ''; const title = a.text().trim();
     if (!href || !title) return;
-    const slug = href.replace(/\/$/, '').split('/').pop();
-    out.push({ id: slug, slug, title, url: href });
+    out.push({ id: href.replace(/\/$/, '').split('/').pop(), slug: href.replace(/\/$/, '').split('/').pop(), title, url: href });
   });
   return out;
 }
-
 async function otakuEpisodes(slug) {
   const r = await otakuHttp.get(`${OTAKU}/anime/${slug}/`);
   const $ = cheerio.load(r.data);
   const eps = [];
   $('.episodelist ul li a').each((_, el) => {
-    const href = $(el).attr('href') || '';
-    const text = $(el).text().trim();
+    const href = $(el).attr('href') || ''; const text = $(el).text().trim();
     const m = /episode\s*(\d+)/i.exec(text) || /(\d+)/.exec(text);
     eps.push({ title: text, url: href, num: m ? +m[1] : null });
   });
-  if (eps.length > 1 && eps.filter(e => e.num != null).length >= eps.length * 0.5) {
-    eps.sort((a, b) => (a.num ?? 1e9) - (b.num ?? 1e9));
-  }
+  if (eps.length > 1 && eps.filter(e => e.num != null).length >= eps.length * 0.5) eps.sort((a, b) => (a.num ?? 1e9) - (b.num ?? 1e9));
   return eps;
 }
-
 async function otakuWatch(url) {
   const r = await otakuHttp.get(url);
   const $ = cheerio.load(r.data);
   let embed = null;
-  $('iframe').each((_, el) => {
-    const s = $(el).attr('src') || '';
-    if (/blogger\.com\/video\.g|desustream|embed/i.test(s) && !/google|facebook|twitter|disqus/i.test(s)) {
-      embed = s; return false;
-    }
-  });
+  $('iframe').each((_, el) => { const s = $(el).attr('src') || ''; if (/blogger\.com\/video\.g|desustream|embed/i.test(s) && !/google|facebook|twitter|disqus/i.test(s)) { embed = s; return false; } });
   if (!embed) throw new Error('Embed tidak ditemukan');
   if (embed.startsWith('//')) embed = 'https:' + embed;
   return { embed, isBlogger: /blogger\.com\/video\.g/i.test(embed) };
 }
 
-/* ===== PROVIDER 4: SAMEHADAKU ===== */
+/* ===== SAMEHADAKU ===== */
 const SAME = 'https://samehadaku.site';
 const sameHttp = http(SAME);
-
 async function sameSearch(q) {
   const r = await sameHttp.get(`${SAME}/?s=${encodeURIComponent(q)}`);
   const $ = cheerio.load(r.data);
   const out = [];
   $('.animpost .animepost, .bs .bsx a').each((_, el) => {
     const a = $(el).is('a') ? $(el) : $(el).find('a').first();
-    const href = a.attr('href') || '';
-    const title = a.find('.tt, .title').text().trim() || a.attr('title') || '';
+    const href = a.attr('href') || ''; const title = a.find('.tt, .title').text().trim() || a.attr('title') || '';
     if (!href || !title) return;
-    const slug = href.replace(/\/$/, '').split('/').pop();
-    out.push({ id: slug, slug, title, url: href });
+    out.push({ id: href.replace(/\/$/, '').split('/').pop(), slug: href.replace(/\/$/, '').split('/').pop(), title, url: href });
   });
   return out;
 }
-
 async function sameEpisodes(slug) {
   const r = await sameHttp.get(`${SAME}/anime/${slug}/`);
   const $ = cheerio.load(r.data);
   const eps = [];
   $('#episodelist ul li a, .lstepsiode ul li a').each((_, el) => {
-    const href = $(el).attr('href') || '';
-    const text = $(el).text().trim();
+    const href = $(el).attr('href') || ''; const text = $(el).text().trim();
     const m = /episode\s*(\d+)/i.exec(text) || /(\d+)/.exec(text);
     eps.push({ title: text, url: href, num: m ? +m[1] : null });
   });
-  if (eps.length > 1 && eps.filter(e => e.num != null).length >= eps.length * 0.5) {
-    eps.sort((a, b) => (a.num ?? 1e9) - (b.num ?? 1e9));
-  }
+  if (eps.length > 1 && eps.filter(e => e.num != null).length >= eps.length * 0.5) eps.sort((a, b) => (a.num ?? 1e9) - (b.num ?? 1e9));
   return eps;
 }
-
 async function sameWatch(url) {
   const r = await sameHttp.get(url);
   const $ = cheerio.load(r.data);
   let embed = null;
-  $('.player-embed iframe, iframe').each((_, el) => {
-    const s = $(el).attr('src') || '';
-    if (/blogger|embed|player/i.test(s) && !/google|facebook|twitter|disqus/i.test(s)) {
-      embed = s; return false;
-    }
-  });
+  $('.player-embed iframe, iframe').each((_, el) => { const s = $(el).attr('src') || ''; if (/blogger|embed|player/i.test(s) && !/google|facebook|twitter|disqus/i.test(s)) { embed = s; return false; } });
   if (!embed) throw new Error('Embed tidak ditemukan');
   if (embed.startsWith('//')) embed = 'https:' + embed;
   return { embed, isBlogger: /blogger\.com\/video\.g/i.test(embed) };
@@ -254,64 +198,46 @@ async function tryAll(method, ...args) {
         return { provider: p.name, data: result };
       }
       errors.push(`${p.name}: kosong`);
-    } catch (e) {
-      errors.push(`${p.name}: ${e.message}`);
-    }
+    } catch (e) { errors.push(`${p.name}: ${e.message}`); }
   }
   throw new Error('Semua sumber gagal — ' + errors.join(' | '));
 }
 
-/* ===== ROUTER — semua via ?a= ===== */
+/* ===== ROUTER via ?a= ===== */
 app.get('/', async (req, res) => {
   const a = String(req.query.a || 'health');
-
   if (a === 'search') {
     const q = String(req.query.q || '').trim().slice(0, 100);
     if (!q) return res.status(400).json({ ok: false, error: 'q kosong' });
     try {
       const r = await cached('s:' + q, 5 * 60e3, () => tryAll('search', q));
       return res.json({ ok: true, provider: r.provider, data: r.data });
-    } catch (e) {
-      return res.status(502).json({ ok: false, error: String(e.message).slice(0, 400) });
-    }
+    } catch (e) { return res.status(502).json({ ok: false, error: String(e.message).slice(0, 400) }); }
   }
-
   if (a === 'episodes') {
     const slug = String(req.query.slug || '').trim().slice(0, 200);
     const provider = String(req.query.provider || '').trim();
     if (!slug) return res.status(400).json({ ok: false, error: 'slug kosong' });
     try {
       const r = await cached('e:' + provider + ':' + slug, 10 * 60e3, async () => {
-        if (provider) {
-          const p = PROVIDERS.find(x => x.name === provider);
-          if (p) return { provider: p.name, data: await p.episodes(slug) };
-        }
+        if (provider) { const p = PROVIDERS.find(x => x.name === provider); if (p) return { provider: p.name, data: await p.episodes(slug) }; }
         return tryAll('episodes', slug);
       });
       return res.json({ ok: true, provider: r.provider, data: r.data });
-    } catch (e) {
-      return res.status(502).json({ ok: false, error: String(e.message).slice(0, 400) });
-    }
+    } catch (e) { return res.status(502).json({ ok: false, error: String(e.message).slice(0, 400) }); }
   }
-
   if (a === 'watch') {
     const url = String(req.query.url || '').trim();
     const provider = String(req.query.provider || '').trim();
     if (!url) return res.status(400).json({ ok: false, error: 'url kosong' });
     try {
       const r = await cached('w:' + provider + ':' + url, 15 * 60e3, async () => {
-        if (provider) {
-          const p = PROVIDERS.find(x => x.name === provider);
-          if (p) return { provider: p.name, data: await p.watch(url) };
-        }
+        if (provider) { const p = PROVIDERS.find(x => x.name === provider); if (p) return { provider: p.name, data: await p.watch(url) }; }
         return tryAll('watch', url);
       });
       return res.json({ ok: true, provider: r.provider, data: r.data });
-    } catch (e) {
-      return res.status(502).json({ ok: false, error: String(e.message).slice(0, 400) });
-    }
+    } catch (e) { return res.status(502).json({ ok: false, error: String(e.message).slice(0, 400) }); }
   }
-
   return res.json({ ok: true, service: 'Zukai Anime API', providers: PROVIDERS.map(p => p.name) });
 });
 

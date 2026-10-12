@@ -1,25 +1,35 @@
-// Proxy Deezer (API-nya tidak mengizinkan CORS dari browser).
-const UA = 'Mozilla/5.0 (compatible; ZukaiTemp)';
-module.exports = async (req, res) => {
-  res.setHeader('cache-control', 's-maxage=300, stale-while-revalidate=600');
+const express = require('express');
+const axios = require('axios');
+const cors = require('cors');
+
+const app = express();
+app.use(cors());
+
+const http = axios.create({
+  timeout: 12000,
+  headers: { 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+});
+
+app.get('/', async (req, res) => {
+  const kind = String(req.query.kind || '');
+  const q = String(req.query.q || '').trim().slice(0, 100);
+  const id = String(req.query.id || '').trim();
+
+  let url;
+  if (kind === 'sartist') url = `https://api.deezer.com/search/artist?q=${encodeURIComponent(q)}&limit=20`;
+  else if (kind === 'artists') url = `https://api.deezer.com/chart/0/artists?limit=50`;
+  else if (kind === 'chart') url = `https://api.deezer.com/chart/0/tracks?limit=50`;
+  else if (kind === 'top') url = `https://api.deezer.com/artist/${encodeURIComponent(id)}/top?limit=50`;
+  else if (q) url = `https://api.deezer.com/search/track?q=${encodeURIComponent(q)}&limit=40`;
+  else return res.json({ data: [] });
+
   try {
-    const q = String(req.query.q || '').slice(0, 100);
-    const kind = String(req.query.kind || '');
-    const id = String(req.query.id || '');
-    let url;
-    if (kind === 'chart') url = 'https://api.deezer.com/chart/0/tracks?limit=100';
-    else if (kind === 'artists') url = 'https://api.deezer.com/chart/0/artists?limit=50';
-    else if (kind === 'sartist') url = 'https://api.deezer.com/search/artist?limit=12&q=' + encodeURIComponent(q);
-    else if (kind === 'top') {
-      if (!/^\d{1,12}$/.test(id)) return res.status(400).json({ error: 'id tidak valid' });
-      url = 'https://api.deezer.com/artist/' + id + '/top?limit=50';
-    } else url = 'https://api.deezer.com/search?limit=50&q=' + encodeURIComponent(q);
-    const r = await fetch(url, { headers: { 'user-agent': UA }, signal: AbortSignal.timeout(7000) });
-    const j = await r.json();
-    if (j && j.error) res.setHeader('cache-control', 'no-store');
-    res.status(r.ok ? 200 : r.status).json(j);
+    const r = await http.get(url);
+    res.setHeader('cache-control', 'public, s-maxage=300');
+    res.json(r.data);
   } catch (e) {
-    res.setHeader('cache-control', 'no-store');
-    res.status(502).json({ error: e.message });
+    res.status(502).json({ data: [], error: String(e.message).slice(0, 200) });
   }
-};
+});
+
+module.exports = app;
