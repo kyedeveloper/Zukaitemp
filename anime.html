@@ -112,14 +112,11 @@
 </div>
 <section id="det" data-noswipe aria-label="Detail anime"></section>
 <script>
-/* ===== Fallback ZT ===== */
 const ZT = window.ZT || { esc: s => String(s ?? ''), toast: m => alert(m) };
 const $=s=>document.querySelector(s),esc=ZT.esc,O=location.origin;
-/* ===== Config API ===== */
 const ANIME_API = 'https://zukaitemp.vercel.app/api/anime';
 
 const rd=(k,d)=>{try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch{return d}},wr=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
-/* ---------- AniList + cache ---------- */
 const CP='za_c:',hs=s=>{let h=5381;for(let i=0;i<s.length;i++)h=(h*33^s.charCodeAt(i))>>>0;return h.toString(36)};
 const cget=k=>{const v=rd(CP+k,null);return v&&v.e>Date.now()?v.d:null};
 function cset(k,d,ttl){const put=()=>localStorage.setItem(CP+k,JSON.stringify({e:Date.now()+ttl,d}));try{put()}catch{Object.keys(localStorage).filter(x=>x.startsWith(CP)).slice(0,25).forEach(x=>localStorage.removeItem(x));try{put()}catch{}}}
@@ -214,7 +211,7 @@ function rDaftar(){
    +(dsub==='fav'?(fav.length?fav.map(f=>mini(f,'Ketuk untuk membuka')).join(''):'<div class="empty"><i>💝</i>Belum ada favorit.<br>Ketuk ❤ di halaman detail anime.</div>')
      :(hist.length?hist.map(h=>mini(h,(h.ep||'')+(h.pt>10?' · lanjut '+clk(h.pt):''))).join('')+'<button class="x-back" style="margin-top:6px" data-clrh>🗑 Hapus riwayat</button>':'<div class="empty"><i>📺</i>Belum ada riwayat tontonan.</div>'));
 }
-/* ---------- Detail + pemutar ---------- */
+/* ---------- Detail ---------- */
 let D=null,EPS=[],CAND=[],YTP=null,YTR=null,CUR={idx:-1,vid:''},saveT=0;
 const isFav=id=>rd('za_fav',[]).some(f=>f.id===id);
 function toggleFav(){
@@ -257,8 +254,7 @@ async function loadEps(){
     const r1=await fetch(`${ANIME_API}?a=search&q=${encodeURIComponent(title)}`);
     const j1=await r1.json();
     if(!j1.ok||!j1.data?.length)return paintEps(null,'Anime ini tidak ditemukan di semua sumber.');
-    const anime=j1.data[0];
-    const prov=j1.provider;
+    const anime=j1.data[0], prov=j1.provider;
     const r2=await fetch(`${ANIME_API}?a=episodes&slug=${encodeURIComponent(anime.slug)}&provider=${encodeURIComponent(prov)}`);
     const j2=await r2.json();
     if(!box())return;
@@ -315,7 +311,7 @@ async function playEp(i,fromHist){
     }catch(err){ZT.toast('Gagal memuat video: '+err.message);$('#now').textContent='Gagal memuat video.'}
     return;
   }
-  playVid(e.v,{idx:i,start:fromHist?0:0});
+  playVid(e.v,{idx:i});
 }
 function saveProgAnoboy(i){
   if(!D||i<0)return;const e=EPS[i];const h=rd('za_hist',{});
