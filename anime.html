@@ -262,16 +262,17 @@ async function loadEps(){
   try{
     const r1=await fetch(`${ANIME_API}/anime/search?q=${encodeURIComponent(title)}`);
     const j1=await r1.json();
-    if(!j1.ok||!j1.data?.length)return paintEps(null,'Anime ini tidak ditemukan di Anoboy.');
+    if(!j1.ok||!j1.data?.length)return paintEps(null,'Anime ini tidak ditemukan di semua sumber.');
     const anime=j1.data[0];
-    const r2=await fetch(`${ANIME_API}/anime/episodes?slug=${encodeURIComponent(anime.slug)}`);
+    const prov=j1.provider;   // ← simpan provider yang berhasil
+    const r2=await fetch(`${ANIME_API}/anime/episodes?slug=${encodeURIComponent(anime.slug)}&provider=${encodeURIComponent(prov)}`);
     const j2=await r2.json();
     if(!box())return;
-    if(!j2.ok||!j2.data?.length)return paintEps(null,'Episode tidak ditemukan di halaman Anoboy.');
-    EPS=j2.data.map((ep,i)=>({n:ep.num!=null?ep.num:i+1,t:ep.title,v:ep.url,isAnoboy:true}));
+    if(!j2.ok||!j2.data?.length)return paintEps(null,'Episode tidak ditemukan di '+prov+'.');
+    EPS=j2.data.map((ep,i)=>({n:ep.num!=null?ep.num:i+1,t:ep.title,v:ep.url,isAnoboy:true,provider:j2.provider}));
     CAND=[];
-    paintEps({ch:'Anoboy',title:anime.title});
-  }catch(e){if(box())paintEps(null,'Gagal memuat dari Anoboy: '+e.message)}
+    paintEps({ch:j2.provider,title:anime.title});
+  }catch(e){if(box())paintEps(null,'Gagal memuat: '+e.message)}
 }
 function paintEps(src,msg){
   const b=$('#epbox');if(!b||!D)return;const h=rd('za_hist',{})[D.id];
@@ -304,7 +305,8 @@ async function playEp(i,fromHist){
     if(YTP){try{YTP.destroy()}catch{}YTP=null}
     $('#now').textContent='Memuat episode...';
     try{
-      const r=await fetch(`${ANIME_API}/anime/watch?url=${encodeURIComponent(e.v)}`);
+      // kirim provider biar gak salah sumber
+      const r=await fetch(`${ANIME_API}/anime/watch?url=${encodeURIComponent(e.v)}&provider=${encodeURIComponent(e.provider||'')}`);
       const j=await r.json();
       if(!j.ok)throw new Error(j.error||'gagal ambil embed');
       const pl=$('#pl');const old=pl.querySelector('#anoboy-if');if(old)old.remove();
@@ -314,14 +316,14 @@ async function playEp(i,fromHist){
       fr.setAttribute('referrerpolicy','no-referrer');
       fr.style.cssText='position:absolute;inset:0;width:100%;height:100%;border:0';
       pl.appendChild(fr);
-      $('#now').textContent='Memutar: '+(e.t||('Episode '+(i+1)));
+      $('#now').textContent='Memutar: '+(e.t||('Episode '+(i+1)))+' · '+j.provider;
       document.querySelectorAll('#eps button').forEach(b=>b.classList.toggle('on',+b.dataset.ep===i));
       saveProgAnoboy(i);
     }catch(err){ZT.toast('Gagal memuat video: '+err.message);$('#now').textContent='Gagal memuat video.'}
     return;
   }
   playVid(e.v,{idx:i,start:fromHist?h&&h.vid===e.v?h.pt:0:0});
-}
+                         }
 function saveProgAnoboy(i){
   if(!D||i<0)return;const e=EPS[i];const h=rd('za_hist',{});
   h[D.id]={id:D.id,title:name(D),cover:D.coverImage.large,ep:'Ep '+(e.n||i+1),idx:i,vid:e.v,pt:0,ts:Date.now()};
