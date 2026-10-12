@@ -438,15 +438,41 @@ async function play(i,list){
   try{
     await resolve(t);if(tok!==ptok)return;
     if(t.src==='ytm'){
+      let vid=null;
+      try{vid=(await vids(t))[0]}catch{}
+      if(tok!==ptok)return;
+      if(vid){
+        const ok=await tryAudioPlay(vid,tok);
+        if(tok!==ptok)return;
+        if(ok){errs=0;return}
+      }
       const r=await playYT(t,tok);if(tok!==ptok)return;
       if(!r){
         if(!t.pv)throw new Error('lagu ini tidak ditemukan di YouTube');
-        au.src=t.pv;await au.play();toast('Lagu utuh belum ketemu, memutar cuplikan 30 detik');
+        au.src=t.pv;await au.play();toast('Cuplikan 30 detik');
       }
     }else{au.src=t.url;await au.play()}
     errs=0;
   }catch(e){if(tok!==ptok)return;loading=false;setPlayUI(false);errs++;toast('Gagal memutar: '+(e.message||'lagu tidak bisa dimuat'));if(errs<4)setTimeout(()=>tok===ptok&&next(true),700)}
 }
+
+/* Coba play audio stream YouTube lewat /api/audio (background play aman) */
+function tryAudioPlay(vid,tok){
+  return new Promise(resolve=>{
+    const test=new Audio();
+    let done=false;
+    const fin=ok=>{if(done)return;done=true;test.src='';resolve(ok)};
+    test.onloadedmetadata=()=>{
+      if(tok!==ptok)return fin(false);
+      au.src='/api/audio?id='+vid;
+      au.play().then(()=>fin(true)).catch(()=>fin(false));
+    };
+    test.onerror=()=>fin(false);
+    test.preload='metadata';
+    test.src='/api/audio?id='+vid;
+    setTimeout(()=>fin(false),5000);
+  });
+        }
 function next(auto){
   if(!queue.length)return;
   if(auto&&slEnd){slEnd=false;want=false;syncSl();setPlayUI(false);toast('Timer tidur selesai 🌙');return}
@@ -673,6 +699,20 @@ function ytImport(d){
   tab='pl';plOpen=pls.indexOf(p);art=null;view();
 }
 addEventListener('message',e=>{if(e.origin!==location.origin||!e.data)return;const c=e.data.cmd;if(c==='toggle')tog();else if(c==='next')next();else if(c==='prev')prev();else if(c==='stop'){want=false;E.pause()}else if(c==='closeNp')closeNp();else if(c==='ytImport')ytImport(e.data.data)});
+/* Auto switch ke audio mode saat HP dikunci → background play */
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) return;
+  if (!useYT) return;
+  const t = cur();
+  if (!t || t.src !== 'ytm') return;
+  const vid = yt.ids[yt.i];
+  if (!vid) return;
+  try { yt.p && yt.p.pauseVideo && yt.p.pauseVideo(); } catch {}
+  useYT = false;
+  au.src = '/api/audio?id=' + vid;
+  au.play().catch(() => {});
+  try { setPlayUI(true); } catch {}
+});
 view();loadHome();
 addEventListener('pointerdown',()=>ytReady().catch(()=>{}),{once:true});
 </script></body></html>
