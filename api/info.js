@@ -4,56 +4,33 @@ const cors = require('cors');
 
 const app = express();
 app.use(cors());
-const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36';
 
-const PIPED = [
-  'https://pipedapi.kavin.rocks',
-  'https://pipedapi.adminforge.de',
-  'https://api.piped.yt',
-];
-const INVIDIOUS = [
-  'https://inv.tux.pizza',
-  'https://invidious.nerdvpn.de',
-  'https://iv.melmac.space',
-];
+const KEY = process.env.YT_API_KEY || '';
+const YT = 'https://www.googleapis.com/youtube/v3';
 
 app.get('/', async (req, res) => {
   const id = String(req.query.id || '').trim();
-  if (!/^[\w-]{11}$/.test(id)) return res.json({ views: null, likes: null, date: null });
-
-  for (const base of PIPED) {
-    try {
-      const r = await axios.get(`${base}/streams/${id}`, {
-        timeout: 8000, headers: { 'user-agent': UA },
-      });
-      const d = r.data;
-      return res.json({
-        views: d.views ?? null,
-        likes: d.likes ?? null,
-        date: d.uploadDate || null,
-        title: d.title || null,
-        duration: d.duration || null,
-      });
-    } catch {}
+  if (!/^[\w-]{11}$/.test(id) || !KEY) {
+    return res.json({ views: null, likes: null, date: null });
   }
-
-  for (const base of INVIDIOUS) {
-    try {
-      const r = await axios.get(`${base}/api/v1/videos/${id}`, {
-        timeout: 8000, headers: { 'user-agent': UA },
-      });
-      const d = r.data;
-      return res.json({
-        views: d.viewCount ?? null,
-        likes: d.likeCount ?? null,
-        date: d.published ? String(d.published).slice(0, 10) : null,
-        title: d.title || null,
-        duration: d.lengthSeconds || null,
-      });
-    } catch {}
+  try {
+    const r = await axios.get(`${YT}/videos`, {
+      params: { part: 'statistics,snippet,contentDetails', id, key: KEY },
+      timeout: 10000,
+    });
+    const v = (r.data.items || [])[0];
+    if (!v) return res.json({ views: null, likes: null, date: null });
+    const st = v.statistics || {}, sn = v.snippet || {};
+    res.setHeader('cache-control', 'public, s-maxage=1800');
+    res.json({
+      views: +(st.viewCount || 0),
+      likes: +(st.likeCount || 0),
+      date: (sn.publishedAt || '').slice(0, 10),
+      title: sn.title,
+    });
+  } catch {
+    res.json({ views: null, likes: null, date: null });
   }
-
-  res.json({ views: null, likes: null, date: null });
 });
 
 module.exports = app;
