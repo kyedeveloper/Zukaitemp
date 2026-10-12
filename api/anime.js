@@ -1,231 +1,288 @@
-// Mencari episode anime di kanal YouTube resmi (yang menayangkan gratis dan sah).
-//   GET ?t=judul1|judul2|...   cari playlist yang cocok + daftar episode playlist terbaik
-//   GET ?pl=PLAYLIST_ID        daftar episode dari playlist tertentu
-//   GET ?s=judul               cari manual video di kanal resmi (boros kuota: 100 unit per kanal)
-//
-// Variabel Vercel:
-//   YT_API_KEY       (WAJIB)  – API key YouTube Data v3
-//   ANIME_CHANNELS   (opsional, default di bawah) – daftar handle / channel ID dipisah koma.
-//                      Contoh: "@MuseIndonesia,@MuseAsia,@AniOneAsia,UCxxxxxxxxxxxxxxxxxxxxxx"
-//
-// Catatan kuota YouTube API harian gratis = 10.000 unit.
-//   channels.list    : 1 unit  (cached 7 hari)
-//   playlists.list   : 1 unit / 50 playlist / halaman (cached 24 jam)
-//   playlistItems.list: 1 unit / 50 video / halaman
-//   search.list      : 100 unit (!) – hanya dipakai untuk tombol "Cari di kanal resmi".
+const express = require('express');
+const axios = require('axios');
+const cors = require('cors');
+const cheerio = require('cheerio');
 
-const KEY = process.env.YT_API_KEY || '';
-const HANDLES = (
-  process.env.ANIME_CHANNELS ||
-  '@MuseIndonesia,@MuseAsia,@AniOneAsia,@AniOneIndonesia,@bilibiliAnime'
-).split(',').map(s => s.trim()).filter(Boolean);
+const app = express();
+app.use(cors());
 
-const getJ = async (u, ms = 6000) => {
-  const r = await fetch(u, { headers: { accept: 'application/json' }, signal: AbortSignal.timeout(ms) });
-  const j = await r.json().catch(() => ({}));
-  if (!r.ok) throw new Error((j.error && j.error.message) || 'HTTP ' + r.status);
-  return j;
-};
-const yt = (path, p) =>
-  getJ('https://www.googleapis.com/youtube/v3/' + path + '?' + new URLSearchParams({ ...p, key: KEY }));
+const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
 
-/* ---------- Channel resolution (cached 7 hari) ---------- */
-let chCache = { at: 0, list: null };
-async function channels() {
-  if (chCache.list && Date.now() - chCache.at < 7 * 24 * 3600e3) return chCache.list;
-  const out = [];
-  for (const h of HANDLES) {
+// Helper fetch dengan header lengkap
+const http = (base) => axios.create({
+  timeout: 15000,
+  headers: {
+    'user-agent': UA,
+    'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'accept-language': 'id-ID,id;q=0.9,en;q=0.8',
+    'referer': base + '/',
+  },
+});
+
+// Cache sederhana
+const cache = new Map();
+function cached(key, ttl, fn) {
+  const hit = cache.get(key);
+  if (hit && Date.now() - hit.at < ttl) return Promise.resolve(hit.v);
+  return fn().then(v => {
+    cache.set(key, { at: Date.now(), v });
+    if (cache.size > 300) {
+      const now = Date.now();
+      for (const [k, v] of cache) if (now - v.at > 10 * 60e3) cache.delete(k);
+    }
+    return v;
+  });
+}
+
+/* ============================================================
+   PROVIDER 1: ANOBOY  (WordPress REST API)
+   ============================================================ */
+const ANOBOY = 'https://anoboy.be';
+const anoboyHttp = http(ANOBOY);
+
+async function anoboySearch(q) {
+  for (const type of ['anime', 'posts']) {
     try {
-      const p = /^UC[\w-]{20,}$/.test(h)
-        ? { part: 'snippet', id: h }
-        : { part: 'snippet', forHandle: h.startsWith('@') ? h : '@' + h };
-      const c = ((await yt('channels', p)).items || [])[0];
-      if (c) out.push({ id: c.id, title: c.snippet.title });
-    } catch { /* skip kalau handle salah */ }
-  }
-  if (out.length) chCache = { at: Date.now(), list: out };
-  return out;
-}
-
-/* ---------- Playlists (cached 24 jam) ---------- */
-const plCache = new Map();
-async function playlists(ch) {
-  const hit = plCache.get(ch.id);
-  if (hit && Date.now() - hit.at < 24 * 3600e3) return hit.list;
-  let tok = '', list = [];
-  for (let i = 0; i < 10; i++) {
-    const j = await yt('playlists', {
-      part: 'snippet,contentDetails',
-      channelId: ch.id,
-      maxResults: '50',
-      ...(tok ? { pageToken: tok } : {}),
-    });
-    (j.items || []).forEach(p =>
-      list.push({ id: p.id, title: p.snippet.title, count: p.contentDetails.itemCount, ch: ch.title })
-    );
-    tok = j.nextPageToken;
-    if (!tok) break;
-  }
-  plCache.set(ch.id, { at: Date.now(), list });
-  return list;
-}
-
-/* ---------- Pencocokan judul ---------- */
-const STOP = new Set([
-  'full','episode','episodes','eps','ep','sub','subtitle','subbed','indo','indonesia','indonesian',
-  'english','eng','official','playlist','anime','season','bahasa','resmi','all','musim','dub',
-  'dubbed','hd','free','gratis','streaming','nonton','multi','the','tv','simulcast','premiere','part',
-]);
-const ORD = {
-  '1st':'1', first:'1', '2nd':'2', second:'2', ii:'2',
-  '3rd':'3', third:'3', iii:'3', '4th':'4', fourth:'4', iv:'4',
-  '5th':'5', fifth:'5', '6th':'6', '7th':'7', '8th':'8',
-};
-const norm = s =>
-  String(s || '')
-    .toLowerCase()
-    .normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
-    .replace(/[\[\(【「『].*?[\]\)】」』]/g, ' ')
-    .replace(/[^a-z0-9]+/g, ' ')
-    .trim();
-const toks = s =>
-  norm(s).split(' ').map(t => ORD[t] || t).filter(t => t && !STOP.has(t));
-
-function score(titles, plTitle) {
-  const B = new Set(toks(plTitle));
-  if (!B.size) return 0;
-  let best = 0;
-  for (const t of titles) {
-    const A = new Set(toks(t));
-    if (!A.size) continue;
-    let inter = 0;
-    A.forEach(x => { if (B.has(x)) inter++; });
-    const cover = inter / A.size;
-    const jac = inter / (A.size + B.size - inter);
-    // butuh minimal 60% judul muncul di judul playlist
-    if (cover >= 0.6) {
-      const sc = 0.55 * cover + 0.45 * jac;
-      if (sc > best) best = sc;
-    }
-  }
-  return best;
-}
-
-/* ---------- Deteksi nomor episode ---------- */
-const epNum = t => {
-  if (!t) return null;
-  const s = String(t);
-  // "Episode 1" / "Ep 1" / "EP.1" / "E1"
-  let m = /\b(?:episode|eps?|e)\s*[.#:]?\s*(\d{1,4})\b/i.exec(s);
-  if (m) return +m[1];
-  // "[01]" / "(01)" / "【01】"
-  m = /[\[\(【]\s*(\d{1,4})\s*[\]\)】]/.exec(s);
-  if (m) return +m[1];
-  return null;
-};
-
-/* ---------- Episodes dari playlist ---------- */
-async function episodes(pid) {
-  let tok = '', out = [];
-  for (let i = 0; i < 4; i++) {
-    const j = await yt('playlistItems', {
-      part: 'snippet,contentDetails',
-      playlistId: pid,
-      maxResults: '50',
-      ...(tok ? { pageToken: tok } : {}),
-    });
-    for (const it of j.items || []) {
-      const sn = it.snippet || {};
-      const v = (it.contentDetails || {}).videoId || (sn.resourceId || {}).videoId;
-      if (!v || /^(private|deleted) video$/i.test(sn.title || '')) continue;
-      out.push({
-        v,
-        t: sn.title || '',
-        th: ((sn.thumbnails || {}).medium || (sn.thumbnails || {}).default || {}).url || '',
-        n: epNum(sn.title),
+      const r = await anoboyHttp.get(`${ANOBOY}/wp-json/wp/v2/${type}`, {
+        params: { search: q, per_page: 12, _fields: 'id,title,slug,link' },
+        headers: { accept: 'application/json' },
       });
-    }
-    tok = j.nextPageToken;
-    if (!tok) break;
+      if (Array.isArray(r.data) && r.data.length) {
+        return r.data.map(x => ({
+          id: x.id, slug: x.slug,
+          title: (x.title && (x.title.rendered || x.title)) || '',
+          url: x.link,
+        }));
+      }
+    } catch {}
   }
-  // urutkan hanya kalau mayoritas episode punya nomor yang valid
-  if (out.length > 1 && out.filter(e => e.n != null).length >= out.length * 0.7) {
-    out.sort((a, b) => (a.n ?? 1e9) - (b.n ?? 1e9));
+  return [];
+}
+
+async function anoboyEpisodes(slug) {
+  const r = await anoboyHttp.get(`${ANOBOY}/anime/${slug}/`);
+  const $ = cheerio.load(r.data);
+  const eps = [], seen = new Set();
+  $('a').each((_, el) => {
+    const href = $(el).attr('href') || '';
+    const text = $(el).text().replace(/\s+/g, ' ').trim();
+    if (!href || (!/episode|ep[-_\s]?\d/i.test(href) && !/episode|ep[-_\s]?\d/i.test(text))) return;
+    const full = href.startsWith('http') ? href : (href.startsWith('/') ? ANOBOY + href : `${ANOBOY}/${href}`);
+    if (!full.includes('anoboy') || seen.has(full)) return;
+    seen.add(full);
+    const m = /(?:episode|ep|eps)\s*[-_.]?\s*(\d+)/i.exec(text) || /(\d+)/.exec(text);
+    eps.push({ title: text || 'Episode', url: full, num: m ? +m[1] : null });
+  });
+  if (eps.length > 1 && eps.filter(e => e.num != null).length >= eps.length * 0.5) {
+    eps.sort((a, b) => (a.num ?? 1e9) - (b.num ?? 1e9));
   }
+  return eps;
+}
+
+async function anoboyWatch(url) {
+  const r = await anoboyHttp.get(url);
+  const $ = cheerio.load(r.data);
+  let embed = $('#pembed iframe').attr('src');
+  if (!embed) {
+    $('iframe').each((_, el) => {
+      const s = $(el).attr('src') || '';
+      if (/blogger\.com\/video\.g/i.test(s)) { embed = s; return false; }
+    });
+  }
+  if (!embed) {
+    $('iframe').each((_, el) => {
+      const s = $(el).attr('src') || '';
+      if (/(embed|player|video)/i.test(s) && !/google|facebook|twitter|disqus/i.test(s)) { embed = s; return false; }
+    });
+  }
+  if (!embed) throw new Error('Embed tidak ditemukan');
+  if (embed.startsWith('//')) embed = 'https:' + embed;
+  return { embed, isBlogger: /blogger\.com\/video\.g/i.test(embed) };
+}
+
+/* ============================================================
+   PROVIDER 2: OTAKUDESU  (scrape)
+   ============================================================ */
+const OTAKU = 'https://otakudesu.bid';
+const otakuHttp = http(OTAKU);
+
+async function otakuSearch(q) {
+  const r = await otakuHttp.get(`${OTAKU}/?s=${encodeURIComponent(q)}&post_type=anime`);
+  const $ = cheerio.load(r.data);
+  const out = [];
+  $('.chivsrc li').each((_, el) => {
+    const a = $(el).find('h2 a');
+    const href = a.attr('href') || '';
+    const title = a.text().trim();
+    if (!href || !title) return;
+    const slug = href.replace(/\/$/, '').split('/').pop();
+    out.push({ id: slug, slug, title, url: href });
+  });
   return out;
 }
 
-/* ---------- Handler ---------- */
-module.exports = async (req, res) => {
-  const ok = (j, cache) => {
-    res.setHeader('cache-control', cache || 'public, s-maxage=3600, stale-while-revalidate=86400');
-    return res.status(200).json(j);
-  };
-  if (!KEY) {
-    res.setHeader('cache-control', 'no-store');
-    return res.status(200).json({ ok: false, reason: 'no_key' });
+async function otakuEpisodes(slug) {
+  const r = await otakuHttp.get(`${OTAKU}/anime/${slug}/`);
+  const $ = cheerio.load(r.data);
+  const eps = [];
+  $('.episodelist ul li a').each((_, el) => {
+    const href = $(el).attr('href') || '';
+    const text = $(el).text().trim();
+    const m = /episode\s*(\d+)/i.exec(text) || /(\d+)/.exec(text);
+    eps.push({ title: text, url: href, num: m ? +m[1] : null });
+  });
+  if (eps.length > 1 && eps.filter(e => e.num != null).length >= eps.length * 0.5) {
+    eps.sort((a, b) => (a.num ?? 1e9) - (b.num ?? 1e9));
   }
+  return eps;
+}
+
+async function otakuWatch(url) {
+  const r = await otakuHttp.get(url);
+  const $ = cheerio.load(r.data);
+  let embed = null;
+  $('iframe').each((_, el) => {
+    const s = $(el).attr('src') || '';
+    if (/blogger\.com\/video\.g|desustream|embed/i.test(s) && !/google|facebook|twitter|disqus/i.test(s)) {
+      embed = s; return false;
+    }
+  });
+  if (!embed) throw new Error('Embed tidak ditemukan');
+  if (embed.startsWith('//')) embed = 'https:' + embed;
+  return { embed, isBlogger: /blogger\.com\/video\.g/i.test(embed) };
+}
+
+/* ============================================================
+   PROVIDER 3: SAMEHADAKU  (scrape)
+   ============================================================ */
+const SAME = 'https://samehadaku.site';
+const sameHttp = http(SAME);
+
+async function sameSearch(q) {
+  const r = await sameHttp.get(`${SAME}/?s=${encodeURIComponent(q)}`);
+  const $ = cheerio.load(r.data);
+  const out = [];
+  $('.animpost .animepost, .bs .bsx a').each((_, el) => {
+    const a = $(el).is('a') ? $(el) : $(el).find('a').first();
+    const href = a.attr('href') || '';
+    const title = a.find('.tt, .title').text().trim() || a.attr('title') || '';
+    if (!href || !title) return;
+    const slug = href.replace(/\/$/, '').split('/').pop();
+    out.push({ id: slug, slug, title, url: href });
+  });
+  return out;
+}
+
+async function sameEpisodes(slug) {
+  const r = await sameHttp.get(`${SAME}/anime/${slug}/`);
+  const $ = cheerio.load(r.data);
+  const eps = [];
+  $('#episodelist ul li a, .lstepsiode ul li a').each((_, el) => {
+    const href = $(el).attr('href') || '';
+    const text = $(el).text().trim();
+    const m = /episode\s*(\d+)/i.exec(text) || /(\d+)/.exec(text);
+    eps.push({ title: text, url: href, num: m ? +m[1] : null });
+  });
+  if (eps.length > 1 && eps.filter(e => e.num != null).length >= eps.length * 0.5) {
+    eps.sort((a, b) => (a.num ?? 1e9) - (b.num ?? 1e9));
+  }
+  return eps;
+}
+
+async function sameWatch(url) {
+  const r = await sameHttp.get(url);
+  const $ = cheerio.load(r.data);
+  let embed = null;
+  $('.player-embed iframe, iframe').each((_, el) => {
+    const s = $(el).attr('src') || '';
+    if (/blogger|embed|player/i.test(s) && !/google|facebook|twitter|disqus/i.test(s)) {
+      embed = s; return false;
+    }
+  });
+  if (!embed) throw new Error('Embed tidak ditemukan');
+  if (embed.startsWith('//')) embed = 'https:' + embed;
+  return { embed, isBlogger: /blogger\.com\/video\.g/i.test(embed) };
+}
+
+/* ============================================================
+   REGISTRY + AUTO-FALLBACK
+   ============================================================ */
+const PROVIDERS = [
+  { name: 'Anoboy',     search: anoboySearch, episodes: anoboyEpisodes, watch: anoboyWatch },
+  { name: 'Otakudesu',  search: otakuSearch,  episodes: otakuEpisodes,  watch: otakuWatch  },
+  { name: 'Samehadaku', search: sameSearch,   episodes: sameEpisodes,   watch: sameWatch   },
+];
+
+// Coba tiap provider berurutan, stop kalau salah satu berhasil
+async function tryAll(method, ...args) {
+  const errors = [];
+  for (const p of PROVIDERS) {
+    try {
+      const result = await p[method](...args);
+      if (result && (Array.isArray(result) ? result.length : true)) {
+        return { provider: p.name, data: result };
+      }
+      errors.push(`${p.name}: kosong`);
+    } catch (e) {
+      errors.push(`${p.name}: ${e.message}`);
+    }
+  }
+  throw new Error('Semua sumber gagal — ' + errors.join(' | '));
+}
+
+/* ============================================================
+   ROUTES
+   ============================================================ */
+app.get('/anime/search', async (req, res) => {
+  const q = String(req.query.q || '').trim().slice(0, 100);
+  if (!q) return res.status(400).json({ ok: false, error: 'q kosong' });
   try {
-    // 1) Ambil episode dari playlist ID tertentu
-    const pl = String(req.query.pl || '');
-    if (pl) {
-      if (!/^[\w-]{10,60}$/.test(pl)) return res.status(400).json({ ok: false, reason: 'bad_id' });
-      return ok({ ok: true, eps: await episodes(pl) });
-    }
-
-    const chs = await channels();
-    if (!chs.length) {
-      res.setHeader('cache-control', 'no-store');
-      return res.status(200).json({ ok: false, reason: 'no_channel' });
-    }
-
-    // 2) Pencarian manual (pakai YouTube Search – mahal, hanya untuk fallback)
-    const s = String(req.query.s || '').trim().slice(0, 100);
-    if (s) {
-      const vids = [];
-      for (const c of chs) {
-        try {
-          const j = await yt('search', {
-            part: 'snippet',
-            channelId: c.id,
-            q: s,
-            type: 'video',
-            maxResults: '15',
-          });
-          (j.items || []).forEach(i =>
-            vids.push({
-              v: i.id.videoId,
-              t: i.snippet.title,
-              th: ((i.snippet.thumbnails || {}).medium || {}).url || '',
-              n: epNum(i.snippet.title),
-              ch: c.title,
-            })
-          );
-        } catch { /* skip channel yang gagal */ }
-      }
-      // urutkan supaya rapi
-      if (vids.filter(v => v.n != null).length >= vids.length * 0.6) {
-        vids.sort((a, b) => (a.n ?? 1e9) - (b.n ?? 1e9));
-      }
-      return ok({ ok: true, eps: vids }, 'public, s-maxage=86400, stale-while-revalidate=86400');
-    }
-
-    // 3) Cari playlist yang cocok dengan judul anime
-    const titles = String(req.query.t || '')
-      .split('|').map(x => x.trim()).filter(Boolean).slice(0, 6);
-    if (!titles.length) return res.status(400).json({ ok: false, reason: 'no_title' });
-
-    const all = (await Promise.all(chs.map(c => playlists(c).catch(() => [])))).flat();
-    const cands = all
-      .map(p => ({ ...p, score: score(titles, p.title) }))
-      .filter(p => p.score >= 0.55 && p.count > 0)
-      .sort((a, b) => b.score - a.score || b.count - a.count)
-      .slice(0, 4);
-
-    const eps = cands.length ? await episodes(cands[0].id) : [];
-    return ok({ ok: true, cands, eps, channels: chs.map(c => c.title) });
+    const r = await cached('s:' + q, 5 * 60e3, () => tryAll('search', q));
+    res.json({ ok: true, provider: r.provider, data: r.data });
   } catch (e) {
-    res.setHeader('cache-control', 'no-store');
-    res.status(502).json({ ok: false, reason: 'upstream', message: String(e.message || e).slice(0, 160) });
+    res.status(502).json({ ok: false, error: String(e.message).slice(0, 300) });
   }
-};
+});
+
+app.get('/anime/episodes', async (req, res) => {
+  const slug = String(req.query.slug || '').trim().slice(0, 200);
+  const provider = String(req.query.provider || '').trim();
+  if (!slug) return res.status(400).json({ ok: false, error: 'slug kosong' });
+  try {
+    const r = await cached('e:' + provider + ':' + slug, 10 * 60e3, async () => {
+      // Kalau provider dikasih tahu, langsung pakai itu
+      if (provider) {
+        const p = PROVIDERS.find(x => x.name === provider);
+        if (p) return { provider: p.name, data: await p.episodes(slug) };
+      }
+      return tryAll('episodes', slug);
+    });
+    res.json({ ok: true, provider: r.provider, data: r.data });
+  } catch (e) {
+    res.status(502).json({ ok: false, error: String(e.message).slice(0, 300) });
+  }
+});
+
+app.get('/anime/watch', async (req, res) => {
+  const url = String(req.query.url || '').trim();
+  const provider = String(req.query.provider || '').trim();
+  if (!url || !url.startsWith('http')) return res.status(400).json({ ok: false, error: 'url tidak valid' });
+  try {
+    const r = await cached('w:' + provider + ':' + url, 15 * 60e3, async () => {
+      if (provider) {
+        const p = PROVIDERS.find(x => x.name === provider);
+        if (p) return { provider: p.name, data: await p.watch(url) };
+      }
+      return tryAll('watch', url);
+    });
+    res.json({ ok: true, provider: r.provider, data: r.data });
+  } catch (e) {
+    res.status(502).json({ ok: false, error: String(e.message).slice(0, 300) });
+  }
+});
+
+app.get('/api/anime', (req, res) => {
+  res.json({ ok: true, service: 'Zukai Anime API', providers: PROVIDERS.map(p => p.name) });
+});
+
+module.exports = app;
