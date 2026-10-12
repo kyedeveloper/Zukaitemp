@@ -114,7 +114,7 @@
 <script>
 const ZT = window.ZT || { esc: s => String(s ?? ''), toast: m => alert(m) };
 const $=s=>document.querySelector(s),esc=ZT.esc,O=location.origin;
-const ANIME_API = 'https://zukaitemp.vercel.app/api/anime';
+const ANIME_API = 'https://zukaitemp.vercel.app/api/media?r=anime';
 
 const rd=(k,d)=>{try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch{return d}},wr=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
 const CP='za_c:',hs=s=>{let h=5381;for(let i=0;i<s.length;i++)h=(h*33^s.charCodeAt(i))>>>0;return h.toString(36)};
