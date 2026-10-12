@@ -188,10 +188,11 @@ const fmt=s=>{s=Math.max(0,s|0);return (s/60|0)+':'+String(s%60).padStart(2,'0')
 const qurl=u=>String(u||'').replace(/['"()\\\s<>]/g,c=>'%'+c.charCodeAt(0).toString(16).padStart(2,'0'));
 const bgu=a=>a?`background-image:url('${qurl(a)}'),linear-gradient(135deg,var(--p2),var(--p1))`:'';
 const bg=a=>esc(bgu(a));
-const MUSIC_API='/api/music';
-const YT_API='/api/yt';
-const AUDIO_API='/api/audio';
-const INFO_API='/api/info';
+const MEDIA='/api/media';
+const MUSIC_API=MEDIA+'?r=music';
+const YT_API=MEDIA+'?r=yt';
+const AUDIO_API=MEDIA+'?r=audio';
+const INFO_API=MEDIA+'?r=info';
 
 let tab='home', qtxt='', results=null, HOME={}, SECS=[], art=null;
 let queue=[], idx=-1, shuf=false, rep=0;
