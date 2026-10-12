@@ -1,11 +1,11 @@
-const express = require('express');
-const axios = require('axios');
-const cors = require('cors');
-const cheerio = require('cheerio');
+// Ganti semua 'require' menjadi 'import':
+import express from 'express';
+import axios from 'axios';
+import cors from 'cors';
+import cheerio from 'cheerio';
 
 const app = express();
-app.use(cors());
-
+// ... sisa kode ...
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
 
 // Helper fetch
@@ -331,4 +331,5 @@ app.get('/api/anime', (req, res) => {
   res.json({ ok: true, service: 'Zukai Anime API', providers: PROVIDERS.map(p => p.name) });
 });
 
-module.exports = app;
+// Ganti 'module.exports = app;' menjadi:
+export default app;
