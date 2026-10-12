@@ -22,22 +22,20 @@
 .m-tabs button.on{background:linear-gradient(135deg,var(--p1),color-mix(in srgb,var(--p1) 55%,var(--g2)));color:#fff;box-shadow:0 8px 16px -8px var(--p1)}
 .m-info{padding:14px 16px;border-radius:20px;margin-bottom:18px;font:600 .8rem/1.5 Nunito;color:var(--mut)}
 .m-info b{color:var(--ink);font-weight:600}
-/* track */
-.m-track{display:flex;align-items:center;gap:12px;width:100%;border:0;text-align:left;color:var(--ink);padding:10px 12px;border-radius:22px;margin-bottom:8px;background:var(--w);transition:transform .2s,box-shadow .2s}
-.m-track:active{transform:scale(.98)}
+.m-track{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px;border-radius:22px;margin-bottom:8px;background:var(--w);transition:transform .2s,box-shadow .2s}
 .m-track.on{background:linear-gradient(135deg,color-mix(in srgb,var(--p1) 15%,var(--w)),color-mix(in srgb,var(--g2) 15%,var(--w)));box-shadow:0 8px 20px -12px var(--p1)}
-.m-track .th{flex:none;width:52px;height:52px;border-radius:14px;background:var(--p3) center/cover;position:relative;overflow:hidden}
+.m-track .th{flex:none;width:52px;height:52px;border:0;border-radius:14px;background:var(--p3) center/cover;position:relative;overflow:hidden;cursor:pointer}
 .m-track.on .th::after{content:"♪";position:absolute;inset:0;display:grid;place-items:center;font-size:1.4rem;color:#fff;background:linear-gradient(135deg,rgba(255,77,148,.75),rgba(200,80,220,.75))}
-.m-track .tx{flex:1;min-width:0}
+.m-track .tx{flex:1;min-width:0;cursor:pointer;text-align:left;border:0;background:none;color:var(--ink);padding:0}
 .m-track .tx b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font:600 .9rem/1.25 Fredoka;color:var(--ink)}
 .m-track .tx span{display:block;font:700 .72rem Nunito;color:var(--mut);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .m-track .dur{font:700 .74rem Nunito;color:var(--mut);flex:none}
+.m-track .cl{border:0;background:none;color:var(--mut);width:36px;height:36px;font-size:1rem;flex:none;cursor:pointer}
 .m-empty{text-align:center;padding:50px 20px;color:var(--mut);font-weight:700}
 .m-empty i{display:block;font-style:normal;font-size:2.6rem;margin-bottom:10px}
 .m-skel{display:flex;align-items:center;gap:12px;padding:10px 12px;margin-bottom:8px;border-radius:22px;background:var(--w)}
 .m-skel .a{width:52px;height:52px;border-radius:14px}
 .m-skel .b{flex:1;height:36px;border-radius:10px}
-/* player */
 .m-player{position:fixed;left:0;right:0;bottom:calc(var(--sb) + 78px);z-index:40;padding:12px 16px 14px;background:color-mix(in srgb,var(--p4) 88%,transparent);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);border-top:1px solid color-mix(in srgb,var(--p1) 22%,transparent);box-shadow:0 -14px 40px -20px rgba(0,0,0,.35);transform:translateY(140%);transition:transform .4s cubic-bezier(.22,1,.36,1)}
 .m-player.on{transform:none}
 .m-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
@@ -51,7 +49,7 @@
 .m-bar .dot{position:absolute;top:50%;transform:translate(-50%,-50%);width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.35);pointer-events:none}
 .m-tm{display:flex;justify-content:space-between;font:700 .68rem Nunito;color:var(--mut);margin-bottom:8px}
 .m-ctrl{display:flex;align-items:center;justify-content:center;gap:14px}
-.m-ctrl button{border:0;background:none;color:var(--ink);width:44px;height:44px;font-size:1.2rem;border-radius:50%;transition:transform .15s;display:grid;place-items:center}
+.m-ctrl button{border:0;background:none;color:var(--ink);width:44px;height:44px;font-size:1.2rem;border-radius:50%;transition:transform .15s;display:grid;place-items:center;cursor:pointer}
 .m-ctrl button:active{transform:scale(.9)}
 .m-ctrl button.main{width:56px;height:56px;font-size:1.7rem;color:#fff;background:linear-gradient(135deg,var(--p1),var(--g2));box-shadow:0 10px 26px -10px var(--p1)}
 .m-ctrl button.on{color:var(--p1)}
@@ -70,7 +68,7 @@
     <button id="qx" hidden aria-label="Hapus">✕</button>
   </div>
   <nav class="m-tabs glass" id="tabs">
-    <button data-t="home" class="on">Jelajah</button>
+    <button data-t="home" class="on">Cari</button>
     <button data-t="fav">❤ Favorit</button>
     <button data-t="hist">🕘 Riwayat</button>
   </nav>
@@ -97,7 +95,6 @@
 <audio id="au" preload="metadata" crossorigin="anonymous"></audio>
 
 <script>
-/* ============ Fallback + helper ============ */
 const ZT = window.ZT || { esc: s => String(s ?? ''), toast: m => alert(m) };
 const $ = s => document.querySelector(s), esc = ZT.esc;
 const toast = m => { try { ZT.toast(m); } catch { console.log(m); } };
@@ -112,7 +109,6 @@ let RESULTS = [], FAV = rd('zm_fav', []), HIST = rd('zm_hist', []);
 let CUR = { idx: -1, list: [], track: null, repeat: 'none', shuffle: false };
 const au = $('#au'), pg = $('#pg'), player = $('#player');
 
-/* ============ Render ============ */
 function render(){
   document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.t === tab));
   if (tab === 'home') renderHome();
@@ -127,18 +123,18 @@ function renderHome(){
     return;
   }
   pg.innerHTML = `<div class="m-info glass">${RESULTS.length} hasil ditemukan</div>` +
-    RESULTS.map((t,i) => tHTML(t,i,false)).join('');
+    RESULTS.map((t,i) => tHTML(t,i,CUR.track && CUR.track.id === t.id, 'home')).join('');
 }
 
 function renderFav(){
   if (!FAV.length) { pg.innerHTML = `<div class="m-empty"><i>💝</i>Belum ada favorit.<br>Tekan ❤ di lagu yang kamu suka.</div>`; return; }
-  pg.innerHTML = FAV.map((t,i) => tHTML(t,i,false,'fav')).join('');
+  pg.innerHTML = FAV.map((t,i) => tHTML(t,i,CUR.track && CUR.track.id === t.id,'fav')).join('');
 }
 
 function renderHist(){
   if (!HIST.length) { pg.innerHTML = `<div class="m-empty"><i>🕘</i>Belum ada riwayat.</div>`; return; }
   pg.innerHTML = `<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button class="x-back" id="hclr" style="margin:0;min-height:34px;padding:0 14px;font-size:.78rem">🗑 Hapus riwayat</button></div>` +
-    HIST.map((t,i) => tHTML(t,i,false,'hist')).join('');
+    HIST.map((t,i) => tHTML(t,i,CUR.track && CUR.track.id === t.id,'hist')).join('');
 }
 
 function tHTML(t, i, isCur, mode){
@@ -147,17 +143,16 @@ function tHTML(t, i, isCur, mode){
   const dur = t.duration ? `<span class="dur">${fmt(t.duration)}</span>` : '';
   const isFav = FAV.some(x => x.id === t.id);
   return `<div class="m-track${on}">
-    <button class="th" data-play="${i}" data-mode="${mode||'home'}" style="background-image:url('${thumb}')" aria-label="Putar"></button>
-    <div class="tx" data-play="${i}" data-mode="${mode||'home'}">
+    <button class="th" data-play="${i}" data-mode="${mode}" style="background-image:url('${thumb}')" aria-label="Putar"></button>
+    <button class="tx" data-play="${i}" data-mode="${mode}">
       <b>${esc(t.title)}</b>
       <span>${esc(t.artist || 'YouTube')}</span>
-    </div>
+    </button>
     ${dur}
-    <button class="cl" data-fav="${i}" data-mode="${mode||'home'}" style="font-size:.95rem;${isFav?'color:var(--p1)':''}" aria-label="Favorit">${isFav?'❤':'🤍'}</button>
+    <button class="cl" data-fav="${i}" data-mode="${mode}" style="${isFav?'color:var(--p1)':''}" aria-label="Favorit">${isFav?'❤':'🤍'}</button>
   </div>`;
 }
 
-/* ============ Search ============ */
 let qT = 0;
 $('#q').addEventListener('input', e => {
   const v = e.target.value.trim();
@@ -172,7 +167,7 @@ async function doSearch(q){
   document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.t === 'home'));
   pg.innerHTML = Array(5).fill('<div class="m-skel"><div class="a sk"></div><div class="b sk"></div></div>').join('');
   try {
-    const r = await fetch(`${MUSIC_API}/search?q=${encodeURIComponent(q)}`);
+    const r = await fetch(`${MUSIC_API}?a=search&q=${encodeURIComponent(q)}`);
     const j = await r.json();
     if (!j.ok || !j.data?.length) {
       pg.innerHTML = `<div class="m-empty"><i>🔍</i>Tidak ada hasil untuk "${esc(q)}"<br><small>Server mungkin sibuk, coba lagi.</small></div>`;
@@ -185,7 +180,6 @@ async function doSearch(q){
   }
 }
 
-/* ============ Play ============ */
 async function playTrack(t, list, idx){
   if (!t) return;
   CUR.track = t; CUR.list = list; CUR.idx = idx;
@@ -195,11 +189,9 @@ async function playTrack(t, list, idx){
   $('#pth').src = t.thumbnail || '';
   $('#ppl').innerHTML = '<span class="sp"></span>';
 
-  // Bangun URL stream
   let url = t.url;
   if (!url) {
-    // id di-encode biar bot:xxx juga jalan
-    url = `${MUSIC_API}/stream?id=${encodeURIComponent(t.id)}`;
+    url = `${MUSIC_API}?a=stream&id=${encodeURIComponent(t.id)}`;
   }
   au.src = url;
   au.load();
@@ -209,24 +201,20 @@ async function playTrack(t, list, idx){
   } catch (err) {
     toast('Gagal putar: ' + (err.message || 'coba lagu lain'));
     $('#ppl').textContent = '▶';
-    // fallback: coba /stream biasa
     if (!t.url) {
-      try { au.src = `${MUSIC_API}/stream?id=${encodeURIComponent(t.id)}`; await au.play(); $('#ppl').textContent = '⏸'; } catch {}
+      try { au.src = `${MUSIC_API}?a=stream&id=${encodeURIComponent(t.id)}`; await au.play(); $('#ppl').textContent = '⏸'; } catch {}
     }
   }
 
   updateMS(t);
 
-  // Simpan riwayat
   HIST = HIST.filter(x => x.id !== t.id);
   HIST.unshift({ ...t, url: t.url });
   if (HIST.length > 50) HIST = HIST.slice(0, 50);
   wr('zm_hist', HIST);
 
-  // Highlight
   document.querySelectorAll('.m-track').forEach(el => el.classList.remove('on'));
-  const cur = document.querySelector(`.m-track .th[data-play="${idx}"][data-mode="${list === RESULTS ? 'home' : list === FAV ? 'fav' : 'hist'}"]`);
-  if (cur) cur.closest('.m-track').classList.add('on');
+  render();
 }
 
 function updateMS(t){
@@ -265,7 +253,6 @@ function playPrev(){
   playTrack(CUR.list[i], CUR.list, i);
 }
 
-/* ============ Audio events ============ */
 au.addEventListener('timeupdate', () => {
   const c = au.currentTime, d = au.duration || 0;
   $('#pcu').textContent = fmt(c);
@@ -285,7 +272,6 @@ au.addEventListener('error', () => {
   $('#ppl').textContent = '▶';
 });
 
-/* ============ Kontrol ============ */
 $('#ppl').onclick = () => { if (!CUR.track) return; au.paused ? au.play() : au.pause(); };
 $('#pnx').onclick = playNext;
 $('#ppv').onclick = playPrev;
@@ -306,7 +292,6 @@ $('#pcl').onclick = () => {
   CUR = { idx: -1, list: [], track: null, repeat: CUR.repeat, shuffle: CUR.shuffle };
 };
 
-/* Seek */
 const bar = $('#pbar');
 let dragging = false;
 function seek(e){
@@ -322,7 +307,6 @@ bar.addEventListener('touchstart', e => { dragging = true; seek(e); }, {passive:
 bar.addEventListener('touchmove', e => { if (dragging) seek(e); }, {passive:true});
 bar.addEventListener('touchend', () => dragging = false);
 
-/* ============ Klik track ============ */
 pg.addEventListener('click', e => {
   const playBtn = e.target.closest('[data-play]');
   if (playBtn) {
@@ -354,12 +338,10 @@ pg.addEventListener('click', e => {
   if (e.target.id === 'hclr') { HIST = []; wr('zm_hist', HIST); renderHist(); }
 });
 
-/* ============ Tab ============ */
 document.querySelectorAll('#tabs button').forEach(b => {
   b.onclick = () => { tab = b.dataset.t; render(); };
 });
 
-/* ============ Anime interop ============ */
 addEventListener('message', e => {
   if (e.data && e.data.animePlay) { try { au.pause(); } catch {} }
 });

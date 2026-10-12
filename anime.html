@@ -105,25 +105,19 @@
 </head>
 <body>
 <div class="wrap">
-  <header class="x-top hd"><h1>Anime</h1><p>Katalog lengkap, nonton lewat kanal YouTube resmi</p></header>
+  <header class="x-top hd"><h1>Anime</h1><p>Katalog lengkap · nonton episode via Anoboy & partner</p></header>
   <div class="x-search glass"><span aria-hidden="true">🔍</span><input id="q" type="search" placeholder="Cari judul anime…" autocomplete="off" enterkeyhint="search"><button id="qx" hidden aria-label="Hapus">✕</button></div>
   <nav class="x-seg glass" id="seg"><button data-t="home" class="on">Jelajah</button><button data-t="jadwal">Jadwal</button><button data-t="daftar">Daftarku</button></nav>
   <main id="pg"></main>
 </div>
 <section id="det" data-noswipe aria-label="Detail anime"></section>
 <script>
-// --- DEBUG: tampilkan error langsung di halaman (sementara) ---
-window.addEventListener('error', e => {
-  const d = document.createElement('div');
-  d.style.cssText = 'position:fixed;left:10px;right:10px;bottom:80px;z-index:9999;background:#c00;color:#fff;padding:12px;border-radius:12px;font:600 12px monospace;white-space:pre-wrap;max-height:40vh;overflow:auto';
-  d.textContent = '❌ ' + (e.message || 'error') + '\n@ ' + (e.filename || '') + ':' + e.lineno;
-  document.body.appendChild(d);
-});
-// Fallback ZT kalau core.js telat/gagal
+/* ===== Fallback ZT ===== */
 const ZT = window.ZT || { esc: s => String(s ?? ''), toast: m => alert(m) };
 const $=s=>document.querySelector(s),esc=ZT.esc,O=location.origin;
-// Ganti dengan URL panel Pterodactyl kamu (tanpa trailing slash)
+/* ===== Config API ===== */
 const ANIME_API = 'https://zukaitemp.vercel.app/api/anime';
+
 const rd=(k,d)=>{try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch{return d}},wr=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
 /* ---------- AniList + cache ---------- */
 const CP='za_c:',hs=s=>{let h=5381;for(let i=0;i<s.length;i++)h=(h*33^s.charCodeAt(i))>>>0;return h.toString(36)};
@@ -157,7 +151,7 @@ const plain=t=>String(t||'').replace(/<br\s*\/?>/gi,' ').replace(/<[^>]+>/g,'').
 const bgu=u=>u?`background-image:url('${esc(u)}')`:'';
 const card=m=>`<button class="x-card" data-open="${m.id}"><div class="x-poster" style="${bgu(m.coverImage&&m.coverImage.large)}">${m.averageScore?`<i class="x-sc">★ ${(m.averageScore/10).toFixed(1)}</i>`:''}${m.nextAiringEpisode&&m.nextAiringEpisode.episode>1?`<i class="x-ep">Ep ${m.nextAiringEpisode.episode-1}</i>`:m.format==='MOVIE'?'<i class="x-ep">Film</i>':''}</div><b>${esc(name(m))}</b><span>${FMT[m.format]||''}${m.episodes?' · '+m.episodes+' eps':''}</span></button>`;
 const fail=(e,fn)=>`<div class="x-err glass"><b>Gagal memuat</b>${esc(e.message||e)}<br><button class="x-btn" style="margin-top:12px" data-retry="${fn}">Coba lagi</button></div>`;
-/* ---------- tampilan utama ---------- */
+/* ---------- Tampilan utama ---------- */
 let tab='home',LV=null,dsub='fav',heroT=0;
 const pg=$('#pg');
 function setTab(t){tab=t;LV=null;document.querySelectorAll('#seg button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));render()}
@@ -192,7 +186,7 @@ async function loadMore(){
 let qT=0;
 $('#q').addEventListener('input',e=>{const v=e.target.value.trim();$('#qx').hidden=!v;clearTimeout(qT);qT=setTimeout(()=>{if(v.length>1)openList({title:'Hasil “'+v+'”',v:{search:v,sort:['SEARCH_MATCH']}});else if(!v&&LV&&LV.v.search){LV=null;render()}},450)});
 $('#qx').onclick=()=>{$('#q').value='';$('#qx').hidden=true;if(LV&&LV.v.search){LV=null;render()}};
-/* ---------- jadwal ---------- */
+/* ---------- Jadwal ---------- */
 let schDay=-1,schPop=true,SCHED=null;
 const hm=t=>new Date(t*1000).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',hour12:false}).replace('.',':');
 const clk=s=>{s=Math.floor(s);const h=Math.floor(s/3600),m=Math.floor(s%3600/60),c=s%60;return(h?h+':'+String(m).padStart(2,'0'):m)+':'+String(c).padStart(2,'0')};
@@ -212,7 +206,7 @@ function paintSched(){
   const it=SCHED.items.filter(x=>!x.media.isAdult&&x.media.countryOfOrigin==='JP'&&(!schPop||x.media.popularity>2500)&&(new Date(x.airingAt*1000).getDay()+6)%7===schDay).sort((a,b)=>a.airingAt-b.airingAt);
   el.innerHTML=it.length?it.map(x=>{const m=x.media,d=x.airingAt-now;return`<button class="x-row glass" data-open="${m.id}"><div class="tm">${hm(x.airingAt)}</div><div class="ph" style="${bgu(m.coverImage.large)}"></div><div class="tx"><b>${esc(name(m))}</b><span>Episode ${x.episode} · ${FMT[m.format]||''}</span></div><span class="x-chip ${d<0?'ok':''}">${d<0?'Sudah tayang':d<3600?Math.max(1,Math.round(d/60))+' mnt lagi':Math.floor(d/3600)+' jam lagi'}</span></button>`}).join(''):'<div class="empty"><i>🌙</i>Belum ada jadwal untuk hari ini.</div>';
 }
-/* ---------- daftarku ---------- */
+/* ---------- Daftarku ---------- */
 function rDaftar(){
   const fav=rd('za_fav',[]),hist=Object.values(rd('za_hist',{})).sort((a,b)=>b.ts-a.ts);
   const mini=(h,sub)=>`<button class="x-row glass" data-open="${h.id}"><div class="ph" style="${bgu(h.cover)}"></div><div class="tx"><b>${esc(h.title)}</b><span>${esc(sub)}</span></div></button>`;
@@ -220,7 +214,7 @@ function rDaftar(){
    +(dsub==='fav'?(fav.length?fav.map(f=>mini(f,'Ketuk untuk membuka')).join(''):'<div class="empty"><i>💝</i>Belum ada favorit.<br>Ketuk ❤ di halaman detail anime.</div>')
      :(hist.length?hist.map(h=>mini(h,(h.ep||'')+(h.pt>10?' · lanjut '+clk(h.pt):''))).join('')+'<button class="x-back" style="margin-top:6px" data-clrh>🗑 Hapus riwayat</button>':'<div class="empty"><i>📺</i>Belum ada riwayat tontonan.</div>'));
 }
-/* ---------- detail + pemutar (Anoboy) ---------- */
+/* ---------- Detail + pemutar ---------- */
 let D=null,EPS=[],CAND=[],YTP=null,YTR=null,CUR={idx:-1,vid:''},saveT=0;
 const isFav=id=>rd('za_fav',[]).some(f=>f.id===id);
 function toggleFav(){
@@ -260,12 +254,12 @@ async function loadEps(){
   const m=D,my=m.id,box=()=>D&&D.id===my?$('#epbox'):null;
   const title=m.title.romaji||m.title.english||m.title.native||name(m);
   try{
-    const r1=await fetch(`${ANIME_API}/anime/search?q=${encodeURIComponent(title)}`);
+    const r1=await fetch(`${ANIME_API}?a=search&q=${encodeURIComponent(title)}`);
     const j1=await r1.json();
     if(!j1.ok||!j1.data?.length)return paintEps(null,'Anime ini tidak ditemukan di semua sumber.');
     const anime=j1.data[0];
-    const prov=j1.provider;   // ← simpan provider yang berhasil
-    const r2=await fetch(`${ANIME_API}/anime/episodes?slug=${encodeURIComponent(anime.slug)}&provider=${encodeURIComponent(prov)}`);
+    const prov=j1.provider;
+    const r2=await fetch(`${ANIME_API}?a=episodes&slug=${encodeURIComponent(anime.slug)}&provider=${encodeURIComponent(prov)}`);
     const j2=await r2.json();
     if(!box())return;
     if(!j2.ok||!j2.data?.length)return paintEps(null,'Episode tidak ditemukan di '+prov+'.');
@@ -277,11 +271,11 @@ async function loadEps(){
 function paintEps(src,msg){
   const b=$('#epbox');if(!b||!D)return;const h=rd('za_hist',{})[D.id];
   if(!EPS.length){
-    b.innerHTML=`<h3>📺 Episode</h3><p>${esc(msg||'Belum ada episode di Anoboy.')}</p><div class="d-links"><button data-msearch>🔎 Cari manual</button><a target="_blank" rel="noopener" href="https://www.crunchyroll.com/search?q=${q2(name(D))}">Crunchyroll</a><a target="_blank" rel="noopener" href="https://www.bilibili.tv/id/search-result?keyword=${q2(name(D))}">Bstation</a></div><div id="msr"></div>`;
+    b.innerHTML=`<h3>📺 Episode</h3><p>${esc(msg||'Belum ada episode.')}</p><div class="d-links"><button data-msearch>🔎 Cari manual</button><a target="_blank" rel="noopener" href="https://www.crunchyroll.com/search?q=${q2(name(D))}">Crunchyroll</a><a target="_blank" rel="noopener" href="https://www.bilibili.tv/id/search-result?keyword=${q2(name(D))}">Bstation</a></div><div id="msr"></div>`;
     return;
   }
   const nums=EPS.every(e=>e.n!=null)?EPS.map(e=>e.n):EPS.map((_,i)=>i+1);
-  b.innerHTML=`<h3>📺 Episode <span class="d-chips" style="margin:0"><span>${EPS.length}</span></span></h3>${src?`<p class="dm">Sumber resmi: ${esc(src.ch)} · ${esc(src.title)}</p>`:''}<div class="d-eps" id="eps">${EPS.map((e,i)=>`<button data-ep="${i}" title="${esc(e.t)}" class="${i===CUR.idx?'on':h&&h.vid===e.v?'w':''}">${nums[i]}</button>`).join('')}</div>`;
+  b.innerHTML=`<h3>📺 Episode <span class="d-chips" style="margin:0"><span>${EPS.length}</span></span></h3>${src?`<p class="dm">Sumber: ${esc(src.ch)} · ${esc(src.title)}</p>`:''}<div class="d-eps" id="eps">${EPS.map((e,i)=>`<button data-ep="${i}" title="${esc(e.t)}" class="${i===CUR.idx?'on':h&&h.vid===e.v?'w':''}">${nums[i]}</button>`).join('')}</div>`;
   const go=$('#plgo');if(go&&h&&h.idx!=null&&EPS[h.idx]&&EPS[h.idx].v===h.vid)$('#now').textContent='Terakhir ditonton: '+(h.ep||'');
 }
 const epLabel=i=>'Ep '+(EPS[i]&&EPS[i].n!=null?EPS[i].n:i+1);
@@ -305,8 +299,7 @@ async function playEp(i,fromHist){
     if(YTP){try{YTP.destroy()}catch{}YTP=null}
     $('#now').textContent='Memuat episode...';
     try{
-      // kirim provider biar gak salah sumber
-      const r=await fetch(`${ANIME_API}/anime/watch?url=${encodeURIComponent(e.v)}&provider=${encodeURIComponent(e.provider||'')}`);
+      const r=await fetch(`${ANIME_API}?a=watch&url=${encodeURIComponent(e.v)}&provider=${encodeURIComponent(e.provider||'')}`);
       const j=await r.json();
       if(!j.ok)throw new Error(j.error||'gagal ambil embed');
       const pl=$('#pl');const old=pl.querySelector('#anoboy-if');if(old)old.remove();
@@ -322,8 +315,8 @@ async function playEp(i,fromHist){
     }catch(err){ZT.toast('Gagal memuat video: '+err.message);$('#now').textContent='Gagal memuat video.'}
     return;
   }
-  playVid(e.v,{idx:i,start:fromHist?h&&h.vid===e.v?h.pt:0:0});
-                         }
+  playVid(e.v,{idx:i,start:fromHist?0:0});
+}
 function saveProgAnoboy(i){
   if(!D||i<0)return;const e=EPS[i];const h=rd('za_hist',{});
   h[D.id]={id:D.id,title:name(D),cover:D.coverImage.large,ep:'Ep '+(e.n||i+1),idx:i,vid:e.v,pt:0,ts:Date.now()};
@@ -339,14 +332,14 @@ function onErr(e){const pl=$('#pl');if(!pl||!CUR.vid)return;const x=document.cre
 function killPlayer(){clearInterval(saveT);try{YTP&&YTP.destroy&&YTP.destroy()}catch{}YTP=null;const old=document.getElementById('anoboy-if');if(old)old.remove();CUR={idx:-1,vid:''}}
 async function manualSearch(){
   const box=$('#msr');if(!box||!D)return;box.innerHTML='<div class="sk" style="height:48px;margin-top:10px"></div>';
-  try{const j=await (await fetch(`${ANIME_API}/anime/search?q=${encodeURIComponent(name(D))}`)).json();const list=j.data||[];
+  try{const j=await (await fetch(`${ANIME_API}?a=search&q=${encodeURIComponent(name(D))}`)).json();const list=j.data||[];
     if(!list.length){box.innerHTML='<p class="dm" style="margin-top:10px">Tidak ada hasil.</p>';return}
-    const eps=await (await fetch(`${ANIME_API}/anime/episodes?slug=${encodeURIComponent(list[0].slug)}`)).json();
+    const eps=await (await fetch(`${ANIME_API}?a=episodes&slug=${encodeURIComponent(list[0].slug)}`)).json();
     if(!eps.ok||!eps.data?.length){box.innerHTML='<p class="dm" style="margin-top:10px">Tidak ada episode.</p>';return}
-    EPS=eps.data.map((ep,i)=>({n:ep.num!=null?ep.num:i+1,t:ep.title,v:ep.url,isAnoboy:true}));CAND=[];paintEps({ch:'Anoboy',title:list[0].title});
+    EPS=eps.data.map((ep,i)=>({n:ep.num!=null?ep.num:i+1,t:ep.title,v:ep.url,isAnoboy:true,provider:eps.provider}));CAND=[];paintEps({ch:eps.provider,title:list[0].title});
   }catch{box.innerHTML='<p class="dm" style="margin-top:10px">Pencarian gagal.</p>'}
 }
-/* ---------- klik ---------- */
+/* ---------- Klik ---------- */
 document.addEventListener('click',e=>{
   const t=e.target,c=s=>t.closest(s);let x;
   if(x=c('[data-open]'))return openDetail(+x.dataset.open);
@@ -367,6 +360,7 @@ document.addEventListener('click',e=>{
   if(x=c('#seg [data-t]'))return setTab(x.dataset.t);
 });
 document.addEventListener('change',e=>{if(e.target.id==='spop'){schPop=e.target.checked;paintSched()}});
+addEventListener('message',e=>{if(e.origin===O&&e.data&&e.data.active===false){try{YTP&&YTP.pauseVideo&&YTP.pauseVideo()}catch{}}});
 render();
 </script>
 </body>
