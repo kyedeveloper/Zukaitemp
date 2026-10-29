@@ -1,58 +1,89 @@
 <!DOCTYPE html>
-<html lang="id"><head>
+<html lang="id">
+<head>
 <meta charset="UTF-8">
-<script src="/core.js"></script><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Unduh</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/base.css">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Downloader · ZukaiTemp</title>
+<meta name="theme-color" content="#08070c">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/app.css">
 <style>
-.plats{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
-.pt{background:var(--w);border:2px solid var(--p3);border-radius:99px;padding:6px 14px;font-weight:700;font-size:.85rem;color:var(--mut)}
-.res{margin-top:18px;display:flex;flex-direction:column;gap:14px}
-.res img{width:100%;max-height:300px;object-fit:cover;border-radius:16px}
-.res h3{font-size:1.05rem}
-.dls{display:flex;flex-direction:column;gap:10px}
-.note{background:var(--p4);border-radius:14px;padding:12px 14px;font-size:.84rem;color:var(--mut);font-weight:600;margin-top:16px}
-.err{color:#d6336c;font-weight:700}
-</style><link rel="stylesheet" href="/glass.css"><link rel="stylesheet" href="/theme.css">
+.box{max-width:620px;margin:0 auto}
+.res{margin-top:18px;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--card);display:none}
+.res.on{display:block;animation:in .4s var(--ease)}
+@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.res .top{display:flex;gap:12px;padding:12px}
+.res img{width:104px;height:78px;object-fit:cover;border-radius:9px;background:#1b1728}
+.res .m{flex:1;min-width:0}
+.res h3{font-size:.9rem;margin-bottom:4px}
+.res small{color:var(--dim2);font-size:.72rem}
+.res .row{display:flex;gap:8px;padding:0 12px 12px;flex-wrap:wrap}
+.tag{font-family:var(--mono);font-size:.58rem;padding:3px 8px;border-radius:5px;border:1px solid var(--line);color:var(--dim2)}
+</style>
 </head>
-<body><div class="wrap">
-  <div class="hd"><h1>⬇️ Downloader</h1></div>
-  <div class="card">
-    <p class="sub" style="margin-bottom:12px">Tempel link video, lalu pilih hasil unduhan.</p>
-    <input id="u" type="url" inputmode="url" placeholder="https://www.tiktok.com/@user/video/...">
-    <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
-      <button class="btn p" id="go" style="flex:1">⬇ Ambil video</button>
-      <button class="btn o" id="paste">📋 Tempel</button>
-    </div>
-    <div class="plats"><span class="pt">🎵 TikTok</span><span class="pt">📸 Instagram</span><span class="pt">▶️ YouTube</span><span class="pt">🐦 X / Twitter</span><span class="pt">👥 Facebook</span></div>
-    <div class="sub" id="st"></div>
+<body>
+<div class="grid-bg"></div>
+<header class="top"><div class="wrap hrow">
+  <a href="/" class="logo"><span class="mk"><i class="fa-solid fa-download"></i></span><span>DOWNLOADER<small>ZUKAITEMP</small></span></a>
+  <div class="hactions"><a class="iconbtn" href="/"><i class="fa-solid fa-xmark"></i></a></div>
+</div></header>
+
+<main class="wrap" style="padding-top:26px">
+  <div class="box">
+    <span class="kicker">YouTube</span>
+    <h2 class="sec">Tempel link, ambil audionya</h2>
+    <p class="sub">Video biasa, Shorts, atau youtu.be semuanya bisa. Hasil berupa tautan langsung dan tautan proxy.</p>
+
+    <form style="display:flex;gap:8px;margin-top:16px" onsubmit="go(event)">
+      <input class="inp" id="u" placeholder="https://youtu.be/xxxxxxxxxxx" autocomplete="off">
+      <button class="btn p" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+    </form>
+
     <div class="res" id="res"></div>
-    <p class="note">TikTok langsung jalan tanpa pengaturan. YouTube, Instagram, dan lainnya belum punya layanan gratis tanpa kunci yang bisa dipercaya, jadi butuh server Cobalt (variabel COBALT_API di Vercel). Unduh hanya konten milikmu atau yang boleh disimpan, dan hargai hak cipta pembuatnya.</p>
+    <div class="note" style="font-size:.72rem;color:var(--dim2);border-left:2px solid var(--warn);padding-left:9px;margin-top:16px">
+      Tautan langsung dari Google berlaku sekitar 6 jam. Untuk disimpan lama, pakai tautan proxy.
+    </div>
   </div>
-</div>
-<div class="toast" id="toast"></div>
+</main>
+<div id="toast"></div>
 
 <script>
-const $=s=>document.querySelector(s);
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('on'),2600)}
-$('#paste').onclick=async()=>{try{$('#u').value=await navigator.clipboard.readText();$('#u').focus()}catch{toast('Izin tempel ditolak, tempel manual ya')}};
-async function run(){
-  const u=$('#u').value.trim();
-  if(!/^https?:\/\//i.test(u))return toast('Masukkan link yang diawali https://');
-  $('#go').disabled=true;$('#res').innerHTML='';$('#st').textContent='Mengambil data video...';
-  try{
-    const r=await fetch('/api/dl?u='+encodeURIComponent(u),{cache:'no-store'});
-    const j=await r.json().catch(()=>({error:'Balasan server tidak valid'}));
-    if(!r.ok||j.error)throw new Error(j.error||'HTTP '+r.status);
-    $('#st').textContent='Siap! Ketuk tombol untuk membuka atau menyimpan.';
-    $('#res').innerHTML=(j.cover?`<img src="${esc(j.cover)}" alt="" referrerpolicy="no-referrer">`:'')+
-      `<div><h3>${esc(j.title||'Video')}</h3><span class="sub">${esc(j.author||'')}</span></div>
-       <div class="dls">${j.items.map(i=>`<a class="btn ${i.type==='video'?'p':'o'}" href="${esc(i.url)}" target="_blank" rel="noopener noreferrer" download>${i.type==='audio'?'🎵':i.type==='image'?'🖼':'🎬'} ${esc(i.label)}</a>`).join('')}</div>
-       <p class="sub">Kalau cuma terbuka di tab baru, tahan lama video lalu pilih "Simpan/Unduh".</p>`;
-  }catch(e){$('#st').innerHTML='<span class="err">'+esc(e.message)+'</span>'}
-  $('#go').disabled=false;
+const $ = s => document.querySelector(s);
+let tt;
+function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('up'); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove('up'),2400); }
+const idFrom = u => {
+  const m = String(u).match(/(?:v=|youtu\.be\/|shorts\/|embed\/)([\w-]{11})/);
+  return m ? m[1] : (/^[\w-]{11}$/.test(u.trim()) ? u.trim() : null);
+};
+
+async function go(e){
+  e.preventDefault();
+  const id = idFrom($('#u').value);
+  if (!id) return toast('Link tidak dikenali.');
+  const r = $('#res'); r.classList.remove('on');
+  r.classList.add('on'); r.innerHTML = '<div style="padding:14px"><div class="skel"></div></div>';
+  try {
+    const res = await fetch('/api/dl?id=' + id);
+    const j = await res.json();
+    if (!res.ok || j.error) throw new Error(j.error || 'gagal');
+    r.innerHTML = `<div class="top"><img src="${j.thumb}" alt=""><div class="m">
+        <h3>${j.title.replace(/[<>]/g,'')}</h3><small>${j.artist.replace(/[<>]/g,'')}</small>
+        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+          <span class="tag">${Math.floor(j.seconds/60)}:${String(j.seconds%60).padStart(2,'0')}</span>
+          <span class="tag">${j.audio.mime}</span><span class="tag">${Math.round(j.audio.bitrate/1000)}kbps</span>
+        </div></div></div>
+      <div class="row">
+        <a class="btn p" href="/api/stream?id=${id}" download="${j.title.slice(0,40)}.m4a"><i class="fa-solid fa-download"></i> Audio</a>
+        <a class="btn" href="${j.yt}" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i> Sumber</a>
+        <button class="btn" onclick="navigator.clipboard.writeText('${j.proxy}');toast('Link proxy disalin')"><i class="fa-regular fa-copy"></i> Copy proxy</button>
+      </div>`;
+  } catch (err) {
+    r.innerHTML = `<div style="padding:14px" class="empty">${err.message}</div>`;
+  }
 }
-$('#go').onclick=run;$('#u').onkeydown=e=>{if(e.key==='Enter')run()};
-</script></body></html>
+</script>
+</body>
+</html>
