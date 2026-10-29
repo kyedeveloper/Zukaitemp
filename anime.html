@@ -2,361 +2,428 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<script src="/core.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Anime · ZukaiTemp</title>
-<meta name="theme-color" content="#ff4d94">
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/base.css">
+<meta name="theme-color" content="#08070c">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <style>
-.x-top h1{font-size:2rem}.x-top p{color:var(--mut);font-weight:700;font-size:.88rem;margin-bottom:14px}
-.x-search{display:flex;align-items:center;gap:8px;padding:4px 8px 4px 16px;border-radius:99px;margin-bottom:12px}
-.x-search input{flex:1;min-width:0;border:0!important;background:transparent!important;box-shadow:none!important;font:600 .98rem Nunito;min-height:46px;padding:0 4px}
-.x-search:focus-within{box-shadow:0 0 0 4px color-mix(in srgb,var(--p1) 18%,transparent)}
-#q,#q:focus{border:0!important;box-shadow:none!important;background:transparent!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;border-radius:0!important}
-.x-search button{border:0;background:none;color:var(--mut);width:36px;height:36px;font-size:1rem}
-.x-seg{display:flex;gap:4px;padding:4px;border-radius:20px;margin-bottom:16px}
-.x-seg button{flex:1;min-height:42px;border:0;border-radius:16px;background:transparent;color:var(--mut);font:600 .88rem Fredoka;transition:all .3s}
-.x-seg button.on{background:linear-gradient(135deg,var(--p1),color-mix(in srgb,var(--p1) 55%,var(--g2)));color:#fff;box-shadow:0 8px 16px -8px var(--p1)}
-.x-hero{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;border-radius:28px;margin-bottom:10px;box-shadow:var(--sh)}
-.x-hero::-webkit-scrollbar{display:none}
-.x-slide{flex:none;width:100%;scroll-snap-align:center;position:relative;min-height:236px;padding:20px 18px;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;color:#fff;background:#222 center/cover;cursor:pointer}
-.x-slide::before{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(10,6,20,.92),rgba(10,6,20,.45) 55%,rgba(10,6,20,.15))}
-.x-slide>*{position:relative}
-.x-slide h2{font:600 1.35rem/1.15 Fredoka;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.x-slide p{font-size:.82rem;font-weight:600;opacity:.88;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.x-meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-.x-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:99px;font:700 .72rem Nunito;background:rgba(255,255,255,.2);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
-.x-acts{display:flex;gap:8px;margin-top:4px}
-.x-btn{border:0;border-radius:99px;min-height:42px;padding:0 20px;font:600 .9rem Fredoka;color:#fff;background:linear-gradient(135deg,var(--p1),var(--g2));box-shadow:0 10px 20px -10px var(--p1)}
-.x-btn.o{background:rgba(255,255,255,.2);box-shadow:none;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
-.x-dots{display:flex;justify-content:center;gap:6px;margin-bottom:18px}
-.x-dots i{width:7px;height:7px;border-radius:99px;background:color-mix(in srgb,var(--p1) 25%,transparent);transition:all .35s}.x-dots i.on{width:22px;background:var(--p1)}
-.x-gen{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -18px 20px;padding:0 18px}
-.x-gen::-webkit-scrollbar{display:none}
-.x-gen button{flex:none;border:0;min-height:38px;padding:0 16px;border-radius:99px;background:var(--w);color:var(--ink);font:600 .84rem Fredoka;box-shadow:var(--sh)}
-.x-sec{margin-bottom:24px}
-.x-sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.x-sh h2{font-size:1.2rem}.x-sh button{border:0;background:none;color:var(--p1);font:700 .82rem Nunito}
-.x-car{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;margin:0 -18px;padding:2px 18px 8px}
-.x-car::-webkit-scrollbar{display:none}
-.x-card{flex:none;width:128px;border:0;background:none;text-align:left;color:var(--ink);scroll-snap-align:start;transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
-.x-card:active{transform:scale(.94)}
-.x-poster{position:relative;aspect-ratio:2/3;border-radius:20px;background:color-mix(in srgb,var(--p1) 14%,var(--w)) center/cover;box-shadow:0 14px 26px -16px var(--p1);overflow:hidden}
-.x-sc{position:absolute;left:8px;top:8px;font:700 .72rem Nunito;font-style:normal;color:#fff;padding:2px 8px;border-radius:99px;background:rgba(0,0,0,.5);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
-.x-ep{position:absolute;right:0;bottom:0;font:700 .7rem Nunito;color:#fff;padding:4px 10px;border-radius:14px 0 0 0;background:linear-gradient(135deg,var(--p1),var(--g2))}
-.x-card b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:8px;font:600 .86rem/1.25 Fredoka}
-.x-card span{display:block;margin-top:2px;font:700 .72rem Nunito;color:var(--mut)}
-.x-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:18px 12px}
-.x-grid .x-card{width:auto}
-.x-back{border:0;border-radius:99px;min-height:40px;padding:0 18px;font:600 .88rem Fredoka;color:var(--p1);background:color-mix(in srgb,var(--p1) 12%,transparent);margin-bottom:14px}
-.x-more{display:block;margin:18px auto;min-height:44px;padding:0 24px}
-.x-err{padding:20px;border-radius:24px;text-align:center;color:var(--mut);font-weight:700}
-.x-err b{display:block;font:600 1rem Fredoka;color:var(--ink);margin-bottom:6px}
-.x-days{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -18px 14px;padding:0 18px}
-.x-days::-webkit-scrollbar{display:none}
-.x-days button{flex:none;width:56px;min-height:64px;border:0;border-radius:20px;background:var(--w);color:var(--mut);font:600 .78rem Fredoka;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-shadow:var(--sh)}
-.x-days button b{font-size:1.2rem;color:var(--ink)}
-.x-days button.on{background:linear-gradient(135deg,var(--p1),var(--g2));color:#fff}.x-days button.on b{color:#fff}
-.x-days button.td::after{content:"";width:5px;height:5px;border-radius:50%;background:var(--p1)}.x-days button.on.td::after{background:#fff}
-.x-row{display:flex;align-items:center;gap:12px;width:100%;border:0;text-align:left;color:var(--ink);padding:10px 12px;border-radius:22px;margin-bottom:10px}
-.x-row .tm{flex:none;width:50px;text-align:center;font:600 1rem Fredoka;color:var(--p1)}
-.x-row .ph{flex:none;width:46px;height:64px;border-radius:12px;background:var(--p3) center/cover}
-.x-row .tx{flex:1;min-width:0}.x-row .tx b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font:600 .92rem/1.25 Fredoka}
-.x-row .tx span{display:block;font:700 .74rem Nunito;color:var(--mut);margin-top:3px}
-.x-chip{padding:3px 10px;border-radius:99px;font:700 .7rem Nunito;white-space:nowrap;background:color-mix(in srgb,var(--p1) 14%,transparent);color:var(--p1)}.x-chip.ok{background:rgba(16,185,129,.15);color:#0f9a63}
-.x-tg{display:flex;align-items:center;gap:8px;margin:0 0 12px;font:700 .8rem Nunito;color:var(--mut)}
-#det{position:fixed;inset:0;z-index:40;overflow-y:auto;background:var(--p4);transform:translateY(105%);transition:transform .6s cubic-bezier(.22,1,.36,1);padding-bottom:calc(var(--sb) + 30px)}
-#det.on{transform:none}
-.d-top{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top) + 10px) 14px 10px;background:color-mix(in srgb,var(--p4) 80%,transparent);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
-.d-top button{flex:none;width:44px;height:44px;border:0;border-radius:15px;color:var(--ink);font-size:1.15rem}
-.d-top b{flex:1;min-width:0;font:600 1rem Fredoka;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.d-top button.on{color:#ff3b5c}
-.d-in{padding:0 16px}
-.d-pl{position:relative;aspect-ratio:16/9;border-radius:24px;overflow:hidden;background:#000;box-shadow:0 24px 44px -24px var(--p1)}
-.d-pl iframe,.d-pl #ytp{position:absolute;inset:0;width:100%;height:100%;border:0}
-.d-ph{position:absolute;inset:0;background:#111 center/cover;display:grid;place-items:center}
-.d-ph::before{content:"";position:absolute;inset:0;background:rgba(10,6,20,.45)}
-.d-big{position:relative;width:76px;height:76px;border:0;border-radius:50%;font-size:1.9rem;color:#fff;background:linear-gradient(135deg,var(--p1),var(--g2));box-shadow:0 14px 30px -8px var(--p1);animation:ztPls 2s ease-in-out infinite}
-@keyframes ztPls{50%{transform:scale(1.08)}}
-.d-perr{position:absolute;inset:0;z-index:2;display:grid;place-content:center;gap:10px;text-align:center;padding:18px;background:rgba(10,6,20,.88);color:#fff;font-weight:700;font-size:.88rem}
-.d-perr a{color:#fff;font:600 .9rem Fredoka;background:linear-gradient(135deg,var(--p1),var(--g2));padding:10px 18px;border-radius:99px;text-decoration:none}
-.d-now{margin:10px 2px 0;font:700 .8rem Nunito;color:var(--mut)}
-.d-h{margin:16px 2px 8px}.d-h h1{font:600 1.35rem/1.2 Fredoka}.d-h p{color:var(--mut);font-weight:700;font-size:.82rem;margin-top:3px}
-.d-chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
-.d-chips span{padding:4px 12px;border-radius:99px;font:700 .74rem Nunito;background:color-mix(in srgb,var(--p1) 12%,transparent);color:var(--p1)}
-.d-chips span.s{background:linear-gradient(135deg,var(--p1),var(--g2));color:#fff}
-.d-box{padding:14px;border-radius:22px;margin:14px 0}
-.d-box h3{font:600 1rem Fredoka;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:8px}
-.d-box h3 button{border:0;background:none;color:var(--p1);font:700 .78rem Nunito}
-.d-box p,.d-box li{font-weight:600;font-size:.88rem;line-height:1.6;color:var(--ink)}
-.d-box p.dm{color:var(--mut);font-size:.8rem}
-.d-syn{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}.d-syn.all{-webkit-line-clamp:unset}
-.d-eps{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:8px;max-height:230px;overflow-y:auto;padding:2px}
-.d-eps button{min-height:44px;border:0;border-radius:14px;font:600 .9rem Fredoka;background:color-mix(in srgb,var(--p1) 10%,var(--w));color:var(--ink)}
-.d-eps button.on{background:linear-gradient(135deg,var(--p1),var(--g2));color:#fff}.d-eps button.w{color:var(--p1);box-shadow:inset 0 0 0 2px var(--p1)}
-.d-info{display:grid;grid-template-columns:1fr 1fr;gap:10px}.d-info div{padding:10px 12px;border-radius:16px;background:var(--p4)}.d-info small{display:block;font:700 .68rem Nunito;color:var(--mut)}.d-info b{display:block;font:600 .9rem Fredoka;margin-top:2px}
-.d-alt{display:flex;flex-direction:column;gap:8px;margin-top:10px}.d-alt button{border:0;text-align:left;border-radius:14px;padding:10px 12px;font:600 .82rem Nunito;background:var(--p4);color:var(--ink)}
-.d-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.d-links a,.d-links button{border:0;text-decoration:none;border-radius:99px;min-height:38px;padding:0 16px;display:inline-flex;align-items:center;font:600 .82rem Fredoka;background:color-mix(in srgb,var(--p1) 12%,transparent);color:var(--p1)}
-.empty{text-align:center;padding:30px 10px;color:var(--mut);font-weight:700}.empty i{display:block;font-style:normal;font-size:2.4rem;margin-bottom:8px}
+:root{--bg:#08070c;--card:#12101a;--line:#241f33;--txt:#f2eefb;--dim:#9a92b0;--dim2:#6a6280;--a:#a855f7;--a2:#22d3ee;--ok:#34d399;--bad:#fb7185;--warn:#fbbf24;--mono:'JetBrains Mono',monospace;--ease:cubic-bezier(.16,1,.3,1)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;overflow-x:hidden;padding-bottom:40px;-webkit-tap-highlight-color:transparent}
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-thumb{background:var(--a);border-radius:9px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 14px}
+
+header{position:sticky;top:0;z-index:50;backdrop-filter:blur(16px);background:linear-gradient(180deg,rgba(8,7,12,.96),rgba(8,7,12,.65) 70%,transparent);padding:10px 0 12px}
+.hrow{display:flex;align-items:center;gap:10px}
+.logo{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.75rem;letter-spacing:.14em;font-weight:700}
+.logo i{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;background:linear-gradient(140deg,#7c3aed,#0e7490);border:1px solid #67e8f9;font-size:.85rem;box-shadow:0 0 18px rgba(34,211,238,.4)}
+.hbtn{margin-left:auto;width:34px;height:34px;display:grid;place-items:center;border-radius:9px;border:1px solid var(--line);color:var(--dim);background:rgba(255,255,255,.03)}
+.searchbar{display:flex;gap:8px;margin-top:10px}
+.searchbar input{flex:1;background:#0e0c16;border:1px solid var(--line);border-radius:11px;padding:11px 13px;color:var(--txt);font-size:.85rem;font-family:inherit}
+.searchbar input:focus{outline:none;border-color:var(--a2);box-shadow:0 0 0 3px rgba(34,211,238,.13)}
+.searchbar button{width:44px;border-radius:11px;border:1px solid #67e8f9;background:linear-gradient(120deg,#0891b2,#7c3aed);color:#fff;font-size:.9rem;cursor:pointer}
+
+.tabs{display:flex;gap:4px;padding:4px;border:1px solid var(--line);border-radius:12px;background:#0d0b14;margin:14px 0}
+.tabs button{flex:1;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:8px;border-radius:9px;border:none;background:none;color:var(--dim2);cursor:pointer}
+.tabs button.on{background:rgba(34,211,238,.15);color:#cffafe}
+
+.hero{position:relative;border-radius:16px;overflow:hidden;height:230px;margin-bottom:18px;background:#12101a}
+.hero img{width:100%;height:100%;object-fit:cover;filter:brightness(.5)}
+.hero .ov{position:absolute;inset:0;background:linear-gradient(to top,#08070c 8%,rgba(8,7,12,.1) 65%)}
+.hero .txt{position:absolute;left:16px;right:16px;bottom:14px}
+.hero h3{font-size:1.15rem;line-height:1.2}
+.hero p{font-size:.74rem;color:var(--dim);margin-top:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.hero .row{display:flex;gap:8px;margin-top:10px}
+.hero .dots{position:absolute;right:14px;top:12px;display:flex;gap:5px}
+.hero .dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.35)}
+.hero .dots i.on{background:var(--a2);width:16px;border-radius:9px}
+
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--txt);font-size:.75rem;font-weight:600;cursor:pointer}
+.btn.p{background:linear-gradient(120deg,#0891b2,#7c3aed);border-color:#67e8f9;color:#fff}
+.btn.p:hover{filter:brightness(1.12)}
+
+h2{font-size:.95rem;margin:20px 0 10px;display:flex;align-items:center;gap:8px}
+h2 i{color:var(--a2);font-size:.8rem}
+h2 small{margin-left:auto;font-family:var(--mono);font-size:.56rem;color:var(--dim2);letter-spacing:.1em;text-transform:uppercase}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer;transition:.25s;position:relative}
+.card:hover{transform:translateY(-3px);border-color:rgba(34,211,238,.5)}
+.card img{width:100%;aspect-ratio:2/3;object-fit:cover;background:#1b1728;display:block}
+.card .t{padding:7px 8px;font-size:.73rem;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card .sc{position:absolute;top:6px;right:6px;background:rgba(8,7,12,.85);border:1px solid rgba(34,211,238,.4);color:var(--a2);font-family:var(--mono);font-size:.58rem;padding:2px 5px;border-radius:5px}
+.card .ep{position:absolute;top:6px;left:6px;background:rgba(8,7,12,.85);color:var(--dim);font-family:var(--mono);font-size:.55rem;padding:2px 5px;border-radius:5px}
+.card .fav{position:absolute;bottom:7px;right:7px;width:26px;height:26px;border-radius:50%;background:rgba(8,7,12,.8);border:1px solid var(--line);color:var(--dim);display:grid;place-items:center;font-size:.65rem}
+.card .fav.on{color:var(--bad);border-color:rgba(251,113,133,.5)}
+
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.chip{font-size:.7rem;padding:5px 11px;border-radius:99px;border:1px solid var(--line);background:none;color:var(--dim);cursor:pointer}
+.chip:hover{border-color:var(--a2);color:#cffafe}
+
+.empty{text-align:center;padding:34px 16px;color:var(--dim2);font-family:var(--mono);font-size:.72rem;border:1px dashed var(--line);border-radius:14px}
+.skel{height:180px;border-radius:12px;background:linear-gradient(90deg,#12101a,#1a1626,#12101a);background-size:200% 100%;animation:sh 1.2s infinite}
+@keyframes sh{to{background-position:-200% 0}}
+
+.sched-day{margin-bottom:18px}
+.sched-day h4{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--a2);margin-bottom:8px}
+.sched{display:flex;gap:10px;padding:8px;border:1px solid var(--line);border-radius:11px;margin-bottom:6px;cursor:pointer;align-items:center}
+.sched img{width:44px;height:60px;border-radius:7px;object-fit:cover;background:#1b1728}
+.sched .m{flex:1;min-width:0}
+.sched .m b{font-size:.8rem;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sched .m small{font-size:.66rem;color:var(--dim2)}
+.sched .cd{font-family:var(--mono);font-size:.6rem;color:var(--warn);border:1px solid rgba(251,191,36,.35);padding:3px 7px;border-radius:6px;flex:none}
+
+/* detail */
+#det{position:fixed;inset:0;z-index:80;background:var(--bg);overflow-y:auto;transform:translateY(100%);transition:transform .4s var(--ease);padding-bottom:40px}
+#det.up{transform:none}
+#det .banner{height:200px;background-size:cover;background-position:center;position:relative}
+#det .banner::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,var(--bg),transparent 70%)}
+#det .close{position:absolute;top:calc(12px + env(safe-area-inset-top));left:12px;z-index:2;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:rgba(8,7,12,.7);color:var(--txt);cursor:pointer}
+#det .body{padding:0 14px;margin-top:-70px;position:relative;z-index:2}
+#det h2{font-size:1.15rem;margin:0 0 6px}
+#det .meta{display:flex;gap:6px;flex-wrap:wrap;font-family:var(--mono);font-size:.58rem;color:var(--dim2);margin-bottom:10px}
+#det .meta span{border:1px solid var(--line);padding:2px 7px;border-radius:5px}
+#det .desc{font-size:.8rem;color:var(--dim);line-height:1.65;margin-bottom:14px}
+#det .acts{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+
+.player{position:relative;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden;margin-bottom:10px}
+.player iframe{width:100%;height:100%;border:0}
+.player .ph{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:16px;color:var(--dim2);font-family:var(--mono);font-size:.7rem;gap:8px}
+.srvs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.srv{font-family:var(--mono);font-size:.58rem;padding:5px 10px;border-radius:7px;border:1px solid var(--line);background:none;color:var(--dim);cursor:pointer}
+.srv.on{background:rgba(34,211,238,.14);border-color:var(--a2);color:#cffafe}
+.eps{display:flex;flex-direction:column;gap:5px;max-height:340px;overflow:auto}
+.ep{display:flex;align-items:center;gap:9px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:#0d0b14;font-size:.78rem;cursor:pointer}
+.ep:hover{border-color:var(--a2)}
+.ep .n{font-family:var(--mono);font-size:.6rem;color:var(--a2);border:1px solid rgba(34,211,238,.35);padding:1px 6px;border-radius:5px;flex:none}
+.ep .pg{margin-left:auto;font-family:var(--mono);font-size:.55rem;color:var(--dim2)}
+.note{font-size:.7rem;color:var(--dim2);border-left:2px solid var(--warn);padding-left:8px;margin:10px 0}
+#toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,20px);background:#1a1428;border:1px solid var(--line);padding:10px 16px;border-radius:99px;font-size:.76rem;opacity:0;transition:.3s;z-index:99;pointer-events:none;max-width:88vw;text-align:center}
+#toast.up{opacity:1;transform:translate(-50%,0)}
+.srcstat{display:flex;gap:6px;font-family:var(--mono);font-size:.55rem;color:var(--dim2);margin-top:8px;flex-wrap:wrap}
+.srcstat span{padding:2px 6px;border-radius:4px;border:1px solid var(--line)}
+.srcstat span.up{color:var(--ok);border-color:rgba(52,211,153,.4)}
+.srcstat span.down{color:var(--bad);border-color:rgba(251,113,133,.4)}
 </style>
-<link rel="stylesheet" href="/glass.css">
-<link rel="stylesheet" href="/theme.css">
 </head>
 <body>
-<div class="wrap">
-  <header class="x-top hd"><h1>Anime</h1><p>Katalog lengkap · nonton episode via Anoboy & partner</p></header>
-  <div class="x-search glass"><span aria-hidden="true">🔍</span><input id="q" type="search" placeholder="Cari judul anime…" autocomplete="off" enterkeyhint="search"><button id="qx" hidden aria-label="Hapus">✕</button></div>
-  <nav class="x-seg glass" id="seg"><button data-t="home" class="on">Jelajah</button><button data-t="jadwal">Jadwal</button><button data-t="daftar">Daftarku</button></nav>
-  <main id="pg"></main>
-</div>
-<section id="det" data-noswipe aria-label="Detail anime"></section>
-<script>
-const ZT = window.ZT || { esc: s => String(s ?? ''), toast: m => alert(m) };
-const $=s=>document.querySelector(s),esc=ZT.esc,O=location.origin;
-const ANIME_API = 'https://zukaitemp.vercel.app/api/media?r=anime';
 
-const rd=(k,d)=>{try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch{return d}},wr=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
-const CP='za_c:',hs=s=>{let h=5381;for(let i=0;i<s.length;i++)h=(h*33^s.charCodeAt(i))>>>0;return h.toString(36)};
-const cget=k=>{const v=rd(CP+k,null);return v&&v.e>Date.now()?v.d:null};
-function cset(k,d,ttl){const put=()=>localStorage.setItem(CP+k,JSON.stringify({e:Date.now()+ttl,d}));try{put()}catch{Object.keys(localStorage).filter(x=>x.startsWith(CP)).slice(0,25).forEach(x=>localStorage.removeItem(x));try{put()}catch{}}}
-async function gql(q,v,ttl=20*60e3){
-  const k=hs(q+JSON.stringify(v||{})),c=cget(k);if(c)return c;
-  const r=await fetch('https://graphql.anilist.co',{method:'POST',headers:{'content-type':'application/json',accept:'application/json'},body:JSON.stringify({query:q,variables:v||{}})});
-  if(r.status===429)throw new Error('AniList sedang membatasi permintaan. Tunggu semenit lalu coba lagi.');
-  const j=await r.json().catch(()=>({}));
-  if(!r.ok||j.errors)throw new Error((j.errors&&j.errors[0]&&j.errors[0].message)||'AniList bermasalah ('+r.status+')');
-  cset(k,j.data,ttl);return j.data;
+<header class="wrap">
+  <div class="hrow">
+    <a href="/" class="logo"><i class="fa-solid fa-tv"></i> ZUKAI ANIME</a>
+    <button class="hbtn" onclick="openFav()"><i class="fa-solid fa-heart"></i></button>
+    <a href="/" class="hbtn"><i class="fa-solid fa-xmark"></i></a>
+  </div>
+  <form class="searchbar" onsubmit="runSearch(event)">
+    <input id="q" placeholder="Cari judul anime…" autocomplete="off">
+    <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+  </form>
+</header>
+
+<main class="wrap">
+  <div class="tabs" id="tabs">
+    <button class="on" data-tab="home">Jelajah</button>
+    <button data-tab="jadwal">Jadwal</button>
+    <button data-tab="daftar">Daftar</button>
+  </div>
+  <div id="view"></div>
+</main>
+
+<div id="det"></div>
+<div id="toast"></div>
+
+<script>
+/* ============ util ============ */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const GQL = 'https://graphql.anilist.co';
+const ANI = '/api/anime';
+const LS = { fav: 'za_fav', hist: 'za_hist' };
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const store = { get(k){ try { return JSON.parse(localStorage.getItem(k) || '[]'); } catch { return []; } }, set(k,v){ localStorage.setItem(k, JSON.stringify(v)); } };
+let tt;
+function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('up'); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove('up'),2600); }
+
+/* cache anilist */
+async function gql(query, vars){
+  const key = 'za_' + btoa(unescape(encodeURIComponent(query + JSON.stringify(vars||{})))).slice(0,60);
+  const hit = sessionStorage.getItem(key);
+  if (hit) return JSON.parse(hit);
+  const r = await fetch(GQL, { method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ query, variables: vars }) });
+  if (r.status === 429) throw new Error('rate limit AniList, tunggu sebentar');
+  const j = await r.json();
+  if (j.errors) throw new Error(j.errors[0].message);
+  sessionStorage.setItem(key, JSON.stringify(j.data));
+  return j.data;
 }
-const CARD='id title{romaji english} coverImage{large color} averageScore episodes format status genres nextAiringEpisode{episode airingAt}';
-const LIST=`query($page:Int,$per:Int,$sort:[MediaSort],$status:MediaStatus,$genre:String,$search:String,$format:MediaFormat,$pop:Int){Page(page:$page,perPage:$per){pageInfo{hasNextPage}media(type:ANIME,isAdult:false,genre_not_in:["Hentai"],sort:$sort,status:$status,genre:$genre,search:$search,format:$format,popularity_greater:$pop){${CARD}}}}`;
-const list=(v,ttl)=>gql(LIST,Object.assign({page:1,per:20},v),ttl).then(d=>d.Page);
-const HERO=`query{Page(page:1,perPage:8){media(type:ANIME,isAdult:false,sort:TRENDING_DESC,status:RELEASING){id title{romaji english} bannerImage coverImage{extraLarge large color} description(asHtml:false) genres averageScore format episodes}}}`;
-const DET=`query($id:Int){Media(id:$id,type:ANIME){${CARD} bannerImage description(asHtml:false) synonyms title{native} duration source isAdult season seasonYear studios(isMain:true){nodes{name}} startDate{year month day} trailer{id site} recommendations(perPage:12,sort:RATING_DESC){nodes{mediaRecommendation{${CARD} isAdult}}}}}`;
-const SCH=`query($from:Int,$to:Int,$page:Int){Page(page:$page,perPage:50){pageInfo{hasNextPage}airingSchedules(airingAt_greater:$from,airingAt_lesser:$to,sort:TIME){airingAt episode media{id title{romaji english} coverImage{large} format isAdult popularity countryOfOrigin}}}}`;
-const SECS=[
-  {k:'new',t:'🆕 Baru rilis',v:{sort:['START_DATE_DESC'],status:'RELEASING',pop:5000}},
-  {k:'trend',t:'🔥 Lagi trending',v:{sort:['TRENDING_DESC']}},
-  {k:'top',t:'⭐ Top rated',v:{sort:['SCORE_DESC'],pop:40000,format:'TV'}},
-  {k:'pop',t:'💖 Terpopuler',v:{sort:['POPULARITY_DESC']}},
-  {k:'movie',t:'🎬 Film anime',v:{sort:['POPULARITY_DESC'],format:'MOVIE'}}
-];
-const GENRES=[['Action','Aksi'],['Adventure','Petualangan'],['Comedy','Komedi'],['Drama','Drama'],['Fantasy','Fantasi'],['Romance','Romantis'],['Sci-Fi','Sci-Fi'],['Slice of Life','Slice of Life'],['Supernatural','Supranatural'],['Sports','Olahraga'],['Mystery','Misteri'],['Horror','Horor'],['Psychological','Psikologis'],['Music','Musik'],['Mecha','Mecha'],['Mahou Shoujo','Mahou Shoujo'],['Thriller','Thriller']];
-const FMT={TV:'TV',MOVIE:'Film',OVA:'OVA',ONA:'ONA',SPECIAL:'Spesial',TV_SHORT:'TV Pendek',MUSIC:'Musik'},STAT={FINISHED:'Tamat',RELEASING:'Sedang tayang',NOT_YET_RELEASED:'Belum tayang',CANCELLED:'Dibatalkan',HIATUS:'Hiatus'};
-const name=m=>m.title.english||m.title.romaji;
-const plain=t=>String(t||'').replace(/<br\s*\/?>/gi,' ').replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
-const bgu=u=>u?`background-image:url('${esc(u)}')`:'';
-const card=m=>`<button class="x-card" data-open="${m.id}"><div class="x-poster" style="${bgu(m.coverImage&&m.coverImage.large)}">${m.averageScore?`<i class="x-sc">★ ${(m.averageScore/10).toFixed(1)}</i>`:''}${m.nextAiringEpisode&&m.nextAiringEpisode.episode>1?`<i class="x-ep">Ep ${m.nextAiringEpisode.episode-1}</i>`:m.format==='MOVIE'?'<i class="x-ep">Film</i>':''}</div><b>${esc(name(m))}</b><span>${FMT[m.format]||''}${m.episodes?' · '+m.episodes+' eps':''}</span></button>`;
-const fail=(e,fn)=>`<div class="x-err glass"><b>Gagal memuat</b>${esc(e.message||e)}<br><button class="x-btn" style="margin-top:12px" data-retry="${fn}">Coba lagi</button></div>`;
-/* ---------- Tampilan utama ---------- */
-let tab='home',LV=null,dsub='fav',heroT=0;
-const pg=$('#pg');
-function setTab(t){tab=t;LV=null;document.querySelectorAll('#seg button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));render()}
-function render(){clearInterval(heroT);if(LV)return rListing();if(tab==='jadwal')return rJadwal();if(tab==='daftar')return rDaftar();rHome()}
-async function rHome(){
-  const lastSeen=Object.values(rd('za_hist',{})).sort((a,b)=>b.ts-a.ts).slice(0,10);
-  pg.innerHTML=`<div class="sk" style="height:236px;border-radius:28px;margin-bottom:24px"></div><div class="x-gen">${GENRES.map(g=>`<button data-g="${esc(g[0])}">${g[1]}</button>`).join('')}</div>`
-   +(lastSeen.length?`<section class="x-sec"><div class="x-sh"><h2 class="f">▶️ Lanjut menonton</h2></div><div class="x-car">${lastSeen.map(h=>`<button class="x-card" data-open="${h.id}"><div class="x-poster" style="${bgu(h.cover)}"><i class="x-ep">${esc(h.ep||'')}</i></div><b>${esc(h.title)}</b><span>${h.pt>10?'lanjut '+clk(h.pt):'mulai lagi'}</span></button>`).join('')}</div></section>`:'')
-   +SECS.map(s=>`<section class="x-sec" id="s-${s.k}"><div class="x-sh"><h2 class="f">${s.t}</h2><button data-all="${s.k}">Lihat semua ›</button></div><div class="x-car">${'<div class="sk" style="flex:none;width:128px;height:210px;border-radius:20px"></div>'.repeat(4)}</div></section>`).join('');
-  gql(HERO).then(d=>{const hs=d.Page.media.filter(m=>m.bannerImage||m.coverImage.extraLarge).slice(0,6);if(tab!=='home'||LV||!hs.length)return;
-    const el=document.createElement('div');el.innerHTML=`<div class="x-hero" id="hero">${hs.map(m=>`<div class="x-slide" data-open="${m.id}" style="${bgu(m.bannerImage||m.coverImage.extraLarge)}"><div class="x-meta">${m.averageScore?`<span class="x-pill">★ ${(m.averageScore/10).toFixed(1)}</span>`:''}<span class="x-pill">${FMT[m.format]||'Anime'}</span>${(m.genres||[]).slice(0,2).map(g=>`<span class="x-pill">${esc(g)}</span>`).join('')}</div><h2>${esc(name(m))}</h2><p>${esc(plain(m.description).slice(0,160))}</p><div class="x-acts"><button class="x-btn" data-open="${m.id}">▶ Tonton</button></div></div>`).join('')}</div><div class="x-dots" id="dots">${hs.map((_,i)=>`<i class="${i?'':'on'}"></i>`).join('')}</div>`;
-    const sk=pg.firstElementChild;sk.replaceWith(...el.childNodes);
-    const h=$('#hero');if(!h)return;
-    h.addEventListener('scroll',()=>{const i=Math.round(h.scrollLeft/h.clientWidth);document.querySelectorAll('#dots i').forEach((d,j)=>d.classList.toggle('on',i===j))},{passive:true});
-    let hold=0;h.addEventListener('touchstart',()=>hold=Date.now()+8000,{passive:true});
-    heroT=setInterval(()=>{if(document.hidden||Date.now()<hold||$('#det').classList.contains('on'))return;const n=(Math.round(h.scrollLeft/h.clientWidth)+1)%hs.length;h.scrollTo({left:n*h.clientWidth,behavior:'smooth'})},5500);
-  }).catch(()=>{});
-  SECS.forEach(s=>list(s.v).then(p=>{const car=$('#s-'+s.k+' .x-car');if(car&&tab==='home'&&!LV)car.innerHTML=p.media.map(card).join('')}).catch(e=>{const car=$('#s-'+s.k+' .x-car');if(car)car.innerHTML=`<div class="x-err glass" style="width:100%"><b>Gagal memuat</b>${esc(e.message)}<br><button class="x-btn" style="margin-top:10px" data-retry="home">Coba lagi</button></div>`}));
+
+const F = `id title{romaji english} coverImage{extraLarge large} bannerImage averageScore episodes format status seasonYear genres`;
+const LIST = `query($p:Int,$s:[MediaSort],$q:String,$g:String){ Page(page:$p,perPage:24){ media(type:ANIME,isAdult:false,sort:$s,search:$q,genre:$g){ ${F} } } }`;
+const HERO = `query{ Page(perPage:6){ media(type:ANIME,isAdult:false,sort:TRENDING_DESC){ ${F} } } }`;
+const DET = `query($id:Int){ Media(id:$id,type:ANIME){ ${F} description(asHtml:false) studios(isMain:true){nodes{name}} nextAiringEpisode{episode} } }`;
+const SCH = `query($f:Int,$t:Int){ Page(perPage:60){ airingSchedules(airingAt_greater:$f,airingAt_lesser:$t,sort:TIME){ airingAt episode media(type:ANIME,isAdult:false){ ${F} } } } }`;
+
+const SORTS = { home:['TRENDING_DESC','POPULARITY_DESC','SCORE_DESC'], top:['SCORE_DESC'], new:['START_DATE_DESC'], movie:['POPULARITY_DESC'] };
+
+/* ============ kartu ============ */
+function card(m){
+  const t = m.title.romaji || m.title.english || 'Tanpa judul';
+  const fav = store.get(LS.fav).some(x => x.id === m.id);
+  return `<div class="card" data-id="${m.id}">
+    <img src="${esc(m.coverImage?.large || m.coverImage?.extraLarge)}" loading="lazy" alt="">
+    ${m.averageScore ? `<span class="sc">${m.averageScore}%</span>` : ''}
+    ${m.episodes ? `<span class="ep">${m.episodes} ep</span>` : (m.format === 'MOVIE' ? '<span class="ep">film</span>' : '')}
+    <div class="t">${esc(t)}</div>
+    <button class="fav ${fav?'on':''}" data-fav="${m.id}"><i class="fa-${fav?'solid':'regular'} fa-heart"></i></button>
+  </div>`;
 }
-function openList(o){LV=Object.assign({page:1,items:[],more:true,busy:false},o);window.scrollTo({top:0});rListing()}
-function rListing(){
-  pg.innerHTML=`<button class="x-back" data-lback>← Kembali</button><h2 class="f" style="margin:0 0 14px;font-size:1.3rem">${esc(LV.title)}</h2><div class="x-grid" id="lg"></div><div id="ls"></div>`;
-  paintList();if(!LV.items.length)loadMore();
+function bindCards(root){
+  root.querySelectorAll('.card').forEach(el => {
+    el.onclick = e => {
+      if (e.target.closest('[data-fav]')) { e.stopPropagation(); toggleFav(el.dataset.id); return; }
+      openDet(+el.dataset.id);
+    };
+  });
 }
-function paintList(){const g=$('#lg');if(!g)return;g.innerHTML=LV.items.map(card).join('');$('#ls').innerHTML=LV.err?fail(LV.err,'more'):LV.busy&&!LV.items.length?`<div class="x-grid">${'<div class="sk" style="aspect-ratio:2/3;border-radius:20px"></div>'.repeat(6)}</div>`:LV.more?'<button class="x-btn x-more" data-more="1">Muat lebih banyak</button>':LV.items.length?'<p class="empty">Sudah sampai ujung 🎉</p>':'<div class="empty"><i>🔍</i>Tidak ada hasil.</div>'}
-async function loadMore(){
-  if(!LV||LV.busy)return;LV.busy=true;LV.err=null;paintList();const me=LV;
-  try{const p=await list(Object.assign({},LV.v,{page:LV.page,per:24}));if(me!==LV)return;me.items=me.items.concat(p.media.filter(m=>!me.items.some(x=>x.id===m.id)));me.more=p.pageInfo.hasNextPage;me.page++}
-  catch(e){me.err=e}
-  me.busy=false;if(me===LV)paintList();
+function toggleFav(id){
+  const f = store.get(LS.fav);
+  const i = f.findIndex(x => x.id === id);
+  if (i > -1) { f.splice(i,1); toast('Dihapus dari daftar'); } else { f.unshift({ id, ts: Date.now() }); toast('Masuk daftar'); }
+  store.set(LS.fav, f.slice(0,200));
+  $$(`[data-fav="${id}"]`).forEach(b => { b.classList.toggle('on', i === -1); b.innerHTML = `<i class="fa-${i === -1 ? 'solid':'regular'} fa-heart"></i>`; });
 }
-let qT=0;
-$('#q').addEventListener('input',e=>{const v=e.target.value.trim();$('#qx').hidden=!v;clearTimeout(qT);qT=setTimeout(()=>{if(v.length>1)openList({title:'Hasil “'+v+'”',v:{search:v,sort:['SEARCH_MATCH']}});else if(!v&&LV&&LV.v.search){LV=null;render()}},450)});
-$('#qx').onclick=()=>{$('#q').value='';$('#qx').hidden=true;if(LV&&LV.v.search){LV=null;render()}};
-/* ---------- Jadwal ---------- */
-let schDay=-1,schPop=true,SCHED=null;
-const hm=t=>new Date(t*1000).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',hour12:false}).replace('.',':');
-const clk=s=>{s=Math.floor(s);const h=Math.floor(s/3600),m=Math.floor(s%3600/60),c=s%60;return(h?h+':'+String(m).padStart(2,'0'):m)+':'+String(c).padStart(2,'0')};
-async function rJadwal(){
-  const mon=new Date();mon.setHours(0,0,0,0);mon.setDate(mon.getDate()-(mon.getDay()+6)%7);
-  const from=Math.floor(mon/1000)-1,to=from+7*86400+1,td=(new Date().getDay()+6)%7;if(schDay<0)schDay=td;
-  const days=['Sen','Sel','Rab','Kam','Jum','Sab','Min'];
-  const shell=()=>`<div class="x-days">${days.map((d,i)=>{const dt=new Date(mon);dt.setDate(dt.getDate()+i);return`<button data-day="${i}" class="${i===schDay?'on':''} ${i===td?'td':''}">${d}<b>${dt.getDate()}</b></button>`}).join('')}</div><label class="x-tg"><input type="checkbox" id="spop" ${schPop?'checked':''} style="width:18px;min-height:18px"> Hanya yang populer</label><div id="sl"></div>`;
-  pg.innerHTML=shell();$('#sl').innerHTML='<div class="sk" style="height:84px;margin-bottom:10px"></div>'.repeat(4);
-  try{
-    if(!SCHED||SCHED.from!==from){let items=[];for(let p=1;p<=8;p++){const d=await gql(SCH,{from,to,page:p},30*60e3);items=items.concat(d.Page.airingSchedules);if(!d.Page.pageInfo.hasNextPage)break}SCHED={from,items}}
-    if(tab!=='jadwal'||LV)return;paintSched();
-  }catch(e){if(tab==='jadwal')$('#sl').innerHTML=fail(e,'jadwal')}
-}
-function paintSched(){
-  const el=$('#sl');if(!el)return;const now=Date.now()/1000;
-  const it=SCHED.items.filter(x=>!x.media.isAdult&&x.media.countryOfOrigin==='JP'&&(!schPop||x.media.popularity>2500)&&(new Date(x.airingAt*1000).getDay()+6)%7===schDay).sort((a,b)=>a.airingAt-b.airingAt);
-  el.innerHTML=it.length?it.map(x=>{const m=x.media,d=x.airingAt-now;return`<button class="x-row glass" data-open="${m.id}"><div class="tm">${hm(x.airingAt)}</div><div class="ph" style="${bgu(m.coverImage.large)}"></div><div class="tx"><b>${esc(name(m))}</b><span>Episode ${x.episode} · ${FMT[m.format]||''}</span></div><span class="x-chip ${d<0?'ok':''}">${d<0?'Sudah tayang':d<3600?Math.max(1,Math.round(d/60))+' mnt lagi':Math.floor(d/3600)+' jam lagi'}</span></button>`}).join(''):'<div class="empty"><i>🌙</i>Belum ada jadwal untuk hari ini.</div>';
-}
-/* ---------- Daftarku ---------- */
-function rDaftar(){
-  const fav=rd('za_fav',[]),hist=Object.values(rd('za_hist',{})).sort((a,b)=>b.ts-a.ts);
-  const mini=(h,sub)=>`<button class="x-row glass" data-open="${h.id}"><div class="ph" style="${bgu(h.cover)}"></div><div class="tx"><b>${esc(h.title)}</b><span>${esc(sub)}</span></div></button>`;
-  pg.innerHTML=`<div class="x-seg glass" style="margin-bottom:14px"><button data-ds="fav" class="${dsub==='fav'?'on':''}">❤ Favorit ${fav.length}</button><button data-ds="hist" class="${dsub==='hist'?'on':''}">🕘 Riwayat ${hist.length}</button></div>`
-   +(dsub==='fav'?(fav.length?fav.map(f=>mini(f,'Ketuk untuk membuka')).join(''):'<div class="empty"><i>💝</i>Belum ada favorit.<br>Ketuk ❤ di halaman detail anime.</div>')
-     :(hist.length?hist.map(h=>mini(h,(h.ep||'')+(h.pt>10?' · lanjut '+clk(h.pt):''))).join('')+'<button class="x-back" style="margin-top:6px" data-clrh>🗑 Hapus riwayat</button>':'<div class="empty"><i>📺</i>Belum ada riwayat tontonan.</div>'));
-}
-/* ---------- Detail ---------- */
-let D=null,EPS=[],CAND=[],YTP=null,YTR=null,CUR={idx:-1,vid:''},saveT=0;
-const isFav=id=>rd('za_fav',[]).some(f=>f.id===id);
-function toggleFav(){
-  if(!D)return;let f=rd('za_fav',[]);
-  if(isFav(D.id)){f=f.filter(x=>x.id!==D.id);ZT.toast('Dihapus dari favorit')}else{f.unshift({id:D.id,title:name(D),cover:D.coverImage.large,ts:Date.now()});ZT.toast('Ditambahkan ke favorit ❤')}
-  wr('za_fav',f);const b=$('#dfav');if(b)b.classList.toggle('on',isFav(D.id));
-}
-async function openDetail(id){
-  const el=$('#det');el.classList.add('on');el.scrollTop=0;history.replaceState(null,'','#anime');
-  try{saveProg(false)}catch{}
-  killPlayer();
-  el.innerHTML=`<div class="d-top"><button class="glass" data-dclose aria-label="Tutup">‹</button><b>Memuat…</b></div><div class="d-in"><div class="sk" style="aspect-ratio:16/9;border-radius:24px"></div><div class="sk" style="height:90px;margin-top:16px"></div></div>`;
-  try{
-    const m=(await gql(DET,{id},60*60e3)).Media;if(!m||m.isAdult){ZT.toast('Anime ini tidak tersedia');return closeDetail()}
-    D=m;EPS=[];CAND=[];CUR={idx:-1,vid:''};paintDetail();loadEps();
-  }catch(e){el.innerHTML=`<div class="d-top"><button class="glass" data-dclose aria-label="Tutup">‹</button><b>Detail</b></div><div class="d-in">${fail(e,'det:'+id)}</div>`}
-}
-function closeDetail(){killPlayer();$('#det').classList.remove('on');D=null;if(tab==='daftar')rDaftar()}
-function paintDetail(){
-  const m=D,tr=m.trailer&&m.trailer.site&&m.trailer.site.toLowerCase()==='youtube'?m.trailer.id:'',st=((m.studios||{}).nodes||[]).map(s=>s.name).join(', '),sd=m.startDate&&m.startDate.year?[m.startDate.day,m.startDate.month,m.startDate.year].filter(Boolean).join('/'):'—';
-  const recs=((m.recommendations||{}).nodes||[]).map(n=>n.mediaRecommendation).filter(r=>r&&!r.isAdult);
-  const nx=m.nextAiringEpisode?`Episode ${m.nextAiringEpisode.episode} tayang ${new Date(m.nextAiringEpisode.airingAt*1000).toLocaleString('id-ID',{weekday:'long',hour:'2-digit',minute:'2-digit'})}`:'';
-  $('#det').innerHTML=`<div class="d-top"><button class="glass" data-dclose aria-label="Tutup">‹</button><b>${esc(name(m))}</b><button class="glass ${isFav(m.id)?'on':''}" id="dfav" data-dfav aria-label="Favorit">❤</button></div>
-  <div class="d-in"><div class="d-pl" id="pl"><div id="ytp"></div><div class="d-ph" id="plph" style="${bgu(m.bannerImage||m.coverImage.large)}"><button class="d-big" id="plgo" aria-label="Putar">▶</button></div></div>
-  <div class="d-now" id="now">${tr?'Trailer tersedia di bawah.':''}</div>
-  <div class="d-h"><h1>${esc(name(m))}</h1>${m.title.romaji&&m.title.romaji!==name(m)?`<p>${esc(m.title.romaji)}</p>`:''}</div>
-  <div class="d-chips">${m.averageScore?`<span class="s">★ ${(m.averageScore/10).toFixed(1)}</span>`:''}<span>${STAT[m.status]||''}</span><span>${FMT[m.format]||''}</span>${m.episodes?`<span>${m.episodes} episode</span>`:''}${(m.genres||[]).slice(0,4).map(g=>`<span>${esc(g)}</span>`).join('')}</div>
-  ${nx?`<p class="d-now">⏰ ${esc(nx)}</p>`:''}
-  <div class="d-box glass" id="epbox"><h3>📺 Episode</h3><div class="sk" style="height:56px"></div></div>
-  <div class="d-box glass"><h3>Sinopsis <button data-syn>Selengkapnya</button></h3><p class="d-syn" id="syn">${esc(plain(m.description)||'Belum ada sinopsis.')}</p><p class="dm" style="margin-top:6px">Sinopsis dari AniList (bahasa Inggris).</p></div>
-  <div class="d-box glass"><h3>Info</h3><div class="d-info"><div><small>Studio</small><b>${esc(st||'—')}</b></div><div><small>Mulai tayang</small><b>${sd}</b></div><div><small>Durasi</small><b>${m.duration?m.duration+' mnt/eps':'—'}</b></div><div><small>Sumber</small><b>${esc(String(m.source||'—').replace(/_/g,' ').toLowerCase())}</b></div></div></div>
-  ${tr?`<div class="d-links"><button data-trailer="${esc(tr)}">▶ Putar trailer</button></div>`:''}
-  ${recs.length?`<section class="x-sec" style="margin-top:20px"><div class="x-sh"><h2 class="f">Mirip dengan ini</h2></div><div class="x-car">${recs.map(card).join('')}</div></section>`:''}</div>`;
-}
-const q2=s=>encodeURIComponent(s);
-async function loadEps(){
-  const m=D,my=m.id,box=()=>D&&D.id===my?$('#epbox'):null;
-  const title=m.title.romaji||m.title.english||m.title.native||name(m);
-  try{
-    const r1=await fetch(`${ANIME_API}?a=search&q=${encodeURIComponent(title)}`);
-    const j1=await r1.json();
-    if(!j1.ok||!j1.data?.length)return paintEps(null,'Anime ini tidak ditemukan di semua sumber.');
-    const anime=j1.data[0], prov=j1.provider;
-    const r2=await fetch(`${ANIME_API}?a=episodes&slug=${encodeURIComponent(anime.slug)}&provider=${encodeURIComponent(prov)}`);
-    const j2=await r2.json();
-    if(!box())return;
-    if(!j2.ok||!j2.data?.length)return paintEps(null,'Episode tidak ditemukan di '+prov+'.');
-    EPS=j2.data.map((ep,i)=>({n:ep.num!=null?ep.num:i+1,t:ep.title,v:ep.url,isAnoboy:true,provider:j2.provider}));
-    CAND=[];
-    paintEps({ch:j2.provider,title:anime.title});
-  }catch(e){if(box())paintEps(null,'Gagal memuat: '+e.message)}
-}
-function paintEps(src,msg){
-  const b=$('#epbox');if(!b||!D)return;const h=rd('za_hist',{})[D.id];
-  if(!EPS.length){
-    b.innerHTML=`<h3>📺 Episode</h3><p>${esc(msg||'Belum ada episode.')}</p><div class="d-links"><button data-msearch>🔎 Cari manual</button><a target="_blank" rel="noopener" href="https://www.crunchyroll.com/search?q=${q2(name(D))}">Crunchyroll</a><a target="_blank" rel="noopener" href="https://www.bilibili.tv/id/search-result?keyword=${q2(name(D))}">Bstation</a></div><div id="msr"></div>`;
-    return;
+
+/* ============ render ============ */
+let tab = 'home', page = 1, sort = 'TRENDING_DESC', genre = '', seen = new Set();
+
+async function render(){
+  const v = $('#view');
+  if (tab === 'daftar') {
+    const f = store.get(LS.fav);
+    if (!f.length) { v.innerHTML = '<div class="empty">Daftar masih kosong. Tekan ikon hati di poster anime.</div>'; return; }
+    v.innerHTML = '<div class="skel"></div>';
+    const out = [];
+    for (const x of f.slice(0,60)) {
+      try { const d = await gql(DET, { id: x.id }); if (d.Media) out.push(d.Media); } catch {}
+    }
+    v.innerHTML = `<h2><i class="fa-solid fa-heart"></i>Daftar saya <small>${out.length}</small></h2><div class="grid" id="g"></div>`;
+    $('#g').innerHTML = out.map(card).join('');
+    return bindCards($('#g'));
   }
-  const nums=EPS.every(e=>e.n!=null)?EPS.map(e=>e.n):EPS.map((_,i)=>i+1);
-  b.innerHTML=`<h3>📺 Episode <span class="d-chips" style="margin:0"><span>${EPS.length}</span></span></h3>${src?`<p class="dm">Sumber: ${esc(src.ch)} · ${esc(src.title)}</p>`:''}<div class="d-eps" id="eps">${EPS.map((e,i)=>`<button data-ep="${i}" title="${esc(e.t)}" class="${i===CUR.idx?'on':h&&h.vid===e.v?'w':''}">${nums[i]}</button>`).join('')}</div>`;
-  const go=$('#plgo');if(go&&h&&h.idx!=null&&EPS[h.idx]&&EPS[h.idx].v===h.vid)$('#now').textContent='Terakhir ditonton: '+(h.ep||'');
+  if (tab === 'jadwal') return renderSchedule();
+  return renderHome();
 }
-const epLabel=i=>'Ep '+(EPS[i]&&EPS[i].n!=null?EPS[i].n:i+1);
-function ytReady(){return YTR||(YTR=new Promise(res=>{if(window.YT&&YT.Player)return res();window.onYouTubeIframeAPIReady=res;const s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';s.onerror=()=>res();document.head.appendChild(s);setTimeout(res,9000)}))}
-async function playVid(vid,o={}){
-  await ytReady();if(!(window.YT&&YT.Player))return ZT.toast('Pemutar YouTube gagal dimuat');
-  if(!D)return;const ph=$('#plph');if(ph)ph.hidden=true;const pe=$('#perr');if(pe)pe.remove();
-  CUR={idx:o.idx==null?-1:o.idx,vid};
-  if(YTP&&YTP.loadVideoById)YTP.loadVideoById({videoId:vid,startSeconds:o.start||0});
-  else YTP=new YT.Player('ytp',{videoId:vid,playerVars:{rel:0,playsinline:1,modestbranding:1,autoplay:1,start:Math.floor(o.start||0)},events:{onReady:e=>e.target.playVideo(),onStateChange:onSt,onError:onErr}});
-  parent.postMessage({animePlay:1},O);
-  const t=o.idx!=null&&o.idx>=0?epLabel(o.idx):'Trailer';$('#now').textContent='Memutar: '+t+(EPS[o.idx]?' · '+EPS[o.idx].t:'');
-  document.querySelectorAll('#eps button').forEach(b=>b.classList.toggle('on',+b.dataset.ep===CUR.idx));
-  if(CUR.idx>=0)saveProg(true);
-}
-async function playEp(i,fromHist){
-  const e=EPS[i];if(!e)return;
-  if(e.isAnoboy){
-    $('#plph').hidden=true;const pe=$('#perr');if(pe)pe.remove();
-    CUR={idx:i,vid:e.v};
-    if(YTP){try{YTP.destroy()}catch{}YTP=null}
-    $('#now').textContent='Memuat episode...';
-    try{
-      const r=await fetch(`${ANIME_API}?a=watch&url=${encodeURIComponent(e.v)}&provider=${encodeURIComponent(e.provider||'')}`);
-      const j=await r.json();
-      if(!j.ok)throw new Error(j.error||'gagal ambil embed');
-      const pl=$('#pl');const old=pl.querySelector('#anoboy-if');if(old)old.remove();
-      const fr=document.createElement('iframe');
-      fr.id='anoboy-if';fr.src=j.data.embed;fr.allowFullscreen=true;
-      fr.setAttribute('allow','autoplay; fullscreen; encrypted-media; picture-in-picture');
-      fr.setAttribute('referrerpolicy','no-referrer');
-      fr.style.cssText='position:absolute;inset:0;width:100%;height:100%;border:0';
-      pl.appendChild(fr);
-      $('#now').textContent='Memutar: '+(e.t||('Episode '+(i+1)))+' · '+j.provider;
-      document.querySelectorAll('#eps button').forEach(b=>b.classList.toggle('on',+b.dataset.ep===i));
-      saveProgAnoboy(i);
-    }catch(err){ZT.toast('Gagal memuat video: '+err.message);$('#now').textContent='Gagal memuat video.'}
-    return;
+
+async function renderHome(){
+  const v = $('#view');
+  v.innerHTML = '<div class="skel" style="height:230px"></div><div class="skel" style="margin-top:12px"></div>';
+  let hero = [];
+  try { hero = (await gql(HERO)).Page.media; } catch (e) { toast(e.message); }
+  v.innerHTML = hero.length ? `<div class="hero" id="hero"></div>` : '';
+  if (hero.length) {
+    let hi = 0;
+    const paint = () => {
+      const m = hero[hi];
+      $('#hero').innerHTML = `<img src="${esc(m.bannerImage || m.coverImage.extraLarge)}" alt="">
+        <div class="ov"></div>
+        <div class="dots">${hero.map((_,i)=>`<i class="${i===hi?'on':''}"></i>`).join('')}</div>
+        <div class="txt"><h3>${esc(m.title.romaji || m.title.english)}</h3>
+        <p>${esc((m.genres||[]).join(' · '))}</p>
+        <div class="row"><button class="btn p" data-open="${m.id}"><i class="fa-solid fa-play"></i> Tonton</button>
+        <button class="btn" data-fav="${m.id}"><i class="fa-regular fa-heart"></i></button></div></div>`;
+      $('#hero').querySelector('[data-open]').onclick = () => openDet(m.id);
+      $('#hero').querySelector('[data-fav]').onclick = e => { e.stopPropagation(); toggleFav(m.id); };
+      $('#hero').onclick = e => { if (!e.target.closest('button')) openDet(m.id); };
+    };
+    paint();
+    setInterval(() => { if (!$('#det').classList.contains('up') && document.visibilityState === 'visible') { hi = (hi+1) % hero.length; paint(); } }, 6000);
   }
-  playVid(e.v,{idx:i});
+  const chips = `<div class="chips">
+    <button class="chip" data-sort="TRENDING_DESC">Trending</button>
+    <button class="chip" data-sort="POPULARITY_DESC">Populer</button>
+    <button class="chip" data-sort="SCORE_DESC">Rating tertinggi</button>
+    <button class="chip" data-sort="START_DATE_DESC">Terbaru</button>
+    <button class="chip" data-g="Action">Action</button>
+    <button class="chip" data-g="Romance">Romance</button>
+    <button class="chip" data-g="Comedy">Comedy</button>
+    <button class="chip" data-g="Fantasy">Fantasy</button>
+    <button class="chip" data-g="Slice of Life">Slice of Life</button>
+  </div>`;
+  v.insertAdjacentHTML('beforeend', chips + '<h2><i class="fa-solid fa-layer-group"></i>Jelajahi <small>AniList</small></h2><div class="grid" id="g"></div><div id="more" style="text-align:center;margin-top:14px"></div>');
+  v.querySelectorAll('.chip').forEach(c => c.onclick = () => {
+    sort = c.dataset.sort || 'POPULARITY_DESC'; genre = c.dataset.g || '';
+    loadGrid(true);
+  });
+  loadGrid(true);
 }
-function saveProgAnoboy(i){
-  if(!D||i<0)return;const e=EPS[i];const h=rd('za_hist',{});
-  h[D.id]={id:D.id,title:name(D),cover:D.coverImage.large,ep:'Ep '+(e.n||i+1),idx:i,vid:e.v,pt:0,ts:Date.now()};
-  const ks=Object.keys(h);if(ks.length>40){ks.sort((a,b)=>h[a].ts-h[b].ts).slice(0,ks.length-40).forEach(k=>delete h[k])}wr('za_hist',h);
+
+async function loadGrid(reset){
+  if (reset) { page = 1; seen = new Set(); $('#g').innerHTML = ''; }
+  try {
+    const d = await gql(LIST, { p: page, s: [sort], g: genre || undefined });
+    const list = (d.Page.media || []).filter(m => !seen.has(m.id));
+    list.forEach(m => seen.add(m.id));
+    $('#g').insertAdjacentHTML('beforeend', list.map(card).join(''));
+    bindCards($('#g'));
+    $('#more').innerHTML = list.length ? '<button class="btn" onclick="page++;loadGrid()">Muat lebih banyak</button>' : '';
+    if (!list.length) $('#g').innerHTML = '<div class="empty">Tidak ada hasil.</div>';
+  } catch (e) { toast(e.message); }
 }
-function saveProg(first){
-  if(!D||CUR.idx<0)return;let t=0;try{t=YTP&&YTP.getCurrentTime?YTP.getCurrentTime():0}catch{}
-  const h=rd('za_hist',{});h[D.id]={id:D.id,title:name(D),cover:D.coverImage.large,ep:epLabel(CUR.idx),idx:CUR.idx,vid:CUR.vid,pt:first?0:t,ts:Date.now()};
-  const ks=Object.keys(h);if(ks.length>40){ks.sort((a,b)=>h[a].ts-h[b].ts).slice(0,ks.length-40).forEach(k=>delete h[k])}wr('za_hist',h);
+
+async function renderSchedule(){
+  const v = $('#view');
+  v.innerHTML = '<div class="skel"></div>';
+  const now = Math.floor(Date.now()/1000);
+  try {
+    const d = await gql(SCH, { f: now - 86400, t: now + 7 * 86400 });
+    const rows = (d.Page.airingSchedules || []).filter(s => s.media && (s.media.popularity || 0) > 1000);
+    if (!rows.length) return v.innerHTML = '<div class="empty">Jadwal kosong.</div>';
+    const days = {};
+    rows.forEach(s => {
+      const dt = new Date(s.airingAt * 1000);
+      const k = dt.toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'short' });
+      (days[k] = days[k] || []).push(s);
+    });
+    v.innerHTML = `<h2><i class="fa-solid fa-calendar-days"></i>Jadwal tayang <small>7 hari</small></h2>` +
+      Object.entries(days).map(([k, list]) => `<div class="sched-day"><h4>${k}</h4>${list.map(s => {
+        const dt = new Date(s.airingAt * 1000);
+        const left = Math.max(0, s.airingAt - now);
+        const cd = left < 3600 ? Math.ceil(left/60) + 'm' : Math.ceil(left/3600) + 'j';
+        return `<div class="sched" data-id="${s.media.id}">
+          <img src="${esc(s.media.coverImage.large)}" loading="lazy" alt="">
+          <div class="m"><b>${esc(s.media.title.romaji)}</b><small>Ep ${s.episode} · ${dt.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}</small></div>
+          <span class="cd">${cd}</span></div>`;
+      }).join('')}</div>`).join('');
+    v.querySelectorAll('.sched').forEach(el => el.onclick = () => openDet(+el.dataset.id));
+  } catch (e) { v.innerHTML = `<div class="empty">${esc(e.message)}</div>`; }
 }
-function onSt(e){clearInterval(saveT);if(e.data===1)saveT=setInterval(()=>saveProg(false),6000);else if(e.data===2)saveProg(false);else if(e.data===0&&CUR.idx>=0&&CUR.idx<EPS.length-1)playEp(CUR.idx+1)}
-function onErr(e){const pl=$('#pl');if(!pl||!CUR.vid)return;const x=document.createElement('div');x.id='perr';x.className='d-perr';x.innerHTML=`<div>${e.data===101||e.data===150?'Pemilik video melarang pemutaran di luar YouTube.':'Video ini tidak bisa diputar.'}</div><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=${esc(CUR.vid)}">Buka di YouTube</a>`;pl.appendChild(x)}
-function killPlayer(){clearInterval(saveT);try{YTP&&YTP.destroy&&YTP.destroy()}catch{}YTP=null;const old=document.getElementById('anoboy-if');if(old)old.remove();CUR={idx:-1,vid:''}}
-async function manualSearch(){
-  const box=$('#msr');if(!box||!D)return;box.innerHTML='<div class="sk" style="height:48px;margin-top:10px"></div>';
-  try{const j=await (await fetch(`${ANIME_API}?a=search&q=${encodeURIComponent(name(D))}`)).json();const list=j.data||[];
-    if(!list.length){box.innerHTML='<p class="dm" style="margin-top:10px">Tidak ada hasil.</p>';return}
-    const eps=await (await fetch(`${ANIME_API}?a=episodes&slug=${encodeURIComponent(list[0].slug)}`)).json();
-    if(!eps.ok||!eps.data?.length){box.innerHTML='<p class="dm" style="margin-top:10px">Tidak ada episode.</p>';return}
-    EPS=eps.data.map((ep,i)=>({n:ep.num!=null?ep.num:i+1,t:ep.title,v:ep.url,isAnoboy:true,provider:eps.provider}));CAND=[];paintEps({ch:eps.provider,title:list[0].title});
-  }catch{box.innerHTML='<p class="dm" style="margin-top:10px">Pencarian gagal.</p>'}
+
+async function runSearch(e){
+  if (e) e.preventDefault();
+  const q = $('#q').value.trim();
+  if (!q) return;
+  tab = 'home';
+  $$('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === 'home'));
+  $('#view').innerHTML = '<div class="skel"></div><div class="skel" style="margin-top:10px"></div>';
+  try {
+    const d = await gql(LIST, { p: 1, s: ['SEARCH_MATCH'], q });
+    const list = d.Page.media || [];
+    $('#view').innerHTML = `<h2><i class="fa-solid fa-magnifying-glass"></i>Hasil "${esc(q)}" <small>${list.length}</small></h2><div class="grid" id="g"></div>`;
+    $('#g').innerHTML = list.length ? list.map(card).join('') : '<div class="empty">Tidak ada hasil.</div>';
+    bindCards($('#g'));
+  } catch (err) { toast(err.message); }
 }
-/* ---------- Klik ---------- */
-document.addEventListener('click',e=>{
-  const t=e.target,c=s=>t.closest(s);let x;
-  if(x=c('[data-open]'))return openDetail(+x.dataset.open);
-  if(c('[data-dclose]'))return closeDetail();
-  if(c('[data-dfav]'))return toggleFav();
-  if(x=c('[data-g]')){const g=GENRES.find(z=>z[0]===x.dataset.g);return openList({title:'Genre: '+(g?g[1]:x.dataset.g),v:{genre:x.dataset.g,sort:['POPULARITY_DESC']}})}
-  if(x=c('[data-all]')){const s=SECS.find(z=>z.k===x.dataset.all);return openList({title:s.t.replace(/^\S+\s/,''),v:s.v})}
-  if(c('[data-lback]')){LV=null;return render()}
-  if(c('[data-more]'))return loadMore();
-  if(x=c('[data-retry]')){const k=x.dataset.retry;if(k.startsWith('det:'))return openDetail(+k.slice(4));if(k==='more'){LV.err=null;return loadMore()}if(k==='jadwal')return rJadwal();return render()}
-  if(x=c('[data-day]')){schDay=+x.dataset.day;document.querySelectorAll('[data-day]').forEach(b=>b.classList.toggle('on',+b.dataset.day===schDay));return paintSched()}
-  if(x=c('[data-ds]')){dsub=x.dataset.ds;return rDaftar()}
-  if(c('[data-clrh]')){wr('za_hist',{});return rDaftar()}
-  if(c('#plgo')){const h=rd('za_hist',{})[D.id];if(EPS.length){const i=h&&h.idx!=null&&EPS[h.idx]&&EPS[h.idx].v===h.vid?h.idx:0;return playEp(i,true)}return ZT.toast('Belum ada episode')}
-  if(x=c('[data-ep]'))return playEp(+x.dataset.ep);
-  if(c('[data-syn]')){const s=$('#syn');s.classList.toggle('all');t.closest('[data-syn]').textContent=s.classList.contains('all')?'Ringkas':'Selengkapnya';return}
-  if(c('[data-msearch]'))return manualSearch();
-  if(x=c('#seg [data-t]'))return setTab(x.dataset.t);
+
+/* ============ detail + player ============ */
+let cur = null;
+
+async function openDet(id){
+  const d = $('#det');
+  d.classList.add('up'); document.body.style.overflow = 'hidden';
+  d.innerHTML = '<div class="skel" style="height:200px;border-radius:0"></div><div class="wrap"><div class="skel" style="margin-top:14px"></div></div>';
+  try {
+    const m = (await gql(DET, { id })).Media;
+    cur = m;
+    const t = m.title.romaji || m.title.english;
+    const hist = store.get(LS.hist);
+    const prog = hist.find(h => h.id === m.id);
+    d.innerHTML = `
+      <div class="banner" style="background-image:url(${esc(m.bannerImage || m.coverImage.extraLarge)})"></div>
+      <button class="close" onclick="closeDet()"><i class="fa-solid fa-arrow-left"></i></button>
+      <div class="body">
+        <h2>${esc(t)}</h2>
+        <div class="meta">
+          ${m.averageScore ? `<span>${m.averageScore}%</span>` : ''}
+          ${m.format ? `<span>${esc(m.format)}</span>` : ''}
+          ${m.episodes ? `<span>${m.episodes} ep</span>` : ''}
+          ${m.seasonYear ? `<span>${m.seasonYear}</span>` : ''}
+          <span>${esc((m.studios?.nodes||[]).map(s=>s.name).join(', ') || '—')}</span>
+        </div>
+        <div class="desc">${esc((m.description || 'Sinopsis belum tersedia.').replace(/<[^>]+>/g,'')).slice(0,900)}</div>
+        <div class="acts">
+          <button class="btn p" onclick="findSource()"><i class="fa-solid fa-play"></i> ${prog ? 'Lanjut ep '+prog.ep : 'Cari sumber tayang'}</button>
+          <button class="btn" onclick="toggleFav(${m.id})"><i class="fa-regular fa-heart"></i> Daftar</button>
+          <a class="btn" href="https://anilist.co/anime/${m.id}" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> AniList</a>
+        </div>
+        <div id="srcArea"></div>
+        <div class="note">Sumber streaming berasal dari situs pihak ketiga. Kalau satu server gagal, coba server lain atau buka di browser.</div>
+      </div>`;
+  } catch (e) { d.innerHTML = `<div class="wrap" style="padding-top:60px"><div class="empty">${esc(e.message)}</div></div>`; }
+}
+function closeDet(){ $('#det').classList.remove('up'); document.body.style.overflow = ''; cur = null; }
+
+async function findSource(){
+  const area = $('#srcArea');
+  if (!cur) return;
+  area.innerHTML = '<div class="empty" style="margin-bottom:10px">Mencari sumber…</div>';
+  const q = cur.title.romaji || cur.title.english;
+  try {
+    const r = await fetch(`${ANI}?a=search&q=${encodeURIComponent(q)}`);
+    const j = await r.json();
+    if (!j.ok || !j.data?.length) return area.innerHTML = '<div class="empty">Sumber tidak ditemukan untuk judul ini. Coba cari manual.</div>';
+    area.innerHTML = `<h2 style="margin-top:4px"><i class="fa-solid fa-server"></i>Pilih sumber <small>${esc(j.via)}</small></h2>` +
+      j.data.slice(0,8).map((s,i) => `<div class="ep" data-s="${i}"><span class="n">${esc(s.provider.slice(0,3))}</span>${esc(s.title)}<span class="pg">buka</span></div>`).join('');
+    area.querySelectorAll('[data-s]').forEach(el => el.onclick = () => loadEps(j.data[+el.dataset.s]));
+  } catch { area.innerHTML = '<div class="empty">Gagal menghubungi sumber.</div>'; }
+}
+
+async function loadEps(src){
+  const area = $('#srcArea');
+  area.innerHTML = '<div class="empty">Memuat episode…</div>';
+  try {
+    const r = await fetch(`${ANI}?a=episodes&slug=${encodeURIComponent(src.slug)}&provider=${encodeURIComponent(src.provider)}&base=${encodeURIComponent(src.base||'')}`);
+    const j = await r.json();
+    if (!j.ok || !j.data?.length) return area.innerHTML = '<div class="empty">Episode tidak tersedia di sumber ini.</div>';
+    area.innerHTML = `<div class="player" id="pl"><div class="ph"><i class="fa-solid fa-circle-play" style="font-size:1.6rem"></i><span>Pilih episode di bawah</span></div></div>
+      <div id="srvBox"></div>
+      <div class="eps">${j.data.map((e,i)=>`<div class="ep" data-e="${i}"><span class="n">${e.num ?? i+1}</span>${esc(e.title)}<span class="pg">putar</span></div>`).join('')}</div>`;
+    area.querySelectorAll('[data-e]').forEach(el => el.onclick = () => playEp(j.data[+el.dataset.e]));
+  } catch { area.innerHTML = '<div class="empty">Gagal memuat episode.</div>'; }
+}
+
+async function playEp(ep){
+  const pl = $('#pl'), box = $('#srvBox');
+  pl.innerHTML = '<div class="ph"><i class="fa-solid fa-spinner fa-spin"></i><span>Menyiapkan server…</span></div>';
+  box.innerHTML = '';
+  try {
+    const r = await fetch(`${ANI}?a=watch&url=${encodeURIComponent(ep.url)}`);
+    const j = await r.json();
+    if (!j.ok || !j.data?.length) throw new Error('server kosong');
+    const put = u => {
+      pl.innerHTML = `<iframe src="${esc(u)}" allow="autoplay; fullscreen; encrypted-media" allowfullscreen referrerpolicy="no-referrer"></iframe>`;
+    };
+    box.innerHTML = `<div class="srvs">${j.data.map((u,i)=>`<button class="srv ${i===0?'on':''}" data-u="${esc(u)}">Server ${i+1}</button>`).join('')}</div>`;
+    box.querySelectorAll('.srv').forEach(b => b.onclick = () => {
+      box.querySelectorAll('.srv').forEach(x => x.classList.remove('on'));
+      b.classList.add('on'); put(b.dataset.u);
+    });
+    put(j.data[0]);
+    saveProg(ep);
+  } catch {
+    pl.innerHTML = `<div class="ph"><i class="fa-solid fa-triangle-exclamation" style="color:var(--warn)"></i><span>Server gagal dimuat.</span>
+      <a class="btn" href="${esc(ep.url)}" target="_blank" rel="noopener">Buka halaman sumber</a></div>`;
+  }
+}
+
+function saveProg(ep){
+  if (!cur) return;
+  const h = store.get(LS.hist).filter(x => x.id !== cur.id);
+  h.unshift({ id: cur.id, ep: ep.num ?? 1, ts: Date.now() });
+  store.set(LS.hist, h.slice(0,60));
+}
+
+function openFav(){ tab='daftar'; $$('#tabs button').forEach(b=>b.classList.toggle('on', b.dataset.tab==='daftar')); render(); window.scrollTo(0,0); }
+
+/* ============ init ============ */
+$$('#tabs button').forEach(b => b.onclick = () => {
+  tab = b.dataset.tab;
+  $$('#tabs button').forEach(x => x.classList.toggle('on', x === b));
+  render();
 });
-document.addEventListener('change',e=>{if(e.target.id==='spop'){schPop=e.target.checked;paintSched()}});
-addEventListener('message',e=>{if(e.origin===O&&e.data&&e.data.active===false){try{YTP&&YTP.pauseVideo&&YTP.pauseVideo()}catch{}}});
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
 render();
 </script>
 </body>
