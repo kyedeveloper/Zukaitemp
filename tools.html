@@ -2,767 +2,119 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<script src="/core.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>ZukaiTools · Hapus Background, Upscale & Lainnya</title>
-<meta name="description" content="Tools gambar gratis: hapus background, upscale, kompres foto, dan generator password.">
-<meta name="theme-color" content="#ff4d94">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tools · ZukaiTemp</title>
+<meta name="theme-color" content="#08070c">
 <link rel="manifest" href="/manifest.json">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" href="/icon-192.png">
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="/icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/app.css">
 <style>
-:root{--p1:#ff4d94;--p2:#ff8fbd;--p3:#ffd9e8;--p4:#fff5f9;--ink:#40182d;--mut:#936079;--w:#fff;--sh:0 14px 34px -18px color-mix(in srgb,var(--p1) 55%,transparent)}
-:root[data-dark]{--p4:#1f0d18;--w:#33172a;--ink:#ffe6f1;--mut:#d79ab9;--p3:#5a2a45}
-*{box-sizing:border-box;margin:0}
-body{font:400 16px/1.55 Nunito,system-ui,sans-serif;color:var(--ink);background:var(--p4);min-height:100vh;overflow-x:hidden}
-h1,h2,h3,.f{font-family:Fredoka,Nunito,sans-serif}
-button{font-family:inherit}
-.blob{position:fixed;border-radius:50%;filter:blur(70px);opacity:.5;z-index:0;animation:drift 16s ease-in-out infinite alternate;pointer-events:none}
-.b1{width:340px;height:340px;background:var(--p2);top:-100px;left:-100px}
-.b2{width:300px;height:300px;background:var(--p3);bottom:-80px;right:-80px;animation-delay:-5s}
-@keyframes drift{to{transform:translate(60px,40px) scale(1.15)}}
-.wrap{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:max(26px,env(safe-area-inset-top)) 20px max(56px,env(safe-area-inset-bottom))}
-.nav{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:26px}
-.logo{display:flex;align-items:center;gap:12px;font-size:1.55rem;font-weight:600;color:var(--p1);text-decoration:none}
-.lg{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--p1),var(--p2));font-size:1.3rem;box-shadow:0 10px 20px -10px var(--p1)}
-.btn{position:relative;border:0;border-radius:15px;min-height:46px;padding:0 22px;font:600 .98rem Fredoka;cursor:pointer;transition:transform .15s;display:inline-flex;gap:8px;align-items:center;justify-content:center;text-decoration:none}
-.btn.sm{min-height:40px;padding:0 18px;font-size:.9rem;border-radius:99px}
-.btn:hover{transform:translateY(-2px)}.btn:active{transform:scale(.96)}
-.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
-.btn.p{background:var(--p1);color:#fff;box-shadow:0 10px 20px -10px var(--p1)}
-.btn.o{background:var(--p4);color:var(--p1);border:2px solid var(--p3)}
-.btn:focus-visible,.tab:focus-visible,.drop:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--p1);outline-offset:2px}
-.hero{background:linear-gradient(135deg,var(--p1),color-mix(in srgb,var(--p1) 72%,var(--g2)));border-radius:30px;padding:30px 28px;color:#fff;box-shadow:0 24px 46px -20px color-mix(in srgb,var(--p1) 70%,transparent);margin-bottom:22px;position:relative;overflow:hidden}
-.hero::after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.13);right:-60px;top:-80px}
-.hero h1{font-size:clamp(1.5rem,5vw,2.1rem);line-height:1.2;position:relative}
-.hero p{opacity:.95;font-weight:600;margin-top:8px;position:relative}
-.tabs{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 16px;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tab{flex:none;min-height:44px;padding:0 20px;border:2px solid var(--p3);background:var(--w);color:var(--mut);border-radius:99px;font:600 .92rem Fredoka;cursor:pointer;transition:.2s}
-.tab.on{background:var(--p1);border-color:var(--p1);color:#fff;box-shadow:0 10px 20px -12px var(--p1)}
-.card{background:var(--w);border-radius:26px;padding:28px;box-shadow:var(--sh);min-width:0}
-.panel{display:none}.panel.on{display:block;animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
-@keyframes pop{from{transform:scale(.97);opacity:0}}
-.card h2{font-size:1.3rem;color:var(--p1);margin-bottom:4px}
-.sub{color:var(--mut);font-weight:600;font-size:.9rem;margin-bottom:20px}
-.drop{border:3px dashed var(--p2);border-radius:24px;padding:40px 18px;text-align:center;cursor:pointer;background:var(--p4);transition:.2s;font-weight:700;color:var(--mut)}
-.drop:hover,.drop.over{background:var(--p3);border-color:var(--p1)}
-.drop i{font-style:normal;font-size:2.6rem;display:block;margin-bottom:6px;animation:float 3s ease-in-out infinite}
-@keyframes float{50%{transform:translateY(-10px)}}
-.work{margin-top:22px}
-.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.pv{position:relative;border-radius:20px;overflow:hidden;background:var(--p4);border:2px solid var(--p3);display:grid;place-items:center;min-height:200px}
-.pv img,.pv canvas{max-width:100%;max-height:380px;display:block;object-fit:contain}
-.pv small{position:absolute;top:10px;left:10px;z-index:2;background:rgba(64,24,45,.75);color:#fff;padding:3px 11px;border-radius:99px;font-weight:700;font-size:.72rem}
-.checker{background:conic-gradient(#ead5df 25%,#fff 0 50%,#ead5df 0 75%,#fff 0) 0 0/20px 20px}
-.ctl{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin:20px 0 0}
-.fld{display:flex;flex-direction:column;gap:6px;min-width:130px;flex:1}
-label,.lbl{font-size:.82rem;font-weight:700;color:var(--mut)}
-select,input[type=number]{width:100%;min-height:46px;padding:0 14px;border-radius:14px;border:2px solid var(--p3);font:600 .95rem Nunito;color:var(--ink);background:var(--p4)}
-input[type=range]{width:100%;accent-color:var(--p1);height:30px}
-.stat{margin-top:16px;font-weight:700;color:var(--mut);font-size:.9rem;min-height:1.4em}
-.prog{height:8px;border-radius:9px;background:var(--p3);overflow:hidden;margin-top:12px;display:none}
-.prog i{display:block;height:100%;width:2%;background:var(--p1);border-radius:9px;transition:width .3s}
-.sws{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.sw{width:36px;height:36px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px var(--p3);cursor:pointer;padding:0}
-.sw.on{box-shadow:0 0 0 3px var(--p1)}
-input[type=color]{width:36px;height:36px;border:0;border-radius:50%;padding:0;background:none;cursor:pointer}
-.pwout{font:600 1.35rem/1.4 Fredoka;word-break:break-all;background:var(--p4);border:2px solid var(--p3);padding:20px;border-radius:20px;margin-bottom:8px;min-height:72px}
-.chk{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
-.chk label{display:flex;gap:8px;align-items:center;background:var(--p4);border:2px solid var(--p3);padding:10px 16px;border-radius:99px;cursor:pointer;color:var(--ink)}
-.chk input{accent-color:var(--p1);width:18px;height:18px}
-.note{margin-top:22px;background:var(--p4);border-radius:16px;padding:14px 16px;font-size:.84rem;color:var(--mut);font-weight:600}
-.foot{margin-top:36px;text-align:center;color:var(--mut);font-size:.84rem;font-weight:700}
-.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,140px);background:var(--ink);color:var(--w);padding:13px 22px;border-radius:99px;font-weight:700;z-index:40;transition:.4s cubic-bezier(.2,1.4,.4,1);max-width:90vw;text-align:center}
-.toast.on{transform:translate(-50%,0)}
-[hidden]{display:none!important}
-@media(max-width:640px){
-  .wrap{padding:max(18px,env(safe-area-inset-top)) 16px max(44px,env(safe-area-inset-bottom))}
-  .hero{padding:22px 18px;border-radius:24px}
-  .card{padding:20px 16px;border-radius:22px}
-  .cols{grid-template-columns:1fr}
-  .logo{font-size:1.35rem}
-  .ctl .btn{flex:1 1 100%}
-}
-textarea{width:100%;padding:14px 16px;border-radius:14px;border:2px solid var(--p3);font:600 .95rem Nunito;color:var(--ink);background:var(--p4);resize:vertical}
-textarea:focus-visible{outline:3px solid var(--p1);outline-offset:2px}
-#aiOut{margin-top:12px}
-.gwrap{display:grid;place-items:center;margin:8px 0 22px}
-.gauge{--v:0;width:230px;height:230px;border-radius:50%;background:conic-gradient(var(--p1) calc(var(--v)*1%),var(--p3) 0);display:grid;place-items:center;transition:background .2s}
-.gauge>div{width:190px;height:190px;border-radius:50%;background:var(--w);display:grid;place-content:center;text-align:center}
-.gauge b{font:600 3rem/1 Fredoka;color:var(--p1)}
-.gauge span{font-weight:700;color:var(--mut);font-size:.88rem}
-.mini{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
-.mini>div{background:var(--p4);border-radius:16px;padding:14px 8px;text-align:center}
-.mini b{display:block;font:600 1.05rem Fredoka;color:var(--p1)}
-.mini span{font-size:.76rem;color:var(--mut);font-weight:700}
-input[type=color]{border-radius:12px;width:100%;height:46px}
-.sws input[type=color]{width:36px;height:36px;border-radius:50%}
-.fld input[type=text],.fld input:not([type]),.fld input[type=number]{width:100%;min-height:46px;padding:0 14px;border-radius:14px;border:2px solid var(--p3);font:600 .95rem Nunito;color:var(--ink);background:var(--p4)}
-@media(max-width:640px){.mini{grid-template-columns:repeat(2,1fr)}}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.tool{border:1px solid var(--line);border-radius:var(--r);background:var(--card);padding:16px;margin-bottom:12px}
+.tool h3{font-size:.88rem;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.tool h3 i{color:var(--a2)}
+.out{margin-top:10px;background:#06050a;border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:11px;font-family:var(--mono);font-size:.75rem;color:var(--a2);word-break:break-all;min-height:42px;white-space:pre-wrap}
+#qr{background:#fff;padding:12px;border-radius:10px;display:inline-block;margin-top:10px}
 </style>
-<link rel="stylesheet" href="/glass.css"><link rel="stylesheet" href="/theme.css">
 </head>
 <body>
-<div class="blob b1"></div><div class="blob b2"></div>
-<div class="wrap">
-  <header class="nav">
-    <a class="logo f" href="#" onclick="return false"><span class="lg">🛠</span><span>ZukaiTools</span></a>
-    
-  </header>
+<div class="grid-bg"></div>
+<header class="top"><div class="wrap hrow">
+  <a href="/" class="logo"><span class="mk"><i class="fa-solid fa-toolbox"></i></span><span>TOOLS<small>ZUKAITEMP</small></span></a>
+  <div class="hactions"><a class="iconbtn" href="/"><i class="fa-solid fa-xmark"></i></a></div>
+</div></header>
 
-  <section class="hero">
-    <h1>Tools gambar & lainnya, gratis 💖</h1>
-    <p>Semua diproses langsung di perangkat kamu. Gambar nggak diunggah ke server kami.</p>
-  </section>
+<main class="wrap" style="padding-top:24px;max-width:660px">
+  <span class="kicker">Alat harian</span>
+  <h2 class="sec">Semua diproses di perangkat</h2>
+  <p class="sub" style="margin-bottom:20px">Tidak ada data yang dikirim ke server.</p>
 
-  <div class="tabs" role="tablist">
-    <button class="tab on" data-t="bg" role="tab">✂️ Hapus BG</button>
-    <button class="tab" data-t="up" role="tab">🔍 Upscale</button>
-    <button class="tab" data-t="ai" role="tab">🧠 AI Lens</button>
-    <button class="tab" data-t="qr" role="tab">🔗 QR Code</button>
-    <button class="tab" data-t="sp" role="tab">📶 Speed Test</button>
-    <button class="tab" data-t="cp" role="tab">🗜 Kompres</button>
-    <button class="tab" data-t="ut" role="tab">🧰 Utilitas</button>
-    <button class="tab" data-t="pw" role="tab">🔑 Password</button>
+  <div class="tool">
+    <h3><i class="fa-solid fa-qrcode"></i> Generator QR</h3>
+    <input class="inp" id="qrIn" placeholder="Teks atau URL" value="https://zukaitemp.vercel.app">
+    <div style="margin-top:10px"><button class="btn p" onclick="mkQr()">Buat QR</button></div>
+    <div id="qr"></div>
   </div>
 
-  <!-- HAPUS BACKGROUND -->
-  <section class="card panel on" id="p-bg">
-    <h2>✂️ Hapus Background</h2>
-    <p class="sub">Potong objek dari fotonya otomatis pakai AI, lalu pilih latar baru.</p>
-    <div class="drop" id="bgDrop" tabindex="0" role="button"><i>🖼</i>Ketuk atau seret gambar ke sini</div>
-    <input type="file" id="bgFile" accept="image/*" hidden>
-    <div class="work" id="bgWork" hidden>
-      <div class="cols">
-        <div class="pv"><small>Asli</small><img id="bgOrig" alt="Gambar asli"></div>
-        <div class="pv checker" id="bgPv"><small>Hasil</small><canvas id="bgRes"></canvas></div>
-      </div>
-      <div class="ctl">
-        <button class="btn p" id="bgRun">✨ Hapus background</button>
-        <button class="btn o" id="bgCancel" hidden>✖ Batal</button>
-        <div class="fld"><label for="bgModel">Model AI</label><select id="bgModel"><option value="rmbg">RMBG-1.4 · serbaguna (non-komersial)</option><option value="modnet">MODNet · foto orang (lisensi bebas)</option></select></div>
-        <div class="fld"><span class="lbl">Warna latar</span>
-          <div class="sws" id="bgSw">
-            <button class="sw on checker" data-c="" title="Transparan" aria-label="Transparan"></button>
-            <button class="sw" data-c="#ffffff" style="background:#fff" title="Putih" aria-label="Putih"></button>
-            <button class="sw" data-c="#ff4d94" style="background:#ff4d94" title="Pink" aria-label="Pink"></button>
-            <button class="sw" data-c="#111111" style="background:#111" title="Hitam" aria-label="Hitam"></button>
-            <input type="color" id="bgColor" value="#ffd9e8" title="Warna lain" aria-label="Warna lain">
-          </div>
-        </div>
-        <button class="btn o" id="bgDl" disabled>⬇ Unduh PNG</button>
-      </div>
-      <div class="prog"><i id="bgBar"></i></div>
-      <div class="stat" id="bgStat"></div>
+  <div class="tool">
+    <h3><i class="fa-solid fa-code"></i> Base64</h3>
+    <textarea class="inp" id="b64" rows="3" placeholder="Teks..."></textarea>
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <button class="btn" onclick="b64run('enc')">Encode</button>
+      <button class="btn" onclick="b64run('dec')">Decode</button>
     </div>
-    <p class="note">Pertama kali dipakai, model AI (±45 MB) diunduh sekali lalu disimpan di browser. RMBG-1.4 (BRIA AI) berlisensi non-komersial. MODNet berlisensi bebas tapi paling bagus untuk foto orang.</p>
-  </section>
+    <div class="out" id="b64out">—</div>
+  </div>
 
-  <!-- UPSCALE -->
-  <section class="card panel" id="p-up">
-    <h2>🔍 Upscale Gambar</h2>
-    <p class="sub">Perbesar resolusi foto yang kecil atau buram.</p>
-    <div class="drop" id="upDrop" tabindex="0" role="button"><i>🖼</i>Ketuk atau seret gambar ke sini</div>
-    <input type="file" id="upFile" accept="image/*" hidden>
-    <div class="work" id="upWork" hidden>
-      <div class="cols">
-        <div class="pv"><small>Asli</small><img id="upOrig" alt="Gambar asli"></div>
-        <div class="pv"><small>Hasil</small><canvas id="upRes"></canvas></div>
-      </div>
-      <div class="ctl">
-        <div class="fld"><label for="upMode">Mode</label>
-          <select id="upMode"><option value="fast">Cepat (tanpa AI)</option><option value="ai">AI (lebih tajam, lambat)</option></select></div>
-        <div class="fld" id="upModelF" hidden><label for="upModel">Model AI</label>
-          <select id="upModel">
-            <option value="Xenova/swin2SR-lightweight-x2-64" data-s="2">Ringan 2× · paling cepat</option>
-            <option value="Xenova/swin2SR-classical-sr-x2-64" data-s="2">Klasik 2× · lebih tajam</option>
-            <option value="Xenova/swin2SR-realworld-sr-x4-64-bsrgan-psnr" data-s="4">Foto nyata 4× · paling berat</option>
-          </select></div>
-        <div class="fld" id="upScaleF"><label for="upScale">Perbesar</label>
-          <select id="upScale"><option>2</option><option>3</option><option>4</option></select></div>
-        <div class="fld" id="upSharpF"><label for="upSharp">Ketajaman</label>
-          <input type="range" id="upSharp" min="0" max="100" value="40"></div>
-      </div>
-      <div class="ctl">
-        <button class="btn p" id="upRun">🔍 Upscale</button>
-        <button class="btn o" id="upCancel" hidden>✖ Batal</button>
-        <button class="btn o" id="upDl" disabled>⬇ Unduh PNG</button>
-      </div>
-      <div class="prog"><i id="upBar"></i></div>
-      <div class="stat" id="upStat"></div>
-    </div>
-    <p class="note">Mode AI memakai model Swin2SR dan dibatasi ukuran gambar (640 px untuk 2×, 320 px untuk 4×). Untuk gambar besar, pakai mode Cepat.</p>
-  </section>
+  <div class="tool">
+    <h3><i class="fa-solid fa-brackets-curly"></i> Rapi JSON</h3>
+    <textarea class="inp" id="js" rows="4" placeholder='{"a":1}'></textarea>
+    <div style="margin-top:10px"><button class="btn" onclick="fmtJson()">Rapikan</button></div>
+    <div class="out" id="jsout">—</div>
+  </div>
 
-  <!-- AI LENS -->
-  <section class="card panel" id="p-ai">
-    <h2>🧠 AI Lens</h2>
-    <p class="sub">Baca teks dari gambar, minta AI mendeskripsikannya, atau deteksi objek di dalamnya.</p>
-    <div class="drop" id="aiDrop" tabindex="0" role="button"><i>🖼</i>Ketuk atau seret gambar ke sini</div>
-    <input type="file" id="aiFile" accept="image/*" hidden>
-    <div class="work" id="aiWork" hidden>
-      <div class="cols">
-        <div class="pv"><small>Gambar</small><img id="aiOrig" alt="Gambar"></div>
-        <div class="pv" id="aiPv" hidden><small>Deteksi</small><canvas id="aiRes"></canvas></div>
-      </div>
-      <div class="ctl">
-        <div class="fld"><label for="aiMode">Tugas</label>
-          <select id="aiMode"><option value="ocr">📝 Baca teks (OCR)</option><option value="caption">💬 Deskripsikan gambar</option><option value="detect">🎯 Deteksi objek</option></select></div>
-        <div class="fld" id="aiLangF"><label for="aiLang">Bahasa teks</label>
-          <select id="aiLang"><option value="ind+eng">Indonesia + Inggris</option><option value="eng">Inggris</option><option value="jpn">Jepang</option><option value="kor">Korea</option><option value="chi_sim">Mandarin</option><option value="ara">Arab</option></select></div>
-      </div>
-      <div class="ctl">
-        <button class="btn p" id="aiRun">▶ Jalankan</button>
-        <button class="btn o" id="aiCancel" hidden>✖ Batal</button>
-        <button class="btn o" id="aiCopy" disabled>📋 Salin hasil</button>
-      </div>
-      <div class="prog"><i id="aiBar"></i></div>
-      <div class="stat" id="aiStat"></div>
-      <textarea id="aiOut" readonly rows="6" placeholder="Hasil muncul di sini"></textarea>
-    </div>
-  </section>
+  <div class="tool">
+    <h3><i class="fa-solid fa-palette"></i> Warna</h3>
+    <input type="color" id="col" value="#a855f7" style="width:60px;height:38px;border:none;background:none">
+    <div class="out" id="colout">—</div>
+  </div>
 
-  <!-- QR -->
-  <section class="card panel" id="p-qr">
-    <h2>🔗 QR Code</h2>
-    <p class="sub">Ubah link, teks, WiFi, atau nomor WhatsApp jadi QR code.</p>
-    <div class="cols">
-      <div>
-        <div class="fld"><label for="qrType">Jenis</label>
-          <select id="qrType"><option value="text">Link / Teks</option><option value="wifi">WiFi</option><option value="wa">WhatsApp</option></select></div>
-        <div id="qrG-text" class="fld" style="margin-top:14px"><label for="qrText">Link atau teks</label><textarea id="qrText" rows="3" placeholder="https://zukaitemp.vercel.app"></textarea></div>
-        <div id="qrG-wifi" hidden>
-          <div class="fld" style="margin-top:14px"><label for="qrSsid">Nama WiFi</label><input id="qrSsid" placeholder="Nama WiFi"></div>
-          <div class="fld" style="margin-top:14px"><label for="qrPass">Password</label><input id="qrPass" placeholder="Password WiFi"></div>
-          <div class="fld" style="margin-top:14px"><label for="qrSec">Keamanan</label><select id="qrSec"><option>WPA</option><option>WEP</option><option value="nopass">Tanpa password</option></select></div>
-        </div>
-        <div id="qrG-wa" hidden>
-          <div class="fld" style="margin-top:14px"><label for="qrNum">Nomor (pakai kode negara)</label><input id="qrNum" inputmode="numeric" placeholder="628123456789"></div>
-          <div class="fld" style="margin-top:14px"><label for="qrMsg">Pesan awal (opsional)</label><input id="qrMsg" placeholder="Halo kak..."></div>
-        </div>
-        <div class="ctl">
-          <div class="fld"><label for="qrFg">Warna QR</label><input type="color" id="qrFg" value="#ff4d94"></div>
-          <div class="fld"><label for="qrBg">Warna latar</label><input type="color" id="qrBg" value="#ffffff"></div>
-        </div>
-        <div class="ctl">
-          <div class="fld"><label for="qrStyle">Gaya</label><select id="qrStyle"><option value="sq">Kotak</option><option value="dot">Titik</option></select></div>
-          <div class="fld"><label for="qrEc">Koreksi error</label><select id="qrEc"><option value="L">L (rendah)</option><option value="M" selected>M</option><option value="Q">Q</option><option value="H">H (tinggi)</option></select></div>
-        </div>
-        <div class="ctl"><div class="fld"><label for="qrSize">Ukuran gambar</label><input type="range" id="qrSize" min="256" max="1024" step="64" value="512"></div></div>
-      </div>
-      <div>
-        <div class="pv checker" style="min-height:260px"><canvas id="qrCanvas" width="1" height="1"></canvas></div>
-        <div class="ctl"><button class="btn p" id="qrDl" disabled>⬇ Unduh PNG</button></div>
-        <div class="stat" id="qrStat">Isi dulu datanya.</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SPEED TEST -->
-  <section class="card panel" id="p-sp">
-    <h2>📶 Tes Kecepatan Internet</h2>
-    <p class="sub">Ukur download, upload, dan ping koneksi kamu.</p>
-    <div class="gwrap">
-      <div class="gauge" id="spGauge"><div><b id="spNum">0</b><span>Mbps · <span id="spLbl">Siap</span></span></div></div>
-    </div>
-    <div class="mini">
-      <div><b id="spPing">–</b><span>Ping</span></div>
-      <div><b id="spJit">–</b><span>Jitter</span></div>
-      <div><b id="spDl">–</b><span>Download</span></div>
-      <div><b id="spUl">–</b><span>Upload</span></div>
-    </div>
-    <div class="ctl" style="justify-content:center"><button class="btn p" id="spGo">▶ Mulai tes</button></div>
-    <div class="stat" id="spStat" style="text-align:center"></div>
-    <p class="note">Tes memakai server Cloudflare dan memakai kuota data sekitar 50-100 MB. Sebaiknya pakai WiFi.</p>
-  </section>
-
-  <!-- KOMPRES -->
-  <section class="card panel" id="p-cp">
-    <h2>🗜 Kompres & Konversi</h2>
-    <p class="sub">Kecilkan ukuran file atau ubah format JPG, PNG, WebP.</p>
-    <div class="drop" id="cpDrop" tabindex="0" role="button"><i>🖼</i>Ketuk atau seret gambar ke sini</div>
-    <input type="file" id="cpFile" accept="image/*" hidden>
-    <div class="work" id="cpWork" hidden>
-      <div class="cols">
-        <div class="pv"><small>Asli</small><img id="cpOrig" alt="Gambar asli"></div>
-        <div class="pv"><small>Hasil</small><img id="cpRes" alt="Hasil kompres"></div>
-      </div>
-      <div class="ctl">
-        <div class="fld"><label for="cpFmt">Format</label>
-          <select id="cpFmt"><option value="image/jpeg">JPG</option><option value="image/webp">WebP</option><option value="image/png">PNG</option></select></div>
-        <div class="fld"><label for="cpW">Lebar maks (px)</label><input type="number" id="cpW" placeholder="asli" min="16" max="8000"></div>
-        <div class="fld"><label for="cpQ">Kualitas: <b id="cpQv">80</b>%</label><input type="range" id="cpQ" min="10" max="100" value="80"></div>
-      </div>
-      <div class="ctl"><button class="btn p" id="cpDl">⬇ Unduh hasil</button></div>
-      <div class="stat" id="cpStat"></div>
-    </div>
-  </section>
-
-  <!-- UTILITAS -->
-  <section class="card panel" id="p-ut">
-    <h2>🧰 Utilitas</h2>
-    <p class="sub">Alat kecil yang sering dipakai.</p>
-    <div class="fld"><label for="utKind">Pilih alat</label>
-      <select id="utKind"><option value="cnt">📝 Penghitung kata & ubah huruf</option><option value="b64">🔐 Base64 encode / decode</option><option value="hash">#️⃣ Hash SHA-256</option><option value="tts">🔊 Teks ke suara</option><option value="fx">💱 Kurs mata uang</option></select></div>
-    <div class="ut" id="ut-cnt" style="margin-top:16px">
-      <textarea id="utT1" rows="6" placeholder="Tempel atau ketik teks di sini..."></textarea>
-      <div class="stat" id="utCnt">0 kata · 0 karakter</div>
-      <div class="ctl"><button class="btn o sm" data-c="up">HURUF BESAR</button><button class="btn o sm" data-c="lo">huruf kecil</button><button class="btn o sm" data-c="ti">Kapital Tiap Kata</button><button class="btn o sm" data-c="sp">Rapikan spasi</button></div>
-    </div>
-    <div class="ut" id="ut-b64" style="margin-top:16px" hidden>
-      <textarea id="utT2" rows="4" placeholder="Teks atau Base64..."></textarea>
-      <div class="ctl"><button class="btn p sm" id="b64e">Encode →</button><button class="btn o sm" id="b64d">← Decode</button></div>
-      <textarea id="utO2" rows="4" readonly placeholder="Hasil"></textarea>
-    </div>
-    <div class="ut" id="ut-hash" style="margin-top:16px" hidden>
-      <textarea id="utT3" rows="4" placeholder="Ketik teks untuk di-hash..."></textarea>
-      <div class="pwout" id="utH" style="margin-top:12px;font-size:.9rem">–</div>
-    </div>
-    <div class="ut" id="ut-tts" style="margin-top:16px" hidden>
-      <textarea id="utT4" rows="4" placeholder="Ketik teks yang mau dibacakan..."></textarea>
-      <div class="ctl"><div class="fld"><label for="utV">Suara</label><select id="utV"></select></div></div>
-      <div class="ctl" style="margin-top:0"><button class="btn p" id="ttsGo">🔊 Bacakan</button><button class="btn o" id="ttsStop">⏹ Stop</button></div>
-    </div>
-    <div class="ut" id="ut-fx" style="margin-top:16px" hidden>
-      <div class="ctl" style="margin-top:0">
-        <div class="fld"><label for="fxA">Jumlah</label><input type="number" id="fxA" value="1" min="0" step="any"></div>
-        <div class="fld"><label for="fxF">Dari</label><select id="fxF"></select></div>
-        <div class="fld"><label for="fxT">Ke</label><select id="fxT"></select></div>
-      </div>
-      <div class="ctl"><button class="btn p" id="fxGo">💱 Hitung</button></div>
-      <div class="pwout" id="fxO" style="font-size:1.15rem">–</div>
-    </div>
-  </section>
-
-  <!-- PASSWORD -->
-  <section class="card panel" id="p-pw">
-    <h2>🔑 Generator Password</h2>
-    <p class="sub">Password acak yang kuat, dibuat langsung di perangkat kamu.</p>
-    <div class="pwout" id="pwOut"></div>
-    <div class="stat" id="pwStr"></div>
-    <div class="ctl" style="margin-top:14px"><div class="fld"><label for="pwLen">Panjang: <b id="pwLenV">16</b></label><input type="range" id="pwLen" min="6" max="48" value="16"></div></div>
-    <div class="chk">
-      <label><input type="checkbox" id="pwUp" checked> A-Z</label>
-      <label><input type="checkbox" id="pwLo" checked> a-z</label>
-      <label><input type="checkbox" id="pwNum" checked> 0-9</label>
-      <label><input type="checkbox" id="pwSym" checked> !@#$</label>
-    </div>
-    <div class="ctl" style="margin-top:0"><button class="btn p" id="pwGen">🎲 Buat baru</button><button class="btn o" id="pwCopy">📋 Salin</button></div>
-  </section>
-
-  <footer class="foot">Dibuat dengan 💗 oleh ZukaiDeveloper</footer>
-</div>
-<div class="toast" id="toast"></div>
+  <div class="tool">
+    <h3><i class="fa-solid fa-clock"></i> Timestamp</h3>
+    <button class="btn" onclick="nowTs()">Sekarang</button>
+    <input class="inp" id="tsIn" placeholder="Unix atau ISO, Enter untuk konversi" style="margin-top:10px">
+    <div class="out" id="tsout">—</div>
+  </div>
+</main>
+<div id="toast"></div>
 
 <script>
-addEventListener('storage',e=>{if(e.key==='zt_dark'){try{document.documentElement.toggleAttribute('data-dark',!!JSON.parse(e.newValue))}catch{}}});
-try{if(JSON.parse(localStorage.getItem('zt_dark')))document.documentElement.setAttribute('data-dark','')}catch{}
-const $=s=>document.querySelector(s);
-function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('on'),2800)}
-const kb=n=>n>1048576?(n/1048576).toFixed(2)+' MB':Math.round(n/1024)+' KB';
-const tick=()=>new Promise(r=>setTimeout(r,40));
-const stat=(k,t)=>$('#'+k+'Stat').textContent=t;
-function bar(k,p){const b=$('#'+k+'Bar');b.parentElement.style.display=p==null?'none':'block';if(p!=null)b.style.width=Math.max(2,Math.min(100,p))+'%'}
-const loadImg=f=>new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>rej(new Error('File itu bukan gambar yang valid'));i.src=URL.createObjectURL(f)});
-function toCanvas(img,max){let w=img.naturalWidth,h=img.naturalHeight;const s=max&&Math.max(w,h)>max?max/Math.max(w,h):1;w=Math.max(1,Math.round(w*s));h=Math.max(1,Math.round(h*s));const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);return c}
-const blobOf=(c,t='image/png',q)=>new Promise(r=>c.toBlob(r,t,q));
-function save(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),5000)}
-const base=f=>f.name.replace(/\.[^.]+$/,'')||'gambar';
-function bind(k,cb){
-  const d=$('#'+k+'Drop'),f=$('#'+k+'File');
-  d.onclick=()=>f.click();
-  d.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();f.click()}};
-  d.ondragover=e=>{e.preventDefault();d.classList.add('over')};
-  d.ondragleave=()=>d.classList.remove('over');
-  d.ondrop=e=>{e.preventDefault();d.classList.remove('over');e.dataTransfer.files[0]&&pick(e.dataTransfer.files[0])};
-  f.onchange=()=>{f.files[0]&&pick(f.files[0]);f.value=''};
-  async function pick(file){
-    if(!file.type.startsWith('image/'))return toast('Pilih file gambar ya');
-    try{const img=await loadImg(file);cb(img,file);$('#'+k+'Work').hidden=false;$('#'+k+'Work').scrollIntoView({behavior:'smooth',block:'nearest'})}
-    catch(e){toast(e.message)}
+const $ = s => document.querySelector(s);
+let tt;
+function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('up'); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove('up'),2000); }
+
+async function mkQr(){
+  const v = $('#qrIn').value.trim();
+  if (!v) return toast('Isi dulu teksnya.');
+  if (!window.QRCode) {
+    await new Promise((ok, no) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js';
+      s.onload = ok; s.onerror = no; document.head.appendChild(s);
+    }).catch(() => toast('Gagal memuat pustaka QR.'));
   }
+  $('#qr').innerHTML = '';
+  if (window.QRCode) new QRCode($('#qr'), { text: v, width: 180, height: 180 });
 }
-
-/* ---------- Tab ---------- */
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
-  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===b));
-  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on',p.id==='p-'+b.dataset.t));
-  history.replaceState(null,'','#'+b.dataset.t);
+function b64run(mode){
+  const v = $('#b64').value;
+  try {
+    $('#b64out').textContent = mode === 'enc'
+      ? btoa(unescape(encodeURIComponent(v)))
+      : decodeURIComponent(escape(atob(v.trim())));
+  } catch { $('#b64out').textContent = 'Input tidak valid untuk decode.'; }
+}
+function fmtJson(){
+  try { $('#jsout').textContent = JSON.stringify(JSON.parse($('#js').value), null, 2); }
+  catch (e) { $('#jsout').textContent = 'JSON tidak valid: ' + e.message; }
+}
+$('#col').oninput = e => {
+  const h = e.target.value;
+  const n = parseInt(h.slice(1), 16);
+  $('#colout').textContent = `${h}\nRGB ${(n>>16)&255}, ${(n>>8)&255}, ${n&255}\nHSL ${h}`;
+};
+function nowTs(){
+  const d = new Date();
+  $('#tsout').textContent = `Unix ${Math.floor(d.getTime()/1000)}\nISO ${d.toISOString()}\nLokal ${d.toLocaleString('id-ID')}`;
+}
+$('#tsIn').addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const v = e.target.value.trim();
+  const d = /^\d+$/.test(v) ? new Date(+v * 1000) : new Date(v);
+  $('#tsout').textContent = isNaN(d) ? 'Tidak valid.' : `ISO ${d.toISOString()}\nLokal ${d.toLocaleString('id-ID')}`;
 });
-{const h=location.hash.slice(1),t=document.querySelector(`.tab[data-t="${h}"]`);t&&t.click()}
-
-/* ---------- Worker AI: semua proses berat jalan di luar layar utama, jadi nggak freeze ---------- */
-function workerMain(){
-  let T=null;const pipes={},models={};
-  const lib=async()=>{if(!T){T=await import('https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2');T.env.allowLocalModels=false}return T};
-  const toRaw=(T,d)=>{const n=d.w*d.h,rgb=new Uint8ClampedArray(n*3);for(let i=0;i<n;i++){rgb[i*3]=d.px[i*4];rgb[i*3+1]=d.px[i*4+1];rgb[i*3+2]=d.px[i*4+2]}return new T.RawImage(rgb,d.w,d.h,3)};
-  const rgba=r=>{const n=r.width*r.height,o=new Uint8ClampedArray(n*4),c=r.channels;for(let i=0,p=0;i<n;i++,p+=c){o[i*4]=r.data[p];o[i*4+1]=r.data[p+1];o[i*4+2]=r.data[p+2];o[i*4+3]=255}return o};
-  self.onmessage=async e=>{
-    const {id,type,data}=e.data;
-    const send=(m,tr)=>self.postMessage(Object.assign({id},m),tr||[]);
-    const prog=p=>{if(p&&p.status==='progress')send({progress:{p:p.progress}})};
-    try{
-      if(type==='sharpen'){
-        const {px,w,h,k}=data,a=px,b=new Uint8ClampedArray(a),c0=1+4*k;
-        for(let y=1;y<h-1;y++)for(let x=1;x<w-1;x++){const i=(y*w+x)*4;for(let ch=0;ch<3;ch++){b[i+ch]=a[i+ch]*c0-k*(a[i-4+ch]+a[i+4+ch]+a[i-w*4+ch]+a[i+w*4+ch])}}
-        send({px:b},[b.buffer]);return;
-      }
-      const T=await lib();
-      if(type==='bg'){
-        const key=data.model;
-        if(!models[key]){
-          const rm=key==='rmbg',repo=rm?'briaai/RMBG-1.4':'Xenova/modnet';
-          const m=await T.AutoModel.from_pretrained(repo,rm?{config:{model_type:'custom'},progress_callback:prog}:{quantized:false,config:{model_type:'custom'},progress_callback:prog});
-          const p=await T.AutoProcessor.from_pretrained(repo,{config:{do_normalize:true,do_pad:false,do_rescale:true,do_resize:true,image_mean:[0.5,0.5,0.5],feature_extractor_type:'ImageFeatureExtractor',image_std:rm?[1,1,1]:[0.5,0.5,0.5],resample:2,rescale_factor:0.00392156862745098,size:rm?{width:1024,height:1024}:{width:512,height:512}}});
-          models[key]={m,p};
-        }
-        send({progress:{phase:1}});
-        const raw=toRaw(T,data),M=models[key];
-        const {pixel_values}=await M.p(raw);
-        const out=await M.m({input:pixel_values});
-        const mask=await T.RawImage.fromTensor(out.output[0].mul(255).to('uint8')).resize(data.w,data.h);
-        const mk=new Uint8Array(mask.data);send({mask:mk},[mk.buffer]);return;
-      }
-      if(type==='up'){
-        if(!pipes[data.model])pipes[data.model]=await T.pipeline('image-to-image',data.model,{progress_callback:prog});
-        send({progress:{phase:1}});
-        const res=await pipes[data.model](toRaw(T,data)),px=rgba(res);
-        send({w:res.width,h:res.height,px},[px.buffer]);return;
-      }
-      if(type==='caption'){
-        if(!pipes.cap)pipes.cap=await T.pipeline('image-to-text','Xenova/vit-gpt2-image-captioning',{progress_callback:prog});
-        send({progress:{phase:1}});
-        const o=await pipes.cap(toRaw(T,data),{max_new_tokens:40});
-        send({text:o[0].generated_text});return;
-      }
-      if(type==='detect'){
-        if(!pipes.det)pipes.det=await T.pipeline('object-detection','Xenova/detr-resnet-50',{progress_callback:prog});
-        send({progress:{phase:1}});
-        const o=await pipes.det(toRaw(T,data),{threshold:0.8});
-        send({objs:o});return;
-      }
-      throw new Error('Tugas tidak dikenal');
-    }catch(err){send({error:String((err&&err.message)||err)})}
-  };
-}
-const WSRC='('+workerMain.toString()+')()';
-let W=null,wid=0;const pend={};
-function cancelAll(msg){
-  Object.keys(pend).forEach(k=>{pend[k].rej(new Error(msg||'Dibatalkan'));delete pend[k]});
-  if(W){W.terminate();W=null}
-}
-function getW(){
-  if(W)return W;
-  W=new Worker(URL.createObjectURL(new Blob([WSRC],{type:'text/javascript'})),{type:'module'});
-  W.onmessage=e=>{const m=e.data,p=pend[m.id];if(!p)return;if(m.progress){p.on&&p.on(m.progress);return}delete pend[m.id];m.error?p.rej(new Error(m.error)):p.res(m)};
-  W.onerror=e=>cancelAll('Worker gagal dimuat: '+(e.message||'browser tidak mendukung'));
-  return W;
-}
-function job(type,data,on,tr){return new Promise((res,rej)=>{const id=++wid;pend[id]={res,rej,on};try{getW().postMessage({id,type,data},tr||[])}catch(e){delete pend[id];rej(e)}})}
-const onProg=k=>p=>{if(p.phase){bar(k,null);stat(k,'Memproses... (layar tetap bisa kamu gerakkan)');return}bar(k,p.p);stat(k,'Mengunduh model AI '+Math.round(p.p||0)+'% · cuma sekali, tersimpan di browser')};
-function busy(k,on){$('#'+k+'Run').disabled=on;$('#'+k+'Cancel').hidden=!on}
-const errTxt=e=>e.message==='Dibatalkan'?'Dibatalkan.':'Gagal: '+(e.message||e)+'. Pastikan internet aktif.';
-['bg','up','ai'].forEach(k=>$('#'+k+'Cancel').onclick=()=>{cancelAll();if(ai.tess){ai.tess.terminate().catch(()=>{});ai.tess=null}});
-
-/* ---------- 1. Hapus background ---------- */
-const bg={src:null,cut:null,color:'',name:'gambar',busy:false};
-bind('bg',(img,file)=>{
-  bg.name=base(file);bg.src=toCanvas(img,2048);bg.cut=null;
-  $('#bgOrig').src=img.src;
-  const r=$('#bgRes');r.width=r.height=1;r.getContext('2d').clearRect(0,0,1,1);
-  $('#bgDl').disabled=true;stat('bg','Siap. Tekan "Hapus background".');bar('bg',null);
-});
-function paintBg(){
-  if(!bg.cut)return;
-  const c=$('#bgRes');c.width=bg.cut.width;c.height=bg.cut.height;
-  const x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);
-  if(bg.color){x.fillStyle=bg.color;x.fillRect(0,0,c.width,c.height)}
-  x.drawImage(bg.cut,0,0);
-  $('#bgPv').classList.toggle('checker',!bg.color);$('#bgDl').disabled=false;
-}
-$('#bgRun').onclick=async()=>{
-  if(!bg.src||bg.busy)return;bg.busy=true;busy('bg',true);
-  try{
-    stat('bg','Menyiapkan AI...');bar('bg',2);
-    const w=bg.src.width,h=bg.src.height,d=bg.src.getContext('2d').getImageData(0,0,w,h);
-    const res=await job('bg',{model:$('#bgModel').value,px:d.data,w,h},onProg('bg'),[d.data.buffer]);
-    if(res.mask.length<w*h)throw new Error('ukuran hasil tidak cocok');
-    const c=document.createElement('canvas');c.width=w;c.height=h;
-    const x=c.getContext('2d');x.drawImage(bg.src,0,0);
-    const o=x.getImageData(0,0,w,h);
-    for(let i=0;i<w*h;i++)o.data[i*4+3]=res.mask[i];
-    x.putImageData(o,0,0);
-    bg.cut=c;paintBg();stat('bg','Selesai! Pilih warna latar kalau mau, lalu unduh. ✨');
-  }catch(e){stat('bg',errTxt(e))}
-  bar('bg',null);bg.busy=false;busy('bg',false);
-};
-$('#bgSw').onclick=e=>{
-  const b=e.target.closest('.sw');if(!b)return;
-  document.querySelectorAll('#bgSw .sw').forEach(x=>x.classList.toggle('on',x===b));
-  bg.color=b.dataset.c;paintBg();
-};
-$('#bgColor').oninput=e=>{document.querySelectorAll('#bgSw .sw').forEach(x=>x.classList.remove('on'));bg.color=e.target.value;paintBg()};
-$('#bgDl').onclick=async()=>save(await blobOf($('#bgRes')),bg.name+'-nobg.png');
-
-/* ---------- 2. Upscale ---------- */
-const up={src:null,out:null,name:'gambar',busy:false};
-bind('up',(img,file)=>{
-  up.name=base(file);up.src=toCanvas(img,0);up.out=null;$('#upOrig').src=img.src;
-  const r=$('#upRes');r.width=r.height=1;$('#upDl').disabled=true;bar('up',null);
-  stat('up',`Ukuran asli ${up.src.width}×${up.src.height}px`);
-});
-function modeUI(){const ai=$('#upMode').value==='ai';$('#upScaleF').hidden=ai;$('#upSharpF').hidden=ai;$('#upModelF').hidden=!ai}
-$('#upMode').onchange=modeUI;modeUI();
-function fastUp(src,scale){
-  let c=src,cur=1;
-  while(cur<scale-1e-6){
-    const st=Math.min(2,scale/cur),n=document.createElement('canvas');
-    n.width=Math.round(c.width*st);n.height=Math.round(c.height*st);
-    const x=n.getContext('2d');x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';x.drawImage(c,0,0,n.width,n.height);
-    c=n;cur*=st;
-  }
-  return c;
-}
-async function aiUp(src,model,s){
-  const W=src.width,H=src.height,TS=128,M=8;
-  const out=document.createElement('canvas');out.width=W*s;out.height=H*s;const ox=out.getContext('2d');
-  const tiles=[];for(let y=0;y<H;y+=TS)for(let x=0;x<W;x+=TS)tiles.push([x,y]);
-  let n=0;
-  for(const [x,y] of tiles){
-    n++;stat('up',`Memproses bagian ${n} dari ${tiles.length}...`);bar('up',(n-1)/tiles.length*100);
-    const sx=Math.max(0,x-M),sy=Math.max(0,y-M),ex=Math.min(W,x+TS+M),ey=Math.min(H,y+TS+M),tw=ex-sx,th=ey-sy;
-    const tc=document.createElement('canvas');tc.width=tw;tc.height=th;tc.getContext('2d').drawImage(src,sx,sy,tw,th,0,0,tw,th);
-    const d=tc.getContext('2d').getImageData(0,0,tw,th);
-    const res=await job('up',{model,px:d.data,w:tw,h:th},n===1?onProg('up'):null,[d.data.buffer]);
-    const rc=document.createElement('canvas');rc.width=res.w;rc.height=res.h;
-    rc.getContext('2d').putImageData(new ImageData(res.px,res.w,res.h),0,0);
-    const cw=Math.min(TS,W-x)*s,ch=Math.min(TS,H-y)*s;
-    ox.drawImage(rc,(x-sx)*s,(y-sy)*s,cw,ch,x*s,y*s,cw,ch);
-  }
-  return out;
-}
-$('#upRun').onclick=async()=>{
-  if(!up.src||up.busy)return;up.busy=true;busy('up',true);
-  try{
-    let out;
-    if($('#upMode').value==='fast'){
-      let sc=+$('#upScale').value;const px=up.src.width*up.src.height;
-      while(sc>1&&px*sc*sc>36e6)sc--;
-      if(sc<+$('#upScale').value)toast('Gambar besar, skala diturunkan ke '+sc+'×');
-      stat('up','Memperbesar...');await tick();
-      out=fastUp(up.src,sc);
-      const k=+$('#upSharp').value/100*0.9;
-      if(k>0){
-        stat('up','Mempertajam...');
-        const x=out.getContext('2d'),d=x.getImageData(0,0,out.width,out.height);
-        const r=await job('sharpen',{px:d.data,w:out.width,h:out.height,k},null,[d.data.buffer]);
-        x.putImageData(new ImageData(r.px,out.width,out.height),0,0);
-      }
-    }else{
-      const opt=$('#upModel').selectedOptions[0],s=+opt.dataset.s,cap=s===4?320:640;
-      let src=up.src;
-      if(Math.max(src.width,src.height)>cap){const k=cap/Math.max(src.width,src.height),c=document.createElement('canvas');c.width=Math.round(src.width*k);c.height=Math.round(src.height*k);c.getContext('2d').drawImage(src,0,0,c.width,c.height);src=c;toast('Gambar dikecilkan ke '+c.width+'×'+c.height+' dulu untuk mode AI')}
-      out=await aiUp(src,opt.value,s);
-    }
-    up.out=out;const r=$('#upRes');r.width=out.width;r.height=out.height;r.getContext('2d').drawImage(out,0,0);
-    stat('up',`Selesai! ${up.src.width}×${up.src.height} → ${out.width}×${out.height}px ✨`);$('#upDl').disabled=false;
-  }catch(e){stat('up',errTxt(e))}
-  bar('up',null);up.busy=false;busy('up',false);
-};
-$('#upDl').onclick=async()=>up.out&&save(await blobOf(up.out),up.name+'-upscaled.png');
-
-/* ---------- 3. Kompres & konversi ---------- */
-const cp={img:null,file:null,blob:null};let cpT=null,cpUrl=null;
-bind('cp',(img,file)=>{cp.img=img;cp.file=file;$('#cpOrig').src=img.src;cpRender()});
-async function cpRender(){
-  if(!cp.img)return;
-  const mw=+$('#cpW').value||0,fmt=$('#cpFmt').value,q=+$('#cpQ').value/100;
-  $('#cpQ').disabled=fmt==='image/png';
-  let c=toCanvas(cp.img,mw);
-  if(fmt==='image/jpeg'){const t=document.createElement('canvas');t.width=c.width;t.height=c.height;const x=t.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,t.width,t.height);x.drawImage(c,0,0);c=t}
-  const b=await blobOf(c,fmt,q);cp.blob=b;
-  if(cpUrl)URL.revokeObjectURL(cpUrl);cpUrl=URL.createObjectURL(b);$('#cpRes').src=cpUrl;
-  const diff=Math.round((1-b.size/cp.file.size)*100);
-  stat('cp',`${kb(cp.file.size)} → ${kb(b.size)} (${c.width}×${c.height}px) ${diff>0?'· hemat '+diff+'%':'· ukuran bertambah'}`);
-}
-const cpSoon=()=>{clearTimeout(cpT);cpT=setTimeout(cpRender,250)};
-$('#cpQ').oninput=()=>{$('#cpQv').textContent=$('#cpQ').value;cpSoon()};
-$('#cpFmt').onchange=cpRender;$('#cpW').oninput=cpSoon;
-$('#cpDl').onclick=()=>{if(!cp.blob)return toast('Pilih gambar dulu');const ext={'image/jpeg':'jpg','image/webp':'webp','image/png':'png'}[cp.blob.type]||'img';save(cp.blob,base(cp.file)+'-zukai.'+ext)};
-
-/* ---------- 5. AI Lens: baca teks, deskripsi, deteksi objek ---------- */
-const ai={src:null,tess:null,busy:false};
-const ID={person:'orang',bicycle:'sepeda',car:'mobil',motorcycle:'motor',airplane:'pesawat',bus:'bus',train:'kereta',truck:'truk',boat:'perahu','traffic light':'lampu lalu lintas',bench:'bangku',bird:'burung',cat:'kucing',dog:'anjing',horse:'kuda',sheep:'domba',cow:'sapi',elephant:'gajah',bear:'beruang',backpack:'ransel',umbrella:'payung',handbag:'tas tangan',tie:'dasi',suitcase:'koper',bottle:'botol','wine glass':'gelas',cup:'cangkir',fork:'garpu',knife:'pisau',spoon:'sendok',bowl:'mangkuk',banana:'pisang',apple:'apel',orange:'jeruk',cake:'kue',chair:'kursi',couch:'sofa',bed:'kasur','dining table':'meja makan',tv:'tv',laptop:'laptop',mouse:'mouse',keyboard:'keyboard','cell phone':'ponsel',book:'buku',clock:'jam',vase:'vas',scissors:'gunting','teddy bear':'boneka beruang'};
-bind('ai',(img,file)=>{
-  ai.src=toCanvas(img,1400);$('#aiOrig').src=img.src;$('#aiOut').value='';$('#aiPv').hidden=true;$('#aiCopy').disabled=true;bar('ai',null);
-  stat('ai','Siap. Pilih tugas lalu tekan Jalankan.');
-});
-function aiUI(){const m=$('#aiMode').value;$('#aiLangF').hidden=m!=='ocr'}
-$('#aiMode').onchange=aiUI;aiUI();
-function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>rej(new Error('gagal memuat '+src.split('/')[2]));document.head.appendChild(s)})}
-$('#aiRun').onclick=async()=>{
-  if(!ai.src||ai.busy)return;ai.busy=true;busy('ai',true);
-  const mode=$('#aiMode').value;$('#aiPv').hidden=true;$('#aiOut').value='';
-  try{
-    if(mode==='ocr'){
-      stat('ai','Memuat mesin OCR...');bar('ai',3);
-      if(!window.Tesseract)await loadScript('https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js');
-      ai.tess=await Tesseract.createWorker($('#aiLang').value,1,{logger:m=>{if(m.progress!=null){bar('ai',m.progress*100);stat('ai',(m.status||'Memproses')+' '+Math.round(m.progress*100)+'%')}}});
-      const r=await ai.tess.recognize(ai.src);await ai.tess.terminate();ai.tess=null;
-      const t=(r.data.text||'').trim();
-      $('#aiOut').value=t||'(tidak ada teks yang terbaca)';stat('ai',t?'Selesai! Teks berhasil dibaca ✨':'Tidak ada teks terdeteksi. Coba gambar yang lebih jelas.');
-    }else{
-      const w=ai.src.width,h=ai.src.height,mx=800,k=Math.min(1,mx/Math.max(w,h));
-      const c=document.createElement('canvas');c.width=Math.round(w*k);c.height=Math.round(h*k);c.getContext('2d').drawImage(ai.src,0,0,c.width,c.height);
-      const d=c.getContext('2d').getImageData(0,0,c.width,c.height);
-      stat('ai','Menyiapkan AI...');bar('ai',2);
-      const res=await job(mode,{px:d.data,w:c.width,h:c.height},onProg('ai'),[d.data.buffer]);
-      if(mode==='caption'){$('#aiOut').value=res.text+'\n\n(Deskripsi AI dalam bahasa Inggris)';stat('ai','Selesai! ✨')}
-      else{
-        const rc=$('#aiRes');rc.width=c.width;rc.height=c.height;const x=rc.getContext('2d');x.drawImage(ai.src,0,0,c.width,c.height);
-        x.lineWidth=Math.max(2,c.width/220);x.font='600 '+Math.max(12,Math.round(c.width/38))+'px Nunito, sans-serif';x.textBaseline='top';
-        const lines=[];
-        res.objs.forEach(o=>{
-          const b=o.box,nm=ID[o.label]||o.label,t=nm+' '+Math.round(o.score*100)+'%';
-          x.strokeStyle='#ff4d94';x.strokeRect(b.xmin,b.ymin,b.xmax-b.xmin,b.ymax-b.ymin);
-          const tw=x.measureText(t).width+10,th=parseInt(x.font)+6;
-          x.fillStyle='#ff4d94';x.fillRect(b.xmin,Math.max(0,b.ymin-th),tw,th);x.fillStyle='#fff';x.fillText(t,b.xmin+5,Math.max(0,b.ymin-th)+3);
-          lines.push('• '+t);
-        });
-        $('#aiPv').hidden=false;$('#aiOut').value=lines.length?lines.join('\n'):'(tidak ada objek yang dikenali)';
-        stat('ai',`Selesai! ${lines.length} objek terdeteksi ✨`);
-      }
-    }
-    $('#aiCopy').disabled=false;
-  }catch(e){stat('ai',errTxt(e))}
-  bar('ai',null);ai.busy=false;busy('ai',false);
-};
-$('#aiCopy').onclick=async()=>{try{await navigator.clipboard.writeText($('#aiOut').value);toast('Tersalin 📋')}catch{toast('Gagal menyalin')}};
-
-/* ---------- 6. QR Code ---------- */
-let qrReady=false;
-function qrUI(){const t=$('#qrType').value;$('#qrG-text').hidden=t!=='text';$('#qrG-wifi').hidden=t!=='wifi';$('#qrG-wa').hidden=t!=='wa'}
-function qrData(){
-  const t=$('#qrType').value;
-  if(t==='wifi'){const e=s=>s.replace(/([\\;,:"])/g,'\\$1');return `WIFI:T:${$('#qrSec').value};S:${e($('#qrSsid').value)};P:${e($('#qrPass').value)};;`}
-  if(t==='wa'){const n=$('#qrNum').value.replace(/\D/g,'');return n?`https://wa.me/${n}`+($('#qrMsg').value?'?text='+encodeURIComponent($('#qrMsg').value):''):''}
-  return $('#qrText').value.trim();
-}
-async function qrDraw(){
-  const text=qrData(),c=$('#qrCanvas');
-  if(!text){c.width=c.height=1;c.getContext('2d').clearRect(0,0,1,1);$('#qrDl').disabled=true;stat('qr','Isi dulu datanya di atas.');return}
-  try{
-    if(!window.qrcode){
-      stat('qr','Memuat pembuat QR...');
-      try{await loadScript('https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js')}catch{await loadScript('https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js')}
-      if(window.qrcode&&qrcode.stringToBytesFuncs&&qrcode.stringToBytesFuncs['UTF-8'])qrcode.stringToBytes=qrcode.stringToBytesFuncs['UTF-8'];
-    }
-    const q=qrcode(0,$('#qrEc').value);q.addData(text,'Byte');q.make();
-    const n=q.getModuleCount(),mar=4,size=+$('#qrSize').value,cell=Math.max(2,Math.floor(size/(n+mar*2))),px=cell*(n+mar*2);
-    c.width=c.height=px;const x=c.getContext('2d');
-    x.fillStyle=$('#qrBg').value;x.fillRect(0,0,px,px);x.fillStyle=$('#qrFg').value;
-    const dots=$('#qrStyle').value==='dot';
-    for(let r=0;r<n;r++)for(let k=0;k<n;k++)if(q.isDark(r,k)){
-      const X=(k+mar)*cell,Y=(r+mar)*cell;
-      if(dots){x.beginPath();x.arc(X+cell/2,Y+cell/2,cell*0.46,0,7);x.fill()}else x.fillRect(X,Y,cell,cell);
-    }
-    $('#qrDl').disabled=false;stat('qr',`QR siap · ${n}×${n} modul · ${px}px`);
-  }catch(e){stat('qr','Gagal membuat QR: '+e.message+(text.length>1000?' (teks terlalu panjang)':''))}
-}
-['qrType','qrText','qrSsid','qrPass','qrSec','qrNum','qrMsg','qrSize','qrFg','qrBg','qrEc','qrStyle'].forEach(i=>{$('#'+i).addEventListener(i==='qrType'?'change':'input',()=>{if(i==='qrType')qrUI();qrDraw()})});
-$('#qrDl').onclick=async()=>save(await blobOf($('#qrCanvas')),'zukai-qr.png');
-qrUI();
-
-/* ---------- 7. Speed test ---------- */
-const CF='https://speed.cloudflare.com';
-const sp={busy:false,stop:false};
-const med=a=>[...a].sort((x,y)=>x-y)[a.length>>1];
-function gauge(v,label){$('#spNum').textContent=v==null?'0':v>=100?v.toFixed(0):v.toFixed(1);$('#spGauge').style.setProperty('--v',Math.min(100,(v||0)/2));if(label)$('#spLbl').textContent=label}
-async function spDown(bytes,on){
-  const s=performance.now(),r=await fetch(`${CF}/__down?bytes=${bytes}&r=${Math.random()}`,{cache:'no-store'});
-  if(!r.ok)throw new Error('server tes menolak (HTTP '+r.status+')');
-  const rd=r.body.getReader();let got=0;
-  for(;;){const {done,value}=await rd.read();if(done)break;got+=value.length;if(sp.stop){rd.cancel();throw new Error('Dibatalkan')}on&&on(got*8/((performance.now()-s)/1000)/1e6)}
-  return {bits:got*8,sec:(performance.now()-s)/1000};
-}
-$('#spGo').onclick=async()=>{
-  if(sp.busy){sp.stop=true;return}
-  sp.busy=true;sp.stop=false;$('#spGo').textContent='⏹ Hentikan';
-  ['spPing','spJit','spDl','spUl'].forEach(i=>$('#'+i).textContent='–');gauge(0,'Ping');
-  try{
-    stat('sp','Mengukur latensi...');
-    const t=[];for(let i=0;i<7;i++){const s=performance.now();const r=await fetch(`${CF}/__down?bytes=0&r=${Math.random()}`,{cache:'no-store'});if(!r.ok)throw new Error('server tes menolak (HTTP '+r.status+')');await r.arrayBuffer();t.push(performance.now()-s);if(sp.stop)throw new Error('Dibatalkan')}
-    t.shift();const ping=med(t),jit=t.slice(1).reduce((a,v,i)=>a+Math.abs(v-t[i]),0)/(t.length-1);
-    $('#spPing').textContent=Math.round(ping)+' ms';$('#spJit').textContent=Math.round(jit)+' ms';
-    gauge(0,'Download');stat('sp','Tes download...');
-    await spDown(1e6);
-    let bits=0,sec=0,t0=performance.now();
-    while(performance.now()-t0<8000){const r=await spDown(2.5e7,v=>gauge(v));bits+=r.bits;sec+=r.sec}
-    const dl=bits/sec/1e6;$('#spDl').textContent=dl.toFixed(1)+' Mbps';gauge(dl,'Upload');
-    stat('sp','Tes upload...');
-    const ups=[];
-    for(const mb of [1,3,6]){
-      if(sp.stop)throw new Error('Dibatalkan');
-      const body=new Blob([new Uint8Array(mb*1e6)]),s=performance.now();
-      const r=await fetch(CF+'/__up',{method:'POST',body,cache:'no-store'});await r.arrayBuffer();
-      const v=mb*8/((performance.now()-s)/1000);ups.push(v);gauge(v);
-    }
-    const ul=Math.max(...ups);$('#spUl').textContent=ul.toFixed(1)+' Mbps';gauge(dl,'Selesai');
-    const c=navigator.connection&&navigator.connection.effectiveType;
-    stat('sp',`Selesai ✨ Download ${dl.toFixed(1)} Mbps, upload ${ul.toFixed(1)} Mbps, ping ${Math.round(ping)} ms`+(c?` · jaringan ${c}`:''));
-  }catch(e){stat('sp',e.message==='Dibatalkan'?'Dibatalkan.':'Gagal: '+e.message+'. Tes ini butuh akses ke speed.cloudflare.com.');gauge(0,'Siap')}
-  sp.busy=false;$('#spGo').textContent='▶ Mulai tes';
-};
-
-/* ---------- Utilitas ---------- */
-const utShow=()=>document.querySelectorAll('.ut').forEach(d=>d.hidden=d.id!=='ut-'+$('#utKind').value);
-$('#utKind').onchange=utShow;
-const cnt=()=>{const t=$('#utT1').value,w=(t.trim().match(/\S+/g)||[]).length;$('#utCnt').textContent=`${w} kata · ${t.length} karakter · ${t?t.split(/\n/).length:0} baris`};
-$('#utT1').oninput=cnt;
-document.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{const t=$('#utT1'),v=t.value;t.value={up:v.toUpperCase(),lo:v.toLowerCase(),ti:v.toLowerCase().replace(/(^|\s)\S/g,m=>m.toUpperCase()),sp:v.replace(/[ \t]+/g,' ').replace(/\n{3,}/g,'\n\n').trim()}[b.dataset.c];cnt()});
-const u8=s=>new TextEncoder().encode(s);
-$('#b64e').onclick=()=>{let b='';u8($('#utT2').value).forEach(x=>b+=String.fromCharCode(x));$('#utO2').value=btoa(b)};
-$('#b64d').onclick=()=>{try{const b=atob($('#utT2').value.trim()),a=Uint8Array.from(b,c=>c.charCodeAt(0));$('#utO2').value=new TextDecoder().decode(a)}catch{$('#utO2').value='(bukan Base64 yang valid)'}};
-$('#utT3').oninput=async()=>{const v=$('#utT3').value;if(!v){$('#utH').textContent='–';return}const h=await crypto.subtle.digest('SHA-256',u8(v));$('#utH').textContent=[...new Uint8Array(h)].map(x=>x.toString(16).padStart(2,'0')).join('')};
-function voices(){const vs=speechSynthesis.getVoices().sort((a,b)=>(/^id/.test(b.lang)-/^id/.test(a.lang)));$('#utV').innerHTML=vs.map((v,i)=>`<option value="${i}">${v.name} (${v.lang})</option>`).join('')||'<option>Suara bawaan</option>';window._vs=vs}
-if('speechSynthesis' in window){voices();speechSynthesis.onvoiceschanged=voices}
-$('#ttsGo').onclick=()=>{if(!('speechSynthesis' in window))return toast('Browser ini tidak mendukung suara');const t=$('#utT4').value.trim();if(!t)return toast('Isi teksnya dulu');speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t),v=(window._vs||[])[+$('#utV').value];if(v){u.voice=v;u.lang=v.lang}else u.lang='id-ID';speechSynthesis.speak(u)};
-$('#ttsStop').onclick=()=>speechSynthesis.cancel();
-const CUR=['IDR','USD','EUR','SGD','MYR','JPY','GBP','AUD','SAR','KRW','CNY','THB'];
-$('#fxF').innerHTML=$('#fxT').innerHTML=CUR.map(c=>`<option>${c}</option>`).join('');$('#fxF').value='USD';$('#fxT').value='IDR';
-$('#fxGo').onclick=async()=>{
-  const a=+$('#fxA').value,f=$('#fxF').value,t=$('#fxT').value;
-  if(f===t){$('#fxO').textContent=a.toLocaleString('id-ID')+' '+t;return}
-  $('#fxO').textContent='Menghitung...';
-  try{const r=await fetch(`https://api.frankfurter.app/latest?amount=${a}&from=${f}&to=${t}`);if(!r.ok)throw new Error('HTTP '+r.status);const j=await r.json();$('#fxO').textContent=`${a.toLocaleString('id-ID')} ${f} = ${j.rates[t].toLocaleString('id-ID',{maximumFractionDigits:2})} ${t}  (kurs ${j.date})`}
-  catch(e){$('#fxO').textContent='Gagal mengambil kurs: '+e.message}
-};
-
-/* ---------- 4. Password ---------- */
-const SETS={pwUp:'ABCDEFGHJKLMNPQRSTUVWXYZ',pwLo:'abcdefghijkmnopqrstuvwxyz',pwNum:'23456789',pwSym:'!@#$%^&*()-_=+?'};
-const rint=n=>{const a=new Uint32Array(1),lim=Math.floor(4294967296/n)*n;do crypto.getRandomValues(a);while(a[0]>=lim);return a[0]%n};
-function genPw(){
-  const on=Object.keys(SETS).filter(k=>$('#'+k).checked);
-  if(!on.length){$('#pwUp').checked=$('#pwLo').checked=true;return genPw()}
-  const len=+$('#pwLen').value,pool=on.map(k=>SETS[k]).join('');
-  const out=on.map(k=>SETS[k][rint(SETS[k].length)]);
-  while(out.length<len)out.push(pool[rint(pool.length)]);
-  for(let i=out.length-1;i>0;i--){const j=rint(i+1);[out[i],out[j]]=[out[j],out[i]]}
-  const pw=out.slice(0,len).join('');
-  $('#pwOut').textContent=pw;
-  const bits=len*Math.log2(pool.length);
-  $('#pwStr').textContent=bits<45?'Kekuatan: lemah, tambah panjangnya':bits<70?'Kekuatan: lumayan':bits<100?'Kekuatan: kuat 💪':'Kekuatan: sangat kuat 🔒';
-}
-$('#pwLen').oninput=()=>{$('#pwLenV').textContent=$('#pwLen').value;genPw()};
-['pwUp','pwLo','pwNum','pwSym'].forEach(k=>$('#'+k).onchange=genPw);
-$('#pwGen').onclick=genPw;
-$('#pwCopy').onclick=async()=>{try{await navigator.clipboard.writeText($('#pwOut').textContent);toast('Password tersalin 🔑')}catch{toast('Gagal menyalin, salin manual ya')}};
-genPw();
-
-if('serviceWorker' in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
 </script>
 </body>
 </html>
