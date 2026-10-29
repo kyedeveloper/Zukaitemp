@@ -1,0 +1,23 @@
+{
+  "functions": {
+    "api/stream.js": { "maxDuration": 30, "memory": 1024 },
+    "api/yt.js": { "maxDuration": 20 },
+    "api/spotify.js": { "maxDuration": 20 },
+    "api/anime.js": { "maxDuration": 20 },
+    "api/mail.js": { "maxDuration": 15 },
+    "api/dl.js": { "maxDuration": 15 }
+  },
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [{ "key": "access-control-allow-origin", "value": "*" }]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "x-content-type-options", "value": "nosniff" },
+        { "key": "referrer-policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ]
+}
