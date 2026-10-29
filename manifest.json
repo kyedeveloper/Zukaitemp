@@ -1,65 +1,20 @@
 {
-  "id": "/",
   "name": "ZukaiTemp",
   "short_name": "ZukaiTemp",
-  "description": "Email sementara gratis dengan banyak server dan domain.",
+  "description": "Musik, anime, downloader, dan tools dalam satu portal ringan.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "lang": "id",
-  "background_color": "#fff5f9",
-  "theme_color": "#ff4d94",
+  "background_color": "#08070c",
+  "theme_color": "#08070c",
   "icons": [
-    {
-      "src": "/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-maskable.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
   "shortcuts": [
-    {
-      "name": "Musik",
-      "url": "/#musik",
-      "icons": [
-        {
-          "src": "/icon-192.png",
-          "sizes": "192x192"
-        }
-      ]
-    },
-    {
-      "name": "Unduh video",
-      "url": "/#unduh",
-      "icons": [
-        {
-          "src": "/icon-192.png",
-          "sizes": "192x192"
-        }
-      ]
-    },
-    {
-      "name": "ZukaiTools",
-      "url": "/#tools",
-      "icons": [
-        {
-          "src": "/icon-192.png",
-          "sizes": "192x192"
-        }
-      ]
-    }
+    { "name": "Musik", "url": "/music.html" },
+    { "name": "Anime", "url": "/anime.html" }
   ]
 }
