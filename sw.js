@@ -1,30 +1,24 @@
-// Service worker ZukaiTemp: halaman selalu coba versi terbaru dulu, cadangan dari cache.
-const V = 'zukaitemp-v19';
-const SHELL = ['/', '/index.html', '/email.html', '/music.html', '/anime.html', '/download.html', '/tools.html', '/base.css', '/glass.css', '/theme.css', '/core.js', '/me.html', '/manifest.json', '/icon-192.png', '/icon-512.png', '/icon-maskable.png', '/apple-touch-icon.png'];
+const CACHE = 'zk-v2';
+const SHELL = ['/', '/index.html', '/music.html', '/anime.html', '/download.html', '/tools.html', '/app.css', '/manifest.json'];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(V).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
 });
 self.addEventListener('activate', e => {
-  e.waitUntil(
-    caches.keys().then(ks => Promise.all(ks.filter(k => k !== V).map(k => caches.delete(k))))
-      .then(() => self.clients.claim())
-  );
+  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
 });
 self.addEventListener('fetch', e => {
-  const r = e.request, u = new URL(r.url);
-  // API email & situs lain tidak pernah di-cache
-  if (r.method !== 'GET' || u.origin !== location.origin || u.pathname.startsWith('/api/')) return;
-  if (r.mode === 'navigate') {
-    // hanya halaman utama yang boleh menimpa cache /index.html (iframe musik dll tidak)
-    const home = u.pathname === '/' || u.pathname === '/index.html';
-    e.respondWith(
-      fetch(r).then(res => { if (home) { const cp = res.clone(); caches.open(V).then(c => c.put('/index.html', cp)); } return res; })
-        .catch(() => (home ? caches.match('/index.html') : caches.match(u.pathname).then(h => h || caches.match('/index.html'))))
-    );
-    return;
-  }
+  const url = new URL(e.request.url);
+  if (e.request.method !== 'GET') return;
+  if (url.pathname.startsWith('/api/')) return;               // API selalu network
+  if (url.hostname.includes('googleapis') || url.hostname.includes('gstatic')) return;
   e.respondWith(
-    caches.match(r).then(hit => hit || fetch(r).then(res => { const cp = res.clone(); caches.open(V).then(c => c.put(r, cp)); return res; }))
+    caches.match(e.request).then(hit => hit || fetch(e.request).then(res => {
+      if (res.ok && res.type === 'basic') {
+        const copy = res.clone();
+        caches.open(CACHE).then(c => c.put(e.request, copy));
+      }
+      return res;
+    }).catch(() => caches.match('/index.html')))
   );
 });
