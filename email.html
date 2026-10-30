@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Email sementara · ZukaiTemp</title>
+<meta name="description" content="Kotak masuk sekali pakai dengan banyak server dan domain.">
 <meta name="theme-color" content="#08070c">
 <link rel="manifest" href="/manifest.json">
 <link rel="icon" href="/icon-192.png">
@@ -11,141 +12,470 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <link rel="stylesheet" href="/app.css">
 <style>
-main{max-width:620px;padding-top:24px}
-.addr{border:1px solid rgba(34,211,238,.35);background:rgba(34,211,238,.05);border-radius:var(--r);padding:14px;margin-bottom:14px}
-.addr small{font-family:var(--mono);font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:var(--dim2);display:block;margin-bottom:6px}
-.addr b{font-family:var(--mono);font-size:.92rem;color:var(--a2);word-break:break-all;display:block}
-.addr .row{display:flex;gap:7px;margin-top:11px;flex-wrap:wrap}
-.mail{display:flex;gap:10px;padding:11px;border:1px solid var(--line);border-radius:11px;background:var(--card);margin-bottom:6px;cursor:pointer;transition:.2s}
-.mail:hover{border-color:var(--a2)}
-.mail.unread{border-color:rgba(34,211,238,.4);background:rgba(34,211,238,.05)}
-.mail .m{flex:1;min-width:0}
-.mail b{font-size:.8rem;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mail small{font-size:.68rem;color:var(--dim2);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mail .tm{font-family:var(--mono);font-size:.55rem;color:var(--dim2);flex:none}
-#reader{position:fixed;inset:0;z-index:90;background:var(--bg);overflow-y:auto;transform:translateY(100%);transition:transform .35s var(--ease);padding-bottom:30px}
-#reader.up{transform:none}
-#reader .hd{position:sticky;top:0;display:flex;gap:10px;align-items:center;padding:12px 14px;background:rgba(8,7,12,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-#reader .hd button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:none;color:var(--txt);cursor:pointer}
-#reader .bd{padding:16px 14px}
-#reader h3{font-size:.95rem;margin-bottom:6px}
-#reader .from{font-family:var(--mono);font-size:.65rem;color:var(--dim2);margin-bottom:14px}
-#reader .frame{width:100%;min-height:60vh;border:1px solid var(--line);border-radius:10px;background:#fff}
+main{max-width:700px;padding-top:22px}
+.hero{border:1px solid rgba(34,211,238,.35);background:linear-gradient(150deg,rgba(34,211,238,.09),rgba(168,85,247,.06));border-radius:var(--r);padding:16px;margin-bottom:12px}
+.hero small{font-family:var(--mono);font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim2);display:block;margin-bottom:7px}
+.hero output{display:block;font-family:var(--mono);font-size:clamp(.85rem,3.6vw,1.05rem);color:var(--a2);word-break:break-all;background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin-bottom:11px}
+.hero output.pop{animation:pop .45s var(--ease)}
+@keyframes pop{from{transform:scale(.94);opacity:0}}
+.acts{display:flex;gap:6px;flex-wrap:wrap}
+.acts .btn{flex:1 1 auto;min-width:0}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:12px}
+.st{border:1px solid var(--line);border-radius:10px;padding:9px 6px;text-align:center;background:var(--bg2)}
+.st b{display:block;font-family:var(--mono);font-size:.92rem;color:var(--a2)}
+.st small{font-family:var(--mono);font-size:.48rem;letter-spacing:.1em;color:var(--dim2);text-transform:uppercase}
+.st .pb{height:3px;background:#231f33;border-radius:9px;margin-top:6px;overflow:hidden}
+.st .pb i{display:block;height:100%;width:100%;background:var(--a2);transition:width 1s linear}
+.toolrow{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px}
+.toolrow .chip.on{background:rgba(34,211,238,.14);border-color:var(--a2);color:#cffafe}
+.cardbox{border:1px solid var(--line);border-radius:var(--r);background:var(--card);padding:13px;margin-bottom:11px}
+.ihead{display:flex;gap:8px;align-items:center;margin-bottom:9px}
+.ihead h3{font-size:.86rem;flex:none}
+.ihead input{flex:1;background:#0e0c16;border:1px solid var(--line);border-radius:8px;padding:7px 10px;color:var(--txt);font-size:.76rem;font-family:inherit;min-width:0}
+.ihead input:focus{outline:none;border-color:var(--a2)}
+#stat{font-family:var(--mono);font-size:.6rem;color:var(--dim2);padding-bottom:9px;border-bottom:1px dashed var(--line);margin-bottom:9px}
+.list{display:flex;flex-direction:column;gap:5px;min-height:180px}
+.m{display:flex;gap:9px;align-items:center;padding:9px;border:1px solid var(--line);border-radius:9px;background:var(--bg2);cursor:pointer;transition:.2s}
+.m:hover{border-color:var(--a2);transform:translateX(3px)}
+.m.un{border-color:rgba(34,211,238,.45);background:rgba(34,211,238,.05)}
+.m .av{width:32px;height:32px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:var(--mono);font-size:.72rem;
+  background:linear-gradient(140deg,var(--a),#4c1d95);color:#fff}
+.m .mi{flex:1;min-width:0}
+.m .mi b{display:block;font-size:.76rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.m .mi span{display:block;font-size:.68rem;color:var(--dim2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.m .mt{flex:none;font-family:var(--mono);font-size:.52rem;color:var(--dim2);text-align:right}
+details{border:1px solid var(--line);border-radius:var(--r);background:var(--card);padding:12px;margin-bottom:9px}
+summary{list-style:none;cursor:pointer;font-size:.8rem;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary::after{content:'+';color:var(--a2);font-family:var(--mono)}
+details[open] summary::after{content:'−'}
+details[open] summary{margin-bottom:11px}
+.hist{display:flex;flex-direction:column;gap:5px;max-height:190px;overflow:auto}
+.h{display:flex;justify-content:space-between;gap:6px;padding:8px 10px;border-radius:8px;background:var(--bg2);
+  font-family:var(--mono);font-size:.66rem;cursor:pointer;word-break:break-all;border:1px solid transparent}
+.h:hover{border-color:var(--line2)}
+.h.cur{background:rgba(34,211,238,.12);color:var(--a2)}
+.h button{border:none;background:none;color:inherit;cursor:pointer;opacity:.6}
+#modal,#devM{position:fixed;inset:0;z-index:95;background:rgba(4,3,6,.85);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:12px}
+#modal.on,#devM.on{display:flex}
+.box{background:var(--card);border:1px solid var(--line2);border-radius:16px;width:min(680px,100%);max-height:92vh;display:flex;flex-direction:column;overflow:hidden}
+.mh{padding:14px 16px;border-bottom:1px solid var(--line)}
+.mh h2{font-size:.92rem;margin-bottom:4px;line-height:1.35}
+.mh p{font-family:var(--mono);font-size:.6rem;color:var(--dim2);word-break:break-all}
+.mb{flex:1;min-height:220px;overflow:auto;background:#fff}
+.mb iframe{width:100%;height:100%;min-height:340px;border:0}
+.mf{padding:11px 14px;display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--line)}
+.mf .btn{flex:0 0 auto}
+.dbody{padding:16px;overflow:auto;font-size:.82rem;color:var(--dim)}
+.dbody h4{color:var(--a2);font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;margin:14px 0 7px}
+.dbody h4:first-child{margin-top:0}
+.dbody ul{margin-left:17px;line-height:1.85}
+.hrt{position:fixed;bottom:-30px;z-index:30;pointer-events:none;animation:up 2.4s ease-out forwards}
+@keyframes up{to{transform:translateY(-105vh) rotate(40deg);opacity:0}}
 </style>
 </head>
 <body>
 <div class="grid-bg"></div>
 <header class="top"><div class="wrap hrow">
   <a href="/" class="logo"><span class="mk"><i class="fa-solid fa-envelope"></i></span><span>EMAIL SEMENTARA<small>ZUKAITEMP</small></span></a>
-  <div class="hactions"><a class="iconbtn" href="/"><i class="fa-solid fa-xmark"></i></a></div>
+  <div class="hactions">
+    <button class="iconbtn" id="bDev" title="Tentang"><i class="fa-solid fa-circle-info"></i></button>
+    <a class="iconbtn" href="/"><i class="fa-solid fa-xmark"></i></a>
+  </div>
 </div></header>
 
 <main class="wrap">
-  <span class="kicker">Sekali pakai</span>
-  <h2 class="sec">Kotak masuk sementara</h2>
-  <p class="sub">Untuk verifikasi, uji coba, atau mendaftar hal yang tidak mau kamu campur dengan email utama. Alamatnya hilang kalau tab ditutup permanen.</p>
-
-  <div class="addr" id="addrBox" style="margin-top:16px">
-    <small>Alamat kamu</small>
-    <b id="addr">—</b>
-    <div class="row">
-      <button class="btn p" onclick="copyAddr()"><i class="fa-regular fa-copy"></i> Copy</button>
-      <button class="btn" onclick="refresh()"><i class="fa-solid fa-rotate"></i> Segarkan</button>
-      <button class="btn" onclick="newAddr()"><i class="fa-solid fa-plus"></i> Ganti</button>
+  <div class="hero">
+    <small id="hs">Alamat email sementara kamu</small>
+    <output id="addr">Menyiapkan…</output>
+    <div class="acts">
+      <button class="btn p" id="bCopy"><i class="fa-regular fa-copy"></i> Salin</button>
+      <button class="btn" id="bNew"><i class="fa-solid fa-wand-magic-sparkles"></i> Acak</button>
+      <button class="btn" id="bRef"><i class="fa-solid fa-rotate"></i> Cek</button>
+      <button class="btn" id="bDel"><i class="fa-solid fa-trash"></i> Hapus</button>
     </div>
   </div>
 
-  <div id="list"><div class="empty">Membuat alamat…</div></div>
+  <div class="stats">
+    <div class="st"><b id="sTot">0</b><small>Pesan</small></div>
+    <div class="st"><b id="sUn">0</b><small>Baru</small></div>
+    <div class="st"><b id="sCd">10s</b><small>Jeda</small><div class="pb"><i id="pb"></i></div></div>
+    <div class="st"><b id="sAge">0m</b><small>Umur</small></div>
+  </div>
+
+  <div class="toolrow">
+    <button class="chip on" id="tAuto">Auto</button>
+    <button class="chip on" id="tSnd">Suara</button>
+    <button class="chip" id="tDark">Gelap</button>
+    <button class="chip" id="bInstall" hidden>Pasang</button>
+  </div>
+
+  <div class="cardbox">
+    <div class="ihead"><h3><i class="fa-solid fa-inbox" style="color:var(--a2)"></i> Kotak masuk</h3>
+      <input id="q" type="search" placeholder="Cari pengirim atau subjek…"></div>
+    <div id="stat">Menunggu pemeriksaan pertama…</div>
+    <div class="list" id="list"></div>
+  </div>
+
+  <details id="dAcc">
+    <summary>Alamat kustom</summary>
+    <div class="field"><label class="label" for="uName">Nama pengguna</label>
+      <input class="inp" id="uName" placeholder="misal: kucingpink" maxlength="30" autocomplete="off"></div>
+    <div class="field"><label class="label" for="dom">Server &amp; domain</label><select class="inp" id="dom"></select></div>
+    <p style="font-size:.72rem;color:var(--dim2);margin-bottom:10px">Kosongkan nama kalau mau diacak.</p>
+    <button class="btn p block" id="bMake">Buat alamat</button>
+  </details>
+
+  <details id="dHist">
+    <summary>Riwayat alamat</summary>
+    <div class="hist" id="hist"></div>
+  </details>
 </main>
 
-<div id="reader">
-  <div class="hd">
-    <button onclick="closeReader()"><i class="fa-solid fa-arrow-left"></i></button>
-    <span class="mono" style="font-size:.62rem;letter-spacing:.14em;color:var(--dim2)">BACA PESAN</span>
-    <button style="margin-left:auto" onclick="delMail()"><i class="fa-solid fa-trash"></i></button>
+<div id="modal" role="dialog" aria-modal="true"><div class="box">
+  <div class="mh"><h2 id="mSub"></h2><p id="mMeta"></p></div>
+  <div class="mb" id="mBody"></div>
+  <div class="mf" id="mFoot">
+    <button class="btn" id="mDel"><i class="fa-solid fa-trash"></i> Hapus</button>
+    <button class="btn" id="mSave"><i class="fa-solid fa-download"></i> Simpan</button>
+    <button class="btn p" id="mClose">Tutup</button>
   </div>
-  <div class="bd">
-    <h3 id="rSub">—</h3>
-    <div class="from" id="rFrom">—</div>
-    <iframe class="frame" id="rFrame" sandbox="allow-popups allow-same-origin"></iframe>
+</div></div>
+
+<div id="devM" role="dialog" aria-modal="true"><div class="box">
+  <div class="mh"><h2>Email sementara</h2><p>ZukaiTemp v2</p></div>
+  <div class="dbody">
+    <h4>Cara pakai</h4>
+    <ul><li>Alamat dibuat otomatis, atau susun sendiri di bagian alamat kustom.</li>
+    <li>Tempel alamatnya di formulir pendaftaran mana pun.</li>
+    <li>Pesan masuk muncul sendiri. Kode OTP bisa disalin sekali tekan.</li></ul>
+    <h4>Server</h4>
+    <p>Dua penyedia dipakai bergantian. Kalau satu gagal, halaman pindah sendiri.</p>
+    <h4>Catatan</h4>
+    <p>Email di sini sementara dan bisa saja dibaca orang lain. Jangan pakai untuk akun penting, bank, atau data pribadi.</p>
   </div>
-</div>
+  <div class="mf"><button class="btn p" id="dClose">Tutup</button></div>
+</div></div>
 
 <div id="toast"></div>
 
 <script>
 const $ = s => document.querySelector(s);
-let tt;
-function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('up'); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove('up'),2200); }
-const K = 'zk_mail';
-let box = null, timer = null, curId = null;
+const API = '/api/mail';
+const PROVS = { tm:'Server A · mail.tm', gw:'Server B · mail.gw' };
+const ch = 'abcdefghijklmnopqrstuvwxyz0123456789';
+const words = ['pinky','sakura','boba','candy','peach','cloud','melon','bunny','kiwi','mochi','berry','glow'];
+const rnd = n => Array.from({length:n}, () => ch[Math.random()*ch.length|0]).join('');
+const store = { get(k,d){ try{ return JSON.parse(localStorage.getItem(k)) ?? d; }catch{ return d; } }, set(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch{} } };
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-function save(){ localStorage.setItem(K, JSON.stringify(box)); }
-function load(){ try { return JSON.parse(localStorage.getItem(K) || 'null'); } catch { return null; } }
+let acc = null, msgs = [], seen = new Set(), gone = new Set(), first = true;
+let auto = true, snd = true, cd = 10, openId = null, curMsg = null;
+let hist = store.get('pm_hist', []);
+let tt; const toast = m => { const t=$('#toast'); t.textContent=m; t.classList.add('up'); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove('up'),2600); };
 
-async function newAddr(){
-  $('#list').innerHTML = '<div class="skel"></div><div class="skel" style="margin-top:8px"></div>';
+function hearts(n=9){
+  for (let i=0;i<n;i++){
+    const s = document.createElement('span');
+    s.className='hrt'; s.textContent=['💗','💖','🌸','💌'][i%4];
+    s.style.left = Math.random()*100+'vw'; s.style.fontSize = 15+Math.random()*20+'px';
+    s.style.animationDelay = Math.random()*.6+'s';
+    document.body.appendChild(s); setTimeout(()=>s.remove(), 3200);
+  }
+}
+function beep(){
+  if (!snd) return;
   try {
-    const r = await fetch('/api/mail?a=create');
-    const j = await r.json();
-    if (!j.ok) throw new Error(j.error || 'gagal membuat alamat');
-    box = { address: j.address, token: j.token };
-    save();
-    $('#addr').textContent = box.address;
-    toast('Alamat baru siap');
-    refresh();
+    const c = new (window.AudioContext||window.webkitAudioContext)();
+    const o = c.createOscillator(), g = c.createGain();
+    o.connect(g); g.connect(c.destination); o.type='sine';
+    o.frequency.setValueAtTime(880, c.currentTime);
+    o.frequency.setValueAtTime(1175, c.currentTime+.12);
+    g.gain.setValueAtTime(.14, c.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001, c.currentTime+.4);
+    o.start(); o.stop(c.currentTime+.4);
+  } catch {}
+}
+const ago = d => { const s = (Date.now()-new Date(d))/1000;
+  if (s<60) return 'baru';
+  if (s<3600) return (s/60|0)+'m';
+  if (s<86400) return (s/3600|0)+'j';
+  return new Date(d).toLocaleDateString('id-ID',{day:'numeric',month:'short'});
+};
+
+/* ---------- transport ---------- */
+async function req(path, opt = {}, prov = 'tm', tok){
+  const h = {};
+  if (opt.body) h['content-type'] = 'application/json';
+  if (tok) h.authorization = 'Bearer ' + tok;
+  const c = new AbortController();
+  const t = setTimeout(() => c.abort(), 13000);
+  try {
+    return await fetch(`${API}?h=${prov}&p=${encodeURIComponent(path)}`,
+      { ...opt, headers: h, cache: 'no-store', signal: c.signal });
   } catch (e) {
-    $('#addr').textContent = '—';
-    $('#list').innerHTML = `<div class="empty">${e.message}</div>`;
+    throw new Error(e.name === 'AbortError' ? 'server terlalu lama' : 'koneksi gagal');
+  } finally { clearTimeout(t); }
+}
+async function api(path, opt = {}, prov, tok){
+  prov = prov || acc?.prov || 'tm';
+  const r = await req(path, opt, prov, tok);
+  if (r.status === 204) return null;
+  const txt = await r.text();
+  let j = null; try { j = JSON.parse(txt); } catch {}
+  if (!r.ok) throw new Error(j?.['hydra:description'] || j?.message || 'error ' + r.status);
+  return j;
+}
+
+/* ---------- akun ---------- */
+async function loadDomains(){
+  const got = {};
+  await Promise.all(Object.keys(PROVS).map(async p => {
+    try {
+      const j = await api('/domains', {}, p);
+      got[p] = (j['hydra:member'] || []).filter(x => x.isActive !== false).map(x => x.domain);
+    } catch {}
+  }));
+  const sel = $('#dom');
+  sel.innerHTML = Object.entries(got).map(([p, list]) =>
+    `<optgroup label="${PROVS[p]}">${list.map(d => `<option value="${p}:${esc(d)}">${esc(d)}</option>`).join('')}</optgroup>`).join('');
+  return Object.keys(got).length > 0;
+}
+
+function setBusy(b){
+  $('#bNew').disabled = $('#bMake').disabled = b;
+  if (b) $('#addr').textContent = 'Menyiapkan…';
+}
+
+async function make(user, pick){
+  const given = !!user;
+  user = (user || words[Math.random()*words.length|0] + rnd(5)).toLowerCase().replace(/[^a-z0-9._-]/g,'');
+  const opts = [...$('#dom').options].map(o => o.value);
+  if (!opts.length) return toast('Domain belum siap, tunggu sebentar.');
+  const by = {}; opts.forEach(v => (by[v.split(':')[0]] ??= []).push(v));
+  const rp = k => by[k][Math.random()*by[k].length|0];
+  const order = [pick || rp(Object.keys(by)[0]), ...Object.keys(by).flatMap(k => by[k])];
+  setBusy(true);
+  let err;
+  for (const v of order){
+    const i = v.indexOf(':'), prov = v.slice(0,i), domain = v.slice(i+1);
+    const address = user + '@' + domain, password = rnd(14);
+    $('#hs').textContent = 'Menyiapkan · ' + (PROVS[prov] || prov) + '…';
+    try {
+      const a = await api('/accounts', { method:'POST', body: JSON.stringify({ address, password }) }, prov);
+      const real = a.address || address;
+      const tok = a.token || (await api('/token', { method:'POST', body: JSON.stringify({ address, password }) }, prov)).token;
+      const entry = { address: real, password, id: a.id, token: tok, prov, created: Date.now() };
+      hist = [entry, ...hist.filter(h => h.address !== real)].slice(0, 8);
+      store.set('pm_hist', hist);
+      activate(entry); setBusy(false);
+      toast('Alamat siap'); hearts(8);
+      return;
+    } catch (e) {
+      err = e;
+      if (/already|used|exist/i.test(e.message)) break;
+    }
+  }
+  setBusy(false);
+  $('#addr').textContent = acc ? acc.address : 'Gagal membuat alamat';
+  $('#hs').textContent = acc ? 'Alamat kamu · ' + PROVS[acc.prov] : 'Tekan Acak untuk coba lagi';
+  toast(err?.message || 'Server tidak merespons');
+}
+
+async function switchTo(i){
+  const h = hist[i]; if (!h) return;
+  setBusy(true);
+  try {
+    try { await api('/messages?page=1', {}, h.prov, h.token); }
+    catch { const t = await api('/token', { method:'POST', body: JSON.stringify({ address:h.address, password:h.password }) }, h.prov); h.token = t.token; store.set('pm_hist', hist); }
+    activate(h);
+  } catch {
+    toast('Akun ini sudah tidak aktif');
+    hist.splice(i,1); store.set('pm_hist', hist); renderHist();
+  }
+  setBusy(false);
+  if (!acc) make();
+}
+
+function activate(a){
+  acc = a; msgs = []; seen = new Set(); gone = new Set(); first = true;
+  $('#hs').textContent = 'Alamat kamu · ' + (PROVS[a.prov] || a.prov);
+  const o = $('#addr'); o.textContent = a.address;
+  o.classList.remove('pop'); void o.offsetWidth; o.classList.add('pop');
+  store.set('pm_cur', a.address);
+  renderHist(); render(); poll(); resetCd();
+}
+
+async function delAcc(){
+  if (!acc) return;
+  if (!confirm('Hapus akun ' + acc.address + ' dan semua pesannya?')) return;
+  try { await api('/accounts/' + acc.id, { method:'DELETE' }, acc.prov, acc.token); } catch {}
+  hist = hist.filter(h => h.address !== acc.address); store.set('pm_hist', hist);
+  acc = null; toast('Akun dihapus');
+  hist.length ? switchTo(0) : make();
+}
+
+/* ---------- inbox ---------- */
+async function poll(){
+  if (!acc) return;
+  try {
+    const j = await api('/messages?page=1', {}, acc.prov, acc.token);
+    msgs = (j['hydra:member'] || []).filter(m => !gone.has(m.id));
+    const fresh = msgs.filter(m => !seen.has(m.id));
+    msgs.forEach(m => seen.add(m.id));
+    if (!first && fresh.length){
+      beep(); hearts(12);
+      toast('💌 ' + fresh.length + ' pesan baru');
+      document.title = '💌 (' + fresh.length + ') Email sementara';
+      setTimeout(() => document.title = 'Email sementara · ZukaiTemp', 4000);
+    }
+    first = false; render();
+    $('#stat').textContent = 'Terakhir cek ' + new Date().toLocaleTimeString('id-ID') + ' · ' + (PROVS[acc.prov]||'') + ' · ' + msgs.length + ' pesan';
+  } catch (e) {
+    $('#stat').textContent = 'Gagal cek: ' + e.message;
   }
 }
 
-async function refresh(){
-  if (!box?.token) return;
+function render(){
+  const q = $('#q').value.trim().toLowerCase();
+  const f = msgs.filter(m => !q || (m.subject + m.intro + m.from.address + (m.from.name||'')).toLowerCase().includes(q));
+  $('#sTot').textContent = msgs.length;
+  $('#sUn').textContent = msgs.filter(m => !m.seen).length;
+  $('#list').innerHTML = f.length ? f.map(m => `<div class="m ${m.seen?'':'un'}" data-id="${m.id}" tabindex="0">
+      <div class="av">${esc((m.from.name || m.from.address)[0]).toUpperCase()}</div>
+      <div class="mi"><b>${esc(m.from.name || m.from.address)}</b><span>${esc(m.subject || '(tanpa subjek)')}</span><span>${esc(m.intro)}</span></div>
+      <div class="mt">${ago(m.createdAt)}</div></div>`).join('')
+    : `<div class="empty">${q ? 'Tidak ada yang cocok' : 'Belum ada pesan. Kirim email ke alamat di atas.'}</div>`;
+}
+
+async function openMsg(id){
   try {
-    const r = await fetch(`/api/mail?a=inbox&token=${encodeURIComponent(box.token)}`);
-    const j = await r.json();
-    if (!j.ok) throw new Error(j.error || 'gagal memuat');
-    if (!j.data.length) return $('#list').innerHTML = '<div class="empty">Belum ada pesan. Kotak ini menunggu.</div>';
-    $('#list').innerHTML = j.data.map(m => `<div class="mail ${m.seen ? '' : 'unread'}" data-id="${m.id}">
-      <div class="m"><b>${m.subject.replace(/[<>]/g,'')}</b><small>${m.from.replace(/[<>]/g,'')} · ${m.intro.replace(/[<>]/g,'').slice(0,60)}</small></div>
-      <span class="tm">${new Date(m.at).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}</span></div>`).join('');
-    $('#list').querySelectorAll('.mail').forEach(el => el.onclick = () => openMail(el.dataset.id));
-  } catch (e) { $('#list').innerHTML = `<div class="empty">${e.message}</div>`; }
+    const m = await api('/messages/' + id, {}, acc.prov, acc.token);
+    openId = id; curMsg = m;
+    $('#mSub').textContent = m.subject || '(tanpa subjek)';
+    $('#mMeta').textContent = 'Dari ' + (m.from.name ? m.from.name + ' <' + m.from.address + '>' : m.from.address) + ' · ' + new Date(m.createdAt).toLocaleString('id-ID');
+    const body = (m.html && m.html.length) ? m.html.join('') : '<pre style="white-space:pre-wrap;font-family:monospace;padding:14px">' + esc(m.text) + '</pre>';
+    $('#mBody').innerHTML = '<iframe sandbox="allow-popups allow-popups-to-escape-sandbox" title="isi"></iframe>';
+    $('#mBody').firstChild.srcdoc = '<base target="_blank"><style>body{font-family:sans-serif;padding:14px;word-break:break-word}img{max-width:100%}</style>' + body;
+    $('#mFoot').querySelectorAll('.att').forEach(e => e.remove());
+    (m.attachments || []).forEach(a => {
+      const b = document.createElement('button');
+      b.className = 'btn att'; b.innerHTML = '<i class="fa-solid fa-paperclip"></i> ' + esc(a.filename);
+      b.onclick = () => dl(a); $('#mFoot').prepend(b);
+    });
+    const plain = m.text || (m.html || []).join(' ').replace(/<[^>]+>/g,' ');
+    const otp = (plain.match(/(?<![\w@.\/-])\d{4,8}(?![\w@.\/-])/) || [])[0];
+    if (otp){
+      const b = document.createElement('button');
+      b.className = 'btn p att'; b.innerHTML = '<i class="fa-solid fa-key"></i> Salin ' + otp;
+      b.onclick = () => { navigator.clipboard.writeText(otp).catch(()=>{}); toast('Kode disalin'); hearts(4); };
+      $('#mFoot').prepend(b);
+    }
+    $('#modal').classList.add('on');
+    const x = msgs.find(z => z.id === id); if (x) { x.seen = true; render(); }
+  } catch (e) { toast(e.message); }
 }
 
-async function openMail(id){
-  curId = id;
-  $('#rSub').textContent = 'Memuat…'; $('#rFrom').textContent = ''; $('#rFrame').srcdoc = '';
-  $('#reader').classList.add('up');
+async function dl(a){
   try {
-    const r = await fetch(`/api/mail?a=read&token=${encodeURIComponent(box.token)}&id=${encodeURIComponent(id)}`);
-    const j = await r.json();
-    if (!j.ok) throw new Error(j.error || 'gagal');
-    $('#rSub').textContent = j.subject || '(tanpa subjek)';
-    $('#rFrom').textContent = j.from + ' · ' + new Date(j.at).toLocaleString('id-ID');
-    $('#rFrame').srcdoc = j.html || `<pre style="font-family:monospace;padding:12px;white-space:pre-wrap">${(j.text||'').replace(/[<>]/g,'')}</pre>`;
-  } catch (e) { $('#rSub').textContent = e.message; }
+    const r = await req(a.downloadUrl, {}, acc.prov, acc.token);
+    const u = URL.createObjectURL(await r.blob());
+    const l = document.createElement('a'); l.href = u; l.download = a.filename; l.click();
+    URL.revokeObjectURL(u);
+  } catch { toast('Gagal mengunduh'); }
 }
-function closeReader(){ $('#reader').classList.remove('up'); curId = null; }
-
-async function delMail(){
-  if (!curId) return;
-  await fetch(`/api/mail?a=delete&token=${encodeURIComponent(box.token)}&id=${encodeURIComponent(curId)}`).catch(()=>{});
-  closeReader(); toast('Pesan dihapus'); refresh();
-}
-
-function copyAddr(){
-  if (!box?.address) return;
-  navigator.clipboard.writeText(box.address).then(() => toast('Alamat disalin')).catch(() => toast('Gagal menyalin'));
+async function delMsg(){
+  if (!openId) return;
+  try {
+    await api('/messages/' + openId, { method:'DELETE' }, acc.prov, acc.token);
+    gone.add(openId); msgs = msgs.filter(m => m.id !== openId);
+    $('#modal').classList.remove('on'); render(); toast('Pesan dihapus');
+  } catch (e) { toast(e.message); }
 }
 
-/* init */
-box = load();
-if (box?.address) { $('#addr').textContent = box.address; refresh(); }
-else newAddr();
-timer = setInterval(refresh, 10000);
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') refresh(); });
+function renderHist(){
+  $('#hist').innerHTML = hist.length ? hist.map((h,i) =>
+    `<div class="h ${acc && h.address === acc.address ? 'cur' : ''}" data-i="${i}"><span>${esc(h.address)}</span>
+      <button data-x="${i}"><i class="fa-solid fa-xmark"></i></button></div>`).join('')
+    : '<div class="empty" style="padding:12px">Belum ada riwayat</div>';
+}
+
+/* ---------- timer ---------- */
+function resetCd(){ cd = 10; tick(); }
+function tick(){ $('#sCd').textContent = auto ? cd + 's' : 'off'; $('#pb').style.width = auto ? cd*10 + '%' : '0%'; }
+setInterval(() => {
+  if (acc) { const m = (Date.now() - acc.created) / 6e4 | 0; $('#sAge').textContent = m < 60 ? m + 'm' : (m/60|0) + 'j'; }
+  if (!auto || !acc) return;
+  if (--cd <= 0) { poll(); cd = 10; }
+  tick();
+}, 1000);
+
+/* ---------- event ---------- */
+document.addEventListener('click', e => {
+  const b = e.target.closest('.btn'); if (!b) return;
+  const r = document.createElement('span'), s = b.getBoundingClientRect(), d = Math.max(s.width, s.height);
+  r.className = 'rip'; r.style.cssText = `width:${d}px;height:${d}px;left:${e.clientX-s.left-d/2}px;top:${e.clientY-s.top-d/2}px`;
+  b.appendChild(r); setTimeout(() => r.remove(), 600);
+});
+$('#bCopy').onclick = () => {
+  if (!acc) return;
+  navigator.clipboard.writeText(acc.address)
+    .then(() => { toast('Alamat disalin'); hearts(5); })
+    .catch(() => toast('Gagal menyalin'));
+};
+$('#bNew').onclick = () => make();
+$('#bRef').onclick = () => { poll(); resetCd(); };
+$('#bDel').onclick = delAcc;
+$('#bMake').onclick = () => make($('#uName').value.trim(), $('#dom').value);
+$('#uName').onkeydown = e => { if (e.key === 'Enter') make($('#uName').value.trim(), $('#dom').value); };
+$('#q').oninput = render;
+$('#list').onclick = e => { const m = e.target.closest('.m'); if (m) openMsg(m.dataset.id); };
+$('#hist').onclick = e => {
+  const x = e.target.closest('[data-x]');
+  if (x) { hist.splice(+x.dataset.x, 1); store.set('pm_hist', hist); renderHist(); return; }
+  const h = e.target.closest('.h'); if (h) switchTo(+h.dataset.i);
+};
+$('#mClose').onclick = () => $('#modal').classList.remove('on');
+$('#modal').onclick = e => { if (e.target.id === 'modal') $('#modal').classList.remove('on'); };
+$('#mDel').onclick = delMsg;
+$('#mSave').onclick = () => {
+  if (!curMsg) return;
+  const body = (curMsg.html && curMsg.html.length) ? curMsg.html.join('') : '<pre>' + esc(curMsg.text) + '</pre>';
+  const doc = '<meta charset="utf-8"><h2>' + esc(curMsg.subject) + '</h2><p>Dari ' + esc(curMsg.from.address) + '</p><hr>' + body;
+  const u = URL.createObjectURL(new Blob([doc], { type:'text/html' }));
+  const l = document.createElement('a'); l.href = u; l.download = 'pesan-' + curMsg.id.slice(0,6) + '.html'; l.click();
+  URL.revokeObjectURL(u); toast('Pesan disimpan');
+};
+$('#tAuto').onclick = e => { auto = !auto; e.currentTarget.classList.toggle('on', auto); resetCd(); toast(auto ? 'Auto nyala' : 'Auto mati'); };
+$('#tSnd').onclick = e => { snd = !snd; e.currentTarget.classList.toggle('on', snd); if (snd) beep(); };
+$('#bDev').onclick = () => $('#devM').classList.add('on');
+$('#dClose').onclick = () => $('#devM').classList.remove('on');
+$('#devM').onclick = e => { if (e.target.id === 'devM') $('#devM').classList.remove('on'); };
+document.onkeydown = e => { if (e.key === 'Escape') { $('#modal').classList.remove('on'); $('#devM').classList.remove('on'); } };
+
+const setDark = d => {
+  document.documentElement.toggleAttribute('data-dark', d);
+  $('#tDark').classList.toggle('on', d);
+  document.documentElement.style.setProperty('--bg', d ? '#0a0910' : '#08070c');
+  store.set('zt_dark', d);
+};
+$('#tDark').onclick = () => setDark(!document.documentElement.hasAttribute('data-dark'));
+setDark(store.get('zt_dark', false));
+
+let deferred;
+addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferred = e; $('#bInstall').hidden = false; });
+$('#bInstall').onclick = async () => { if (deferred) { deferred.prompt(); await deferred.userChoice; deferred = null; $('#bInstall').hidden = true; } };
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
+
+/* ---------- mulai ---------- */
+(async () => {
+  let ok = await loadDomains();
+  renderHist(); render();
+  while (!ok) { await new Promise(r => setTimeout(r, 4000)); ok = await loadDomains(); }
+  const cur = store.get('pm_cur');
+  const i = hist.findIndex(h => h.address === cur);
+  i >= 0 ? switchTo(i) : make();
+})();
 </script>
 </body>
 </html>
