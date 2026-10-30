@@ -9,476 +9,377 @@
 <link rel="icon" href="/icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/app.css">
 <style>
-:root{--bg:#08070c;--card:#12101a;--line:#241f33;--txt:#f2eefb;--dim:#9a92b0;--dim2:#6a6280;--a:#a855f7;--a2:#22d3ee;--ok:#34d399;--bad:#fb7185;--mono:'JetBrains Mono',monospace;--ease:cubic-bezier(.16,1,.3,1)}
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;overflow-x:hidden;padding-bottom:180px;-webkit-tap-highlight-color:transparent}
-::-webkit-scrollbar{width:8px}::-webkit-scrollbar-thumb{background:var(--a);border-radius:9px}
-a{color:inherit;text-decoration:none}
-.wrap{max-width:1000px;margin:0 auto;padding:0 14px}
-
-header{position:sticky;top:0;z-index:50;backdrop-filter:blur(16px);background:linear-gradient(180deg,rgba(8,7,12,.96),rgba(8,7,12,.6) 70%,transparent);padding:10px 0 12px}
-.hrow{display:flex;align-items:center;gap:10px}
-.logo{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.75rem;letter-spacing:.14em;font-weight:700}
-.logo i{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;background:linear-gradient(140deg,var(--a),#4c1d95);border:1px solid #c084fc;font-size:.85rem;box-shadow:0 0 18px rgba(168,85,247,.45)}
-.back{margin-left:auto;width:34px;height:34px;display:grid;place-items:center;border-radius:9px;border:1px solid var(--line);color:var(--dim);background:rgba(255,255,255,.03)}
-.searchbar{display:flex;gap:8px;margin-top:10px}
-.searchbar input{flex:1;background:#0e0c16;border:1px solid var(--line);border-radius:11px;padding:11px 13px;color:var(--txt);font-size:.85rem;font-family:inherit}
-.searchbar input:focus{outline:none;border-color:var(--a);box-shadow:0 0 0 3px rgba(168,85,247,.15)}
-.searchbar button{width:44px;border-radius:11px;border:1px solid #c084fc;background:linear-gradient(120deg,var(--a),#6d28d9);color:#fff;font-size:.9rem;cursor:pointer}
-.srcrow{display:flex;gap:6px;margin-top:9px;overflow:auto;scrollbar-width:none}
-.srcrow::-webkit-scrollbar{display:none}
-.src{flex:none;font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 11px;border-radius:99px;border:1px solid var(--line);background:transparent;color:var(--dim);cursor:pointer}
-.src.on{background:rgba(168,85,247,.16);border-color:var(--a);color:#e9d5ff}
-
-.tabs{display:flex;gap:4px;overflow:auto;padding:4px;border:1px solid var(--line);border-radius:12px;background:#0d0b14;margin:14px 0;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tabs button{flex:1;white-space:nowrap;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:8px 10px;border-radius:9px;border:none;background:none;color:var(--dim2);cursor:pointer;transition:.25s}
+body{padding-bottom:150px}
+header.top{background:rgba(8,7,12,.97)}
+.hrow{padding-top:2px}
+.searchbar{display:flex;gap:6px;margin-top:9px}
+.searchbar input{flex:1;background:#12101a;border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--txt);font-size:.84rem;font-family:inherit}
+.searchbar input:focus{outline:none;border-color:var(--a)}
+.searchbar button{width:40px;border-radius:10px;border:1px solid var(--a-soft);background:linear-gradient(120deg,var(--a),#6d28d9);color:#fff;cursor:pointer}
+.srcrow{display:flex;gap:5px;margin-top:8px}
+.srcrow button{font-family:var(--mono);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 9px;border-radius:99px;border:1px solid var(--line);background:none;color:var(--dim2);cursor:pointer}
+.srcrow button.on{background:rgba(168,85,247,.16);border-color:var(--a);color:#e9d5ff}
+.tabs{display:flex;gap:3px;padding:3px;border:1px solid var(--line);border-radius:10px;background:#0d0b14;margin:12px 0}
+.tabs button{flex:1;font-family:var(--mono);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;padding:7px 4px;border-radius:8px;border:none;background:none;color:var(--dim2);cursor:pointer}
 .tabs button.on{background:rgba(168,85,247,.18);color:#f3e8ff}
-
-h2{font-size:.95rem;margin:18px 0 10px;display:flex;align-items:center;gap:8px}
-h2 i{color:var(--a2);font-size:.8rem}
-h2 small{margin-left:auto;font-family:var(--mono);font-size:.56rem;color:var(--dim2);letter-spacing:.1em;text-transform:uppercase}
-
-.trk{display:flex;align-items:center;gap:10px;padding:7px;border-radius:11px;transition:.2s;cursor:pointer}
-.trk:hover{background:rgba(255,255,255,.05)}
-.trk.on{background:rgba(168,85,247,.14)}
-.trk .cv{width:46px;height:46px;border-radius:8px;object-fit:cover;background:#1b1728;flex:none}
-.trk .meta{flex:1;min-width:0}
-.trk .meta b{display:block;font-size:.83rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.trk .meta small{font-size:.7rem;color:var(--dim2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
-.trk .dur{font-family:var(--mono);font-size:.63rem;color:var(--dim2)}
-.trk .act{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:none;color:var(--dim);cursor:pointer;font-size:.68rem;display:grid;place-items:center;flex:none}
-.trk .act:hover{color:var(--a);border-color:var(--a)}
-.trk .act.fav{color:var(--bad);border-color:rgba(251,113,133,.5)}
-
-.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
-.chip{font-size:.7rem;padding:5px 11px;border-radius:99px;border:1px solid var(--line);background:none;color:var(--dim);cursor:pointer}
-.chip:hover{border-color:var(--a);color:#e9d5ff}
-
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:10px}
-.art{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer;transition:.25s}
-.art:hover{transform:translateY(-3px);border-color:rgba(168,85,247,.5)}
-.art img{width:100%;aspect-ratio:1;object-fit:cover;background:#1b1728;display:block}
-.art span{display:block;padding:8px;font-size:.74rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
-.empty{text-align:center;padding:36px 16px;color:var(--dim2);font-family:var(--mono);font-size:.72rem;border:1px dashed var(--line);border-radius:14px}
-.skel{height:56px;border-radius:11px;background:linear-gradient(90deg,#12101a,#1a1626,#12101a);background-size:200% 100%;animation:sh 1.2s infinite;margin-bottom:8px}
-@keyframes sh{to{background-position:-200% 0}}
-
-/* PLAYER */
-#bar{position:fixed;left:0;right:0;bottom:0;z-index:60;backdrop-filter:blur(22px);background:rgba(14,12,20,.94);border-top:1px solid var(--line);padding:9px 12px calc(9px + env(safe-area-inset-bottom));transform:translateY(120%);transition:transform .45s var(--ease)}
+h2{font-size:.9rem;margin:16px 0 8px;display:flex;align-items:center;gap:7px}
+h2 i{color:var(--a2);font-size:.76rem}
+h2 small{margin-left:auto;font-family:var(--mono);font-size:.54rem;color:var(--dim2);letter-spacing:.1em;text-transform:uppercase}
+h2 button.playall{margin-left:auto;font-family:var(--mono);font-size:.56rem;padding:4px 9px;border-radius:99px;border:1px solid var(--a-soft);background:rgba(168,85,247,.14);color:#e9d5ff;cursor:pointer}
+.trk{display:flex;align-items:center;gap:9px;padding:6px;border-radius:9px;cursor:pointer}
+.trk:hover{background:rgba(255,255,255,.045)}
+.trk.on{background:rgba(168,85,247,.13)}
+.trk .no{width:16px;font-family:var(--mono);font-size:.6rem;color:var(--dim2);text-align:center;flex:none}
+.trk .cv{width:42px;height:42px;border-radius:6px;object-fit:cover;background:#1b1728;flex:none}
+.trk .m{flex:1;min-width:0}
+.trk .m b{display:block;font-size:.81rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.trk .m small{font-size:.68rem;color:var(--dim2);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.trk .d{font-family:var(--mono);font-size:.6rem;color:var(--dim2)}
+.trk .f{width:28px;height:28px;border-radius:7px;border:1px solid var(--line);background:none;color:var(--dim);cursor:pointer;font-size:.64rem;flex:none}
+.trk .f.on{color:var(--bad);border-color:rgba(251,113,133,.5)}
+.chips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+.chips button{font-size:.68rem;padding:4px 10px;border-radius:99px;border:1px solid var(--line);background:none;color:var(--dim);cursor:pointer}
+#bar{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(14,12,20,.96);backdrop-filter:blur(20px);border-top:1px solid var(--line);padding:8px 11px calc(8px + env(safe-area-inset-bottom));transform:translateY(130%);transition:transform .4s var(--ease)}
 #bar.up{transform:none}
-#bar .row{display:flex;align-items:center;gap:10px}
-#bar img{width:44px;height:44px;border-radius:8px;object-fit:cover;background:#1b1728}
-#bar .info{flex:1;min-width:0}
-#bar .info b{display:block;font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#bar .info small{font-size:.68rem;color:var(--dim2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
-#bar button{width:38px;height:38px;border-radius:50%;border:none;background:none;color:var(--txt);font-size:1rem;cursor:pointer;flex:none;display:grid;place-items:center}
-#bar button.main{width:44px;height:44px;background:linear-gradient(120deg,var(--a),#6d28d9);color:#fff;box-shadow:0 0 22px rgba(168,85,247,.5)}
-#seek{width:100%;height:4px;appearance:none;background:#2a2438;border-radius:9px;margin:8px 0 4px;cursor:pointer}
-#seek::-webkit-slider-thumb{appearance:none;width:12px;height:12px;border-radius:50%;background:var(--a2);box-shadow:0 0 10px var(--a2)}
-#seek::-moz-range-thumb{width:12px;height:12px;border:none;border-radius:50%;background:var(--a2)}
-.times{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.58rem;color:var(--dim2)}
-
-/* NOW PLAYING */
-#np{position:fixed;inset:0;z-index:80;background:#08070c;display:none;flex-direction:column;padding:calc(16px + env(safe-area-inset-top)) 18px calc(18px + env(safe-area-inset-bottom))}
-#np.up{display:flex;animation:npIn .4s var(--ease)}
-@keyframes npIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
-#npBg{position:absolute;inset:0;background-size:cover;background-position:center;filter:blur(70px) saturate(1.6);opacity:.35;transform:scale(1.3)}
-#np .inner{position:relative;z-index:1;display:flex;flex-direction:column;height:100%}
-#np .top{display:flex;align-items:center;gap:10px}
-#np .top button{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:rgba(0,0,0,.4);color:var(--txt);cursor:pointer}
-#np .top span{font-family:var(--mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim2)}
-#npCover{width:min(78vw,320px);aspect-ratio:1;border-radius:18px;object-fit:cover;margin:auto;box-shadow:0 30px 70px rgba(0,0,0,.7)}
-#np h3{font-size:1.15rem;margin-top:18px}
-#np p{color:var(--dim2);font-size:.85rem;margin-bottom:12px}
-#np .ctrl{display:flex;align-items:center;justify-content:center;gap:16px;margin:6px 0 14px}
-#np .ctrl button{background:none;border:none;color:var(--txt);font-size:1.15rem;cursor:pointer;width:44px;height:44px;display:grid;place-items:center;border-radius:50%}
-#np .ctrl button.big{width:66px;height:66px;font-size:1.5rem;background:#fff;color:#000}
-#np .ctrl button.on{color:var(--a2)}
-#np .bottom{display:flex;gap:8px;margin-top:auto}
-#np .bottom button{flex:1;padding:11px;border-radius:11px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--dim);font-size:.72rem;font-family:var(--mono);cursor:pointer}
-#ytp{position:fixed;width:1px;height:1px;left:-9999px;top:0}
-#toast{position:fixed;left:50%;bottom:110px;transform:translate(-50%,20px);background:#1a1428;border:1px solid var(--line);padding:10px 16px;border-radius:99px;font-size:.76rem;opacity:0;transition:.3s;z-index:99;pointer-events:none;max-width:88vw;text-align:center}
-#toast.up{opacity:1;transform:translate(-50%,0)}
+#bar .r{display:flex;align-items:center;gap:9px}
+#bar img{width:42px;height:42px;border-radius:6px;object-fit:cover}
+#bar .m{flex:1;min-width:0}
+#bar .m b{display:block;font-size:.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#bar .m small{font-size:.66rem;color:var(--dim2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+#bar button{width:36px;height:36px;border-radius:50%;border:none;background:none;color:var(--txt);cursor:pointer;flex:none;font-size:.95rem}
+#bar button.main{width:42px;height:42px;background:linear-gradient(120deg,var(--a),#6d28d9);color:#fff}
+#seek{width:100%;height:4px;appearance:none;background:#2a2438;border-radius:9px;margin:7px 0 3px;cursor:pointer}
+#seek::-webkit-slider-thumb{appearance:none;width:11px;height:11px;border-radius:50%;background:var(--a2)}
+.times{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.55rem;color:var(--dim2)}
+#np{position:fixed;inset:0;z-index:80;background:#08070c;display:none;flex-direction:column;padding:calc(14px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom))}
+#np.up{display:flex}
+#npBg{position:absolute;inset:0;background-size:cover;background-position:center;filter:blur(70px) saturate(1.5);opacity:.32;transform:scale(1.3)}
+#np .in{position:relative;z-index:1;display:flex;flex-direction:column;height:100%}
+#np .top{display:flex;gap:9px;align-items:center}
+#np .top button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:rgba(0,0,0,.4);color:var(--txt);cursor:pointer}
+#np .top span{font-family:var(--mono);font-size:.56rem;letter-spacing:.18em;color:var(--dim2)}
+#npCv{width:min(74vw,300px);aspect-ratio:1;border-radius:16px;object-fit:cover;margin:auto;box-shadow:0 24px 60px rgba(0,0,0,.7)}
+#np h3{font-size:1.05rem;margin-top:16px}
+#np p{color:var(--dim2);font-size:.82rem;margin-bottom:10px}
+#np .ctl{display:flex;align-items:center;justify-content:center;gap:14px;margin:4px 0 12px}
+#np .ctl button{background:none;border:none;color:var(--txt);font-size:1.05rem;cursor:pointer;width:42px;height:42px;display:grid;place-items:center;border-radius:50%}
+#np .ctl button.big{width:62px;height:62px;font-size:1.4rem;background:#fff;color:#000}
+#np .ctl button.on{color:var(--a2)}
+#np .bot{display:flex;gap:6px;margin-top:auto}
+#np .bot button{flex:1;padding:10px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--dim);font-size:.68rem;font-family:var(--mono);cursor:pointer}
+.badge{font-family:var(--mono);font-size:.5rem;padding:1px 5px;border-radius:4px;border:1px solid rgba(34,211,238,.4);color:var(--a2)}
 </style>
 </head>
 <body>
 
-<header class="wrap">
+<header class="top"><div class="wrap">
   <div class="hrow">
-    <a href="/" class="logo"><i class="fa-solid fa-wave-square"></i> ZUKAI MUSIK</a>
-    <a href="/" class="back"><i class="fa-solid fa-xmark"></i></a>
+    <a href="/" class="logo"><span class="mk"><i class="fa-solid fa-wave-square"></i></span><span>ZUKAI MUSIK<small>FULL TRACK · LATAR AMAN</small></span></a>
+    <div class="hactions">
+      <button class="iconbtn" id="bgBtn" title="Mode latar belakang"><i class="fa-solid fa-moon"></i></button>
+      <a class="iconbtn" href="/anime.html"><i class="fa-solid fa-tv"></i></a>
+      <a class="iconbtn" href="/"><i class="fa-solid fa-xmark"></i></a>
+    </div>
   </div>
   <form class="searchbar" onsubmit="doSearch(event)">
     <input id="q" placeholder="Cari lagu, artis, atau tempel link Spotify…" autocomplete="off">
     <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
   </form>
   <div class="srcrow" id="srcrow">
-    <button class="src on" data-src="yt">YouTube</button>
-    <button class="src" data-src="spotify">Spotify</button>
+    <button class="on" data-s="yt">YouTube</button>
+    <button data-s="spotify">Spotify</button>
   </div>
-</header>
+</div></header>
 
 <main class="wrap">
   <div class="tabs" id="tabs">
-    <button class="on" data-tab="home">Jelajah</button>
-    <button data-tab="fav">Favorit</button>
-    <button data-tab="pl">Playlist</button>
-    <button data-tab="hist">Riwayat</button>
+    <button class="on" data-t="home">Jelajah</button>
+    <button data-t="fav">Favorit</button>
+    <button data-t="pl">Playlist</button>
+    <button data-t="hist">Riwayat</button>
   </div>
   <div id="view"></div>
 </main>
 
 <div id="bar">
   <input type="range" id="seek" min="0" max="1000" value="0">
-  <div class="times"><span id="tCur">0:00</span><span id="tDur">0:00</span></div>
-  <div class="row">
-    <img id="barCv" src="" alt="">
-    <div class="info"><b id="barTitle">—</b><small id="barArtist">—</small></div>
+  <div class="times"><span id="tC">0:00</span><span id="tD">0:00</span></div>
+  <div class="r">
+    <img id="bCv" src="" alt="">
+    <div class="m"><b id="bT">—</b><small id="bA">—</small></div>
     <button onclick="openNp()"><i class="fa-solid fa-chevron-up"></i></button>
-    <button class="main" id="barPlay" onclick="toggle()"><i class="fa-solid fa-play"></i></button>
+    <button class="main" id="bP" onclick="toggle()"><i class="fa-solid fa-play"></i></button>
     <button onclick="next()"><i class="fa-solid fa-forward-step"></i></button>
   </div>
 </div>
 
 <div id="np">
   <div id="npBg"></div>
-  <div class="inner">
-    <div class="top">
-      <button onclick="closeNp()"><i class="fa-solid fa-chevron-down"></i></button>
-      <span>Sedang diputar</span>
-      <button style="margin-left:auto" id="npFav" onclick="favNow()"><i class="fa-regular fa-heart"></i></button>
-    </div>
-    <img id="npCover" src="" alt="">
-    <h3 id="npTitle">—</h3>
-    <p id="npArtist">—</p>
-    <input type="range" id="seek2" min="0" max="1000" value="0" style="width:100%;height:4px;appearance:none;background:#2a2438;border-radius:9px;margin-bottom:14px">
-    <div class="ctrl">
-      <button id="btnShuf" onclick="toggleShuffle()"><i class="fa-solid fa-shuffle"></i></button>
+  <div class="in">
+    <div class="top"><button onclick="closeNp()"><i class="fa-solid fa-chevron-down"></i></button>
+      <span>SEDANG DIPUTAR</span><button style="margin-left:auto" id="npF" onclick="favNow()"><i class="fa-regular fa-heart"></i></button></div>
+    <img id="npCv" src="" alt="">
+    <h3 id="npT">—</h3><p id="npA">—</p>
+    <input type="range" id="seek2" min="0" max="1000" value="0" style="width:100%;height:4px;appearance:none;background:#2a2438;border-radius:9px;margin-bottom:12px">
+    <div class="ctl">
+      <button id="bS" onclick="shuf()"><i class="fa-solid fa-shuffle"></i></button>
       <button onclick="prev()"><i class="fa-solid fa-backward-step"></i></button>
-      <button class="big" id="npPlay" onclick="toggle()"><i class="fa-solid fa-play"></i></button>
+      <button class="big" id="npP" onclick="toggle()"><i class="fa-solid fa-play"></i></button>
       <button onclick="next()"><i class="fa-solid fa-forward-step"></i></button>
-      <button id="btnRep" onclick="cycleRepeat()"><i class="fa-solid fa-repeat"></i></button>
+      <button id="bR" onclick="rep()"><i class="fa-solid fa-repeat"></i></button>
     </div>
-    <div class="bottom">
-      <button onclick="addToPlaylist()"><i class="fa-solid fa-plus"></i> Playlist</button>
+    <div class="bot"><button onclick="addPl()"><i class="fa-solid fa-plus"></i> Playlist</button>
       <button onclick="shareNow()"><i class="fa-solid fa-share-nodes"></i> Bagikan</button>
-      <button onclick="downloadNow()"><i class="fa-solid fa-download"></i> Unduh</button>
-    </div>
+      <button onclick="dlNow()"><i class="fa-solid fa-download"></i> Unduh</button></div>
   </div>
 </div>
 
-<audio id="au" preload="none" crossorigin="anonymous"></audio>
-<iframe id="ytp" allow="autoplay; encrypted-media"></iframe>
+<audio id="au" preload="auto" crossorigin="anonymous"></audio>
+<iframe id="ytp" style="position:fixed;width:1px;height:1px;left:-9999px" allow="autoplay; encrypted-media"></iframe>
 <div id="toast"></div>
 
 <script>
-/* ============ util ============ */
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const au = $('#au');
-const API = { search: '/api/yt', stream: '/api/stream', sp: '/api/spotify', dl: '/api/dl' };
-const LS = { fav: 'zk_fav', pl: 'zk_pl', hist: 'zk_hist' };
+const API = { s:'/api/yt', st:'/api/stream', sp:'/api/spotify' };
+const LS = { fav:'zk_fav', pl:'zk_pl', hist:'zk_hist' };
+let queue = [], idx = -1, sh = false, rp = 0, src = 'yt', tab = 'home', mode = 'proxy';
+let tt; const toast = m => { const t=$('#toast'); t.textContent=m; t.classList.add('up'); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove('up'),2400); };
+const st = { get(k){ try{ return JSON.parse(localStorage.getItem(k)||'[]'); }catch{ return []; } }, set(k,v){ localStorage.setItem(k,JSON.stringify(v)); } };
+const fmt = s => { s = Math.max(0, Math.round(s||0)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
-let toastT;
-function toast(m) {
-  const t = $('#toast');
-  t.textContent = m; t.classList.add('up');
-  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('up'), 2400);
+/* ---------- mesin putar berlapis ---------- */
+/* 1) proxy (paling aman, Range jalan)  2) URL langsung  3) embed YT */
+const tries = new Map();
+
+async function load(t, autoplay = true){
+  const id = t.id;
+  const n = tries.get(id) || 0;
+  paint(t);
+  if (n === 0) {
+    au.src = `${API.st}?id=${id}&v=${Date.now()}`;
+  } else if (n === 1) {
+    try {
+      const r = await fetch(`${API.st}?id=${id}&json=1`);
+      const j = await r.json();
+      if (!j.url) throw new Error('kosong');
+      au.src = j.url;
+    } catch { return embed(t); }
+  } else return embed(t);
+  tries.set(id, n);
+  if (autoplay) au.play().catch(() => { tries.set(id, 2); embed(t); });
 }
-const store = {
-  get(k) { try { return JSON.parse(localStorage.getItem(k) || '[]'); } catch { return []; } },
-  set(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
-};
-const fmt = s => {
-  s = Math.max(0, Math.round(s || 0));
-  return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
-};
-const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-/* ============ state ============ */
-let queue = [], idx = -1, shuffle = false, repeat = 0, src = 'yt', tab = 'home';
-let ytPlayer = null, ytReady = false, usingYt = false;
-
-/* ============ audio ============ */
-function loadTrack(t, autoplay = true) {
-  usingYt = false;
-  au.src = `${API.stream}?id=${encodeURIComponent(t.id)}`;
-  if (autoplay) au.play().catch(() => fallbackYt(t));
-  paintNp(t);
-  mediaSession(t);
-}
-au.addEventListener('error', () => {
-  const t = queue[idx];
-  if (t && !usingYt) fallbackYt(t);
-});
-au.addEventListener('loadedmetadata', () => { $('#tDur').textContent = fmt(au.duration); });
-au.addEventListener('timeupdate', () => {
-  const p = au.duration ? (au.currentTime / au.duration) * 1000 : 0;
-  $('#seek').value = p; $('#seek2').value = p;
-  $('#tCur').textContent = fmt(au.currentTime);
-});
-au.addEventListener('ended', () => repeat === 2 ? playAt(idx) : next());
-
-$('#seek').oninput = e => { if (au.duration) au.currentTime = (e.target.value / 1000) * au.duration; };
-$('#seek2').oninput = e => { if (au.duration) au.currentTime = (e.target.value / 1000) * au.duration; };
-
-/* fallback: kalau stream gagal, pakai iframe YouTube biar lagu tetap jalan */
-function fallbackYt(t) {
-  usingYt = true;
+function embed(t) {
+  mode = 'embed';
   au.pause();
-  $('#ytp').src = `https://www.youtube-nocookie.com/embed/${t.id}?autoplay=1&rel=0&playsinline=1&enablejsapi=1`;
-  toast('Stream langsung gagal, dialihkan ke pemutar YouTube.');
+  $('#ytp').src = `https://www.youtube-nocookie.com/embed/${t.id}?autoplay=1&rel=0&playsinline=1&loop=1&playlist=${t.id}`;
+  toast('Sumber langsung mati, dialihkan ke pemutar YouTube. Latar belakang nonaktif sementara.');
+  paint(t);
 }
 
-/* ============ player ============ */
-function playList(list, i) {
-  queue = list.slice(); idx = i;
-  if (shuffle) idx = Math.floor(Math.random() * queue.length);
-  playAt(idx);
+au.addEventListener('error', () => {
+  const t = queue[idx]; if (!t) return;
+  const n = (tries.get(t.id) || 0) + 1;
+  tries.set(t.id, n);
+  if (n <= 2) load(t, true); else embed(t);
+});
+
+au.addEventListener('play', () => { $$('#bP i,#npP i').forEach(i => i.className='fa-solid fa-pause'); navigator.mediaSession && (navigator.mediaSession.playbackState='playing'); holdLock(); });
+au.addEventListener('pause', () => { $$('#bP i,#npP i').forEach(i => i.className='fa-solid fa-play'); navigator.mediaSession && (navigator.mediaSession.playbackState='paused'); });
+au.addEventListener('loadedmetadata', () => $('#tD').textContent = fmt(au.duration));
+au.addEventListener('timeupdate', () => {
+  const p = au.duration ? au.currentTime/au.duration*1000 : 0;
+  $('#seek').value = p; $('#seek2').value = p; $('#tC').textContent = fmt(au.currentTime);
+});
+au.addEventListener('ended', () => rp === 2 ? playAt(idx) : next());
+$('#seek').oninput = e => { if (au.duration) au.currentTime = e.target.value/1000*au.duration; };
+$('#seek2').oninput = e => { if (au.duration) au.currentTime = e.target.value/1000*au.duration; };
+
+/* wake lock supaya layar tidak tidur saat audio jalan */
+let lock = null;
+async function holdLock(){
+  if (mode === 'embed') return;
+  try { lock = await navigator.wakeLock?.request('screen'); } catch {}
 }
-function playAt(i) {
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && !au.paused) holdLock();
+});
+
+/* ---------- kontrol ---------- */
+function playList(list, i){ queue = list.slice(); idx = sh ? Math.floor(Math.random()*queue.length) : i; playAt(idx); }
+function playAt(i){
   if (i < 0 || i >= queue.length) return;
-  idx = i;
-  const t = queue[i];
-  loadTrack(t);
-  pushHist(t);
-  paintActive();
-  $('#bar').classList.add('up');
+  idx = i; tries.delete(queue[i].id);
+  load(queue[i]);
+  pushHist(queue[i]); $('#bar').classList.add('up'); paintActive();
 }
-function toggle() {
-  if (usingYt) { $('#ytp').src = $('#ytp').src.includes('autoplay=1') ? $('#ytp').src.replace('autoplay=1', 'autoplay=0') : $('#ytp').src.replace('autoplay=0', 'autoplay=1'); return; }
-  if (!queue.length) return toast('Belum ada lagu dipilih.');
-  if (au.paused) au.play().catch(() => fallbackYt(queue[idx]));
-  else au.pause();
+function toggle(){
+  if (mode === 'embed') {
+    const u = $('#ytp').src;
+    $('#ytp').src = u.includes('autoplay=1') ? u.replace('autoplay=1','autoplay=0') : u.replace('autoplay=0','autoplay=1');
+    return;
+  }
+  if (!queue.length) return toast('Pilih lagu dulu.');
+  if (au.paused) au.play().catch(() => embed(queue[idx])); else au.pause();
 }
-au.addEventListener('play', () => {
-  $$('#barPlay i, #npPlay i').forEach(i => i.className = 'fa-solid fa-pause');
-  navigator.mediaSession && (navigator.mediaSession.playbackState = 'playing');
-});
-au.addEventListener('pause', () => {
-  $$('#barPlay i, #npPlay i').forEach(i => i.className = 'fa-solid fa-play');
-  navigator.mediaSession && (navigator.mediaSession.playbackState = 'paused');
-});
-function next() {
-  if (!queue.length) return;
-  if (repeat === 1) return playAt(idx);
-  playAt(shuffle ? Math.floor(Math.random() * queue.length) : (idx + 1) % queue.length);
-}
-function prev() {
-  if (!queue.length) return;
-  if (au.currentTime > 4) { au.currentTime = 0; return; }
-  playAt((idx - 1 + queue.length) % queue.length);
-}
-function toggleShuffle() { shuffle = !shuffle; $('#btnShuf').classList.toggle('on', shuffle); toast(shuffle ? 'Acak aktif' : 'Acak mati'); }
-function cycleRepeat() {
-  repeat = (repeat + 1) % 3;
-  $('#btnRep').classList.toggle('on', repeat > 0);
-  $('#btnRep').innerHTML = repeat === 2 ? '<i class="fa-solid fa-repeat"></i><sup style="font-size:.5rem">1</sup>' : '<i class="fa-solid fa-repeat"></i>';
-  toast(['Repeat mati', 'Repeat semua', 'Repeat satu lagu'][repeat]);
-}
+function next(){ if (!queue.length) return; if (rp === 1) return playAt(idx); playAt(sh ? Math.floor(Math.random()*queue.length) : (idx+1)%queue.length); }
+function prev(){ if (!queue.length) return; if (au.currentTime > 4) { au.currentTime = 0; return; } playAt((idx-1+queue.length)%queue.length); }
+function shuf(){ sh = !sh; $('#bS').classList.toggle('on', sh); toast(sh?'Acak aktif':'Acak mati'); }
+function rep(){ rp = (rp+1)%3; $('#bR').classList.toggle('on', rp>0); toast(['Repeat mati','Repeat semua','Repeat satu'][rp]); }
 
-function paintNp(t) {
-  $('#barCv').src = t.cover; $('#npCover').src = t.coverBig || t.cover;
-  $('#barTitle').textContent = t.title; $('#npTitle').textContent = t.title;
-  $('#barArtist').textContent = t.artist; $('#npArtist').textContent = t.artist;
+function paint(t){
+  $('#bCv').src = t.cover; $('#npCv').src = t.coverBig || t.cover;
+  $('#bT').textContent = t.title; $('#npT').textContent = t.title;
+  $('#bA').textContent = t.artist; $('#npA').textContent = t.artist;
   $('#npBg').style.backgroundImage = `url(${t.coverBig || t.cover})`;
   document.title = `${t.title} — ${t.artist}`;
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.metadata = new MediaMetadata({ title:t.title, artist:t.artist, album:t.album||'ZukaiTemp',
+      artwork:[{ src: t.coverBig||t.cover, sizes:'512x512', type:'image/jpeg' }] });
+    const h = (k,f) => { try { navigator.mediaSession.setActionHandler(k,f); } catch {} };
+    h('play',()=>au.play()); h('pause',()=>au.pause()); h('nexttrack',next); h('previoustrack',prev);
+    h('seekto', d => { if (d.seekTime != null) au.currentTime = d.seekTime; });
+  }
   paintFav();
 }
-function mediaSession(t) {
-  if (!('mediaSession' in navigator)) return;
-  navigator.mediaSession.metadata = new MediaMetadata({
-    title: t.title, artist: t.artist, album: t.album || 'ZukaiTemp',
-    artwork: [{ src: t.coverBig || t.cover, sizes: '512x512', type: 'image/jpeg' }]
-  });
-  navigator.mediaSession.setActionHandler('play', () => au.play());
-  navigator.mediaSession.setActionHandler('pause', () => au.pause());
-  navigator.mediaSession.setActionHandler('nexttrack', next);
-  navigator.mediaSession.setActionHandler('previoustrack', prev);
-}
-function openNp() { if (queue.length) $('#np').classList.add('up'); }
-function closeNp() { $('#np').classList.remove('up'); }
+function openNp(){ if (queue.length) $('#np').classList.add('up'); }
+function closeNp(){ $('#np').classList.remove('up'); }
 
-/* ============ favorit / riwayat / playlist ============ */
-function isFav(id) { return store.get(LS.fav).some(x => x.id === id); }
-function toggleFav(t) {
-  const f = store.get(LS.fav);
-  const i = f.findIndex(x => x.id === t.id);
-  if (i > -1) { f.splice(i, 1); toast('Dihapus dari favorit'); }
-  else { f.unshift(t); toast('Ditambahkan ke favorit'); }
-  store.set(LS.fav, f.slice(0, 300));
-  paintFav(); paintActive();
-  if (tab === 'fav') render();
+/* ---------- favorit, playlist, riwayat ---------- */
+const isFav = id => st.get(LS.fav).some(x => x.id === id);
+function toggleFav(t){
+  const f = st.get(LS.fav); const i = f.findIndex(x => x.id === t.id);
+  if (i > -1) { f.splice(i,1); toast('Dihapus dari favorit'); } else { f.unshift(t); toast('Masuk favorit'); }
+  st.set(LS.fav, f.slice(0,300)); paintFav(); if (tab==='fav') render();
 }
-function paintFav() {
-  const t = queue[idx];
-  const on = t && isFav(t.id);
-  $('#npFav').innerHTML = `<i class="fa-${on ? 'solid' : 'regular'} fa-heart" style="${on ? 'color:var(--bad)' : ''}"></i>`;
+function paintFav(){
+  const t = queue[idx]; const on = t && isFav(t.id);
+  $('#npF').innerHTML = `<i class="fa-${on?'solid':'regular'} fa-heart" style="${on?'color:var(--bad)':''}"></i>`;
 }
-function favNow() { const t = queue[idx]; if (t) toggleFav(t); }
-function pushHist(t) {
-  const h = store.get(LS.hist).filter(x => x.id !== t.id);
-  h.unshift(t); store.set(LS.hist, h.slice(0, 60));
-}
-function addToPlaylist() {
+function favNow(){ const t = queue[idx]; if (t) toggleFav(t); }
+function pushHist(t){ const h = st.get(LS.hist).filter(x => x.id !== t.id); h.unshift(t); st.set(LS.hist, h.slice(0,60)); }
+function addPl(){
   const t = queue[idx]; if (!t) return;
-  const name = prompt('Nama playlist:', 'Favorit saya');
-  if (!name) return;
-  const pl = store.get(LS.pl);
-  let p = pl.find(x => x.name === name);
-  if (!p) { p = { name, tracks: [] }; pl.unshift(p); }
+  const n = prompt('Nama playlist:', 'Favorit saya'); if (!n) return;
+  const pl = st.get(LS.pl); let p = pl.find(x => x.name === n);
+  if (!p) { p = { name:n, tracks:[] }; pl.unshift(p); }
   if (!p.tracks.some(x => x.id === t.id)) p.tracks.unshift(t);
-  store.set(LS.pl, pl);
-  toast('Masuk playlist ' + name);
+  st.set(LS.pl, pl); toast('Masuk playlist '+n);
 }
-function shareNow() {
+function shareNow(){
   const t = queue[idx]; if (!t) return;
-  const url = `https://youtu.be/${t.id}`;
-  if (navigator.share) navigator.share({ title: t.title, url }).catch(() => {});
-  else { navigator.clipboard.writeText(url); toast('Link disalin'); }
+  const u = `https://youtu.be/${t.id}`;
+  navigator.share ? navigator.share({ title:t.title, url:u }).catch(()=>{}) : (navigator.clipboard.writeText(u), toast('Link disalin'));
 }
-function downloadNow() {
-  const t = queue[idx]; if (!t) return;
-  window.open(`${API.stream}?id=${t.id}`, '_blank');
-}
+function dlNow(){ const t = queue[idx]; if (t) location.href = `${API.st}?id=${t.id}`; }
 
-/* ============ render ============ */
-function trackRow(t, list, i) {
-  return `<div class="trk ${queue[idx]?.id === t.id ? 'on' : ''}" data-i="${i}">
-    <img class="cv" src="${esc(t.cover)}" loading="lazy" alt="">
-    <div class="meta"><b>${esc(t.title)}</b><small>${esc(t.artist)}</small></div>
-    <span class="dur">${fmt(t.duration)}</span>
-    <button class="act ${isFav(t.id) ? 'fav' : ''}" data-fav="${i}"><i class="fa-${isFav(t.id) ? 'solid' : 'regular'} fa-heart"></i></button>
-  </div>`;
+/* ---------- render ---------- */
+function row(t, list, i){
+  const f = isFav(t.id);
+  return `<div class="trk ${queue[idx]?.id===t.id?'on':''}" data-i="${i}">
+    <span class="no">${i+1}</span><img class="cv" src="${esc(t.cover)}" loading="lazy" alt="">
+    <div class="m"><b>${esc(t.title)}</b><small>${esc(t.artist)}</small></div>
+    <span class="d">${fmt(t.duration)}</span>
+    <button class="f ${f?'on':''}" data-f="${i}"><i class="fa-${f?'solid':'regular'} fa-heart"></i></button></div>`;
 }
-function bindRows(container, list) {
-  container.querySelectorAll('.trk').forEach(el => {
+function bindList(root, list){
+  root.querySelectorAll('.trk').forEach(el => {
     const i = +el.dataset.i;
-    el.onclick = e => {
-      if (e.target.closest('[data-fav]')) { e.stopPropagation(); toggleFav(list[i]); return; }
-      playList(list, i);
-    };
+    el.onclick = e => { if (e.target.closest('[data-f]')) { e.stopPropagation(); toggleFav(list[i]); } else playList(list, i); };
   });
 }
 
-async function render() {
+async function render(){
   const v = $('#view');
   if (tab === 'fav') {
-    const f = store.get(LS.fav);
-    v.innerHTML = `<h2><i class="fa-solid fa-heart"></i>Favorit <small>${f.length} lagu</small></h2>` +
-      (f.length ? f.map((t, i) => trackRow(t, f, i)).join('') : '<div class="empty">Belum ada favorit. Tekan ikon hati di lagu mana pun.</div>');
-    return bindRows(v, f);
+    const f = st.get(LS.fav);
+    v.innerHTML = `<h2><i class="fa-solid fa-heart"></i>Favorit <small>${f.length}</small>${f.length?'<button class="playall" onclick="playList(store0(),0)">Putar</button>':''}</h2>` +
+      (f.length ? f.map((t,i)=>row(t,f,i)).join('') : '<div class="empty">Belum ada favorit.</div>');
+    if (f.length) { bindList(v, f); v.querySelector('.playall').onclick = () => playList(f, 0); }
+    return;
   }
   if (tab === 'hist') {
-    const h = store.get(LS.hist);
+    const h = st.get(LS.hist);
     v.innerHTML = `<h2><i class="fa-solid fa-clock-rotate-left"></i>Riwayat <small>${h.length}</small></h2>` +
-      (h.length ? h.map((t, i) => trackRow(t, h, i)).join('') : '<div class="empty">Belum ada riwayat putar.</div>');
-    return bindRows(v, h);
+      (h.length ? h.map((t,i)=>row(t,h,i)).join('') : '<div class="empty">Belum ada riwayat.</div>');
+    if (h.length) bindList(v, h);
+    return;
   }
   if (tab === 'pl') {
-    const pl = store.get(LS.pl);
+    const pl = st.get(LS.pl);
     v.innerHTML = `<h2><i class="fa-solid fa-list"></i>Playlist <small>${pl.length}</small></h2>` +
-      (pl.length ? pl.map((p, i) => `<div class="trk" data-pl="${i}">
+      (pl.length ? pl.map((p,i)=>`<div class="trk" data-p="${i}"><span class="no">${i+1}</span>
         <div class="cv" style="display:grid;place-items:center;color:var(--a)"><i class="fa-solid fa-list"></i></div>
-        <div class="meta"><b>${esc(p.name)}</b><small>${p.tracks.length} lagu</small></div>
-        <button class="act" data-del="${i}"><i class="fa-solid fa-trash"></i></button>
-      </div>`).join('') : '<div class="empty">Belum ada playlist. Buka lagu lalu tekan Playlist di pemutar.</div>');
-    v.querySelectorAll('[data-pl]').forEach(el => {
-      el.onclick = e => {
-        if (e.target.closest('[data-del]')) {
-          const pl2 = store.get(LS.pl); pl2.splice(+el.dataset.del, 1); store.set(LS.pl, pl2); render(); return;
-        }
-        const p = store.get(LS.pl)[+el.dataset.pl];
-        if (p?.tracks.length) playList(p.tracks, 0);
-      };
+        <div class="m"><b>${esc(p.name)}</b><small>${p.tracks.length} lagu</small></div>
+        <button class="f" data-d="${i}"><i class="fa-solid fa-trash"></i></button></div>`).join('') : '<div class="empty">Belum ada playlist.</div>');
+    v.querySelectorAll('[data-p]').forEach(el => el.onclick = e => {
+      if (e.target.closest('[data-d]')) { const p = st.get(LS.pl); p.splice(+el.dataset.d,1); st.set(LS.pl,p); render(); return; }
+      const p = st.get(LS.pl)[+el.dataset.p]; if (p?.tracks.length) playList(p.tracks, 0);
     });
     return;
   }
-  v.innerHTML = '<div class="skel"></div><div class="skel"></div><div class="skel"></div>';
-  v.innerHTML = `<h2><i class="fa-solid fa-fire"></i>Rekomendasi <small>YouTube</small></h2>
-    <div class="chips">${['Lofi chill', 'Top Indonesia', 'Hindia', 'Tulus', 'Nadin Amizah', 'JVKE', 'Dangdut koplo', 'Karaoke'].map(c => `<button class="chip" data-q="${c}">${c}</button>`).join('')}</div>
-    <div id="homeList"></div>`;
-  v.querySelectorAll('.chip').forEach(c => c.onclick = () => { $('#q').value = c.dataset.q; doSearch(); });
-  const list = await search('musik populer indonesia 2026');
-  const box = $('#homeList');
-  box.innerHTML = list.length ? list.map((t, i) => trackRow(t, list, i)).join('') : '<div class="empty">Gagal memuat rekomendasi.</div>';
-  bindRows(box, list);
+  v.innerHTML = '<div class="skel"></div><div class="skel" style="margin-top:8px"></div>';
+  const list = await search('musik populer indonesia');
+  v.innerHTML = `<div class="chips">${['Lofi chill','Top Indonesia','Hindia','Tulus','Nadin Amizah','Dangdut koplo','Karaoke','JVKE'].map(c=>`<button data-q="${c}">${c}</button>`).join('')}</div>
+    <h2><i class="fa-solid fa-fire"></i>Rekomendasi <small>YouTube</small></h2><div id="h"></div>`;
+  v.querySelectorAll('.chips [data-q]').forEach(b => b.onclick = () => { $('#q').value = b.dataset.q; doSearch(); });
+  const box = $('#h');
+  box.innerHTML = list.length ? list.map((t,i)=>row(t,list,i)).join('') : '<div class="empty">Gagal memuat.</div>';
+  if (list.length) bindList(box, list);
 }
+const store0 = () => st.get(LS.fav);
 
-async function search(q) {
+async function search(q){
   try {
-    const url = src === 'spotify' ? `${API.sp}?q=${encodeURIComponent(q)}` : `${API.search}?q=${encodeURIComponent(q)}`;
-    const r = await fetch(url);
-    const j = await r.json();
+    const u = src === 'spotify' ? `${API.sp}?q=${encodeURIComponent(q)}` : `${API.s}?q=${encodeURIComponent(q)}`;
+    const j = await (await fetch(u)).json();
     if (j.error) toast(j.error);
     return j.data || [];
   } catch { toast('Pencarian gagal'); return []; }
 }
-
-async function doSearch(e) {
+async function doSearch(e){
   if (e) e.preventDefault();
-  let q = $('#q').value.trim();
-  if (!q) return;
-  // tempel link spotify → impor
-  const sp = q.match(/open\.spotify\.com\/(track|playlist|album)\/([\w]+)/);
+  const q = $('#q').value.trim(); if (!q) return;
+  const sp = q.match(/open\.spotify\.com\/(track|playlist|album)\/(\w+)/);
+  tab = 'home'; $$('#tabs button').forEach(b=>b.classList.toggle('on', b.dataset.t==='home'));
+  $('#view').innerHTML = '<div class="skel"></div>';
   if (sp) {
-    tab = 'home';
-    $$('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === 'home'));
-    $('#view').innerHTML = '<div class="skel"></div><div class="skel"></div>';
     try {
-      const r = await fetch(`${API.sp}?a=${sp[1]}&id=${sp[2]}`);
-      const j = await r.json();
+      const j = await (await fetch(`${API.sp}?a=${sp[1]}&id=${sp[2]}`)).json();
       const list = j.data || [];
-      $('#view').innerHTML = `<h2><i class="fa-brands fa-spotify"></i>${esc(j.name || 'Impor Spotify')} <small>${list.length} lagu</small></h2><div id="imp"></div>`;
-      const box = $('#imp');
-      box.innerHTML = list.length ? list.map((t, i) => trackRow(t, list, i)).join('') : '<div class="empty">Tidak ada lagu yang bisa dicocokkan ke YouTube.</div>';
-      bindRows(box, list);
-      toast('Diimpor dari Spotify (diputar via YouTube).');
+      $('#view').innerHTML = `<h2><i class="fa-brands fa-spotify"></i>${esc(j.name||'Impor')} <small>${list.length}</small>${list.length?'<button class="playall">Putar</button>':''}</h2><div id="h"></div>`;
+      const box = $('#h');
+      box.innerHTML = list.length ? list.map((t,i)=>row(t,list,i)).join('') : '<div class="empty">Tidak ada yang cocok.</div>';
+      if (list.length) { bindList(box, list); $('#view .playall').onclick = () => playList(list,0); }
     } catch { toast('Impor gagal'); }
     return;
   }
-  tab = 'home';
-  $$('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === 'home'));
-  $('#view').innerHTML = '<div class="skel"></div><div class="skel"></div><div class="skel"></div>';
   const list = await search(q);
-  $('#view').innerHTML = `<h2><i class="fa-solid fa-magnifying-glass"></i>Hasil "${esc(q)}" <small>${list.length}</small></h2><div id="res"></div>`;
-  const box = $('#res');
-  box.innerHTML = list.length ? list.map((t, i) => trackRow(t, list, i)).join('') : '<div class="empty">Tidak ada hasil.</div>';
-  bindRows(box, list);
+  $('#view').innerHTML = `<h2><i class="fa-solid fa-magnifying-glass"></i>Hasil "${esc(q)}" <small>${list.length}</small></h2><div id="h"></div>`;
+  const box = $('#h');
+  box.innerHTML = list.length ? list.map((t,i)=>row(t,list,i)).join('') : '<div class="empty">Tidak ada hasil.</div>';
+  if (list.length) bindList(box, list);
 }
+function paintActive(){ $$('.trk').forEach(el => { const t = queue[idx]; el.classList.toggle('on', !!t && el.querySelector('b')?.textContent === t.title); }); }
 
-function paintActive() {
-  $$('.trk').forEach(el => {
-    const t = queue[idx];
-    if (t && el.querySelector('b')?.textContent === t.title) el.classList.add('on');
-    else el.classList.remove('on');
-  });
-}
-
-/* ============ init ============ */
-$$('#tabs button').forEach(b => b.onclick = () => {
-  tab = b.dataset.tab;
-  $$('#tabs button').forEach(x => x.classList.toggle('on', x === b));
-  render();
-});
-$$('.src').forEach(b => b.onclick = () => {
-  src = b.dataset.src;
-  $$('.src').forEach(x => x.classList.toggle('on', x === b));
-  toast(src === 'spotify' ? 'Sumber Spotify (butuh SPOTIFY_ID/SECRET di Vercel)' : 'Sumber YouTube');
-});
+/* ---------- init ---------- */
+$$('#tabs button').forEach(b => b.onclick = () => { tab = b.dataset.t; $$('#tabs button').forEach(x=>x.classList.toggle('on', x===b)); render(); });
+$$('#srcrow button').forEach(b => b.onclick = () => { src = b.dataset.s; $$('#srcrow button').forEach(x=>x.classList.toggle('on', x===b)); });
+$('#bgBtn').onclick = () => {
+  mode = 'proxy';
+  toast('Mode latar belakang: audio diputar lewat proxy, tetap jalan saat layar mati.');
+  if (queue[idx] && $('#ytp').src) { $('#ytp').src=''; load(queue[idx], true); }
+};
 document.addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT') return;
   if (e.code === 'Space') { e.preventDefault(); toggle(); }
-  if (e.code === 'ArrowRight' && e.shiftKey) next();
-  if (e.code === 'ArrowLeft' && e.shiftKey) prev();
 });
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible') paintFav();
-});
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
 render();
 </script>
 </body>
